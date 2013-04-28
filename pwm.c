@@ -5,6 +5,9 @@
 //#include "menu.h"
 #include "define.h"
 
+//这是现在同步锁相比较好的版本
+//工作于dsPIC33FJ16GS504
+
 // Inverter Constants 
 #define TriPD 18400
 
