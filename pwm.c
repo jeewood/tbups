@@ -16,18 +16,7 @@
 long PD1 = TriPD;
 long PD0 = TriPD;
 
-int InvIntCnt = 0;		//逆变中断计数
-int inverterOutputCurrent;
-
-char finvRMS = RMS_NOT_READY;
-char facRMS = RMS_NOT_READY;
-
 int Duty = 0;//Q15(1.0);
-
-int scFlag = 0,scFlag1 = 0;
-int Distance = 0;
-
-int MIntCnt = 0;
 
 INVSTRUCT inv = {0};
 MAINSTRUCT m = {0};
@@ -40,24 +29,24 @@ MAINSTRUCT m = {0};
 #define Max(s,v) {(s).maxv = ((s).maxv<(v))?(v):((s).maxv);}
 #define Min(s,v) {(s).minv = ((s).minv>(v))?(v):((s).minv);}
 
-inline int jabs(int x)
-{
-	return (x<0)?(-(x)):(x);
-}
+inline int jabs(int x)	{ return (x<0)?(-(x)):(x); }
+
 #define abs jabs
 #define set(v) {m.cv=(v);}
 
 #define clr(v) (v) = 0
 #define inc(s) {(s).cnt=((s).cnt+1)%1024;(s).i = ((s).cnt>256)?(s).cnt-512:(s).cnt;}
 
+#define incr(s) ((s)+=((s)<19000)?1:0)
+#define decr(s) ((s)-=((s)>17000)?1:0)
+
 #define ZCTHV 0
 
-typedef unsigned long long ull;
-ull smv = 0;
-ull siv = 0;
-
-
-int err,perr,sum =0,pmcnt;
+//variable for RMS calculate
+long smv = 0;
+long siv = 0;
+char finvRMS = RMS_NOT_READY;
+char facRMS = RMS_NOT_READY;
 
 #define CONVERSION_PAIRS 2
 
@@ -142,6 +131,7 @@ void ConvPair0Handler (void)
  * [ConvPair1Handler description]
  * AC input voltage current gathering
  */
+int err,perr = 0;
 void ConvPair1Handler (void)
 {
 	m.cv = (ADCBUF2 << 5) - DC_OFFSET;// - m.ofs;
@@ -178,10 +168,10 @@ void ConvPair1Handler (void)
 		//BEEP = ~BEEP;
 		switch(m.state)
 		{
-			case NOK:
+			case NOK:	
 			{
-				m.icnt ++;
-				if (m.icnt>10)
+				if (m.cnt<1000) m.icnt ++;	//有过零点产生,说明有交流输入
+				if (m.icnt>10 && Value.ACInV > 1000)	//交流电压大于100V
 				{
 					m.state = ADJ;
 					PD1 = TriPD;
@@ -194,11 +184,11 @@ void ConvPair1Handler (void)
 			{
 				if (m.size>511)
 				{
-					if (PD1<19000) PD1 += 1;	//采样周期变长,采样速度下降
+					incr(PD1);	//采样周期变长,采样速度下降
 				}
 				else if (m.size < 511)
 				{
-					if (PD1>17000) PD1 -= 1;	//采样周期变短长,采样速度上升
+					decr(PD1);	//采样周期变短长,采样速度上升
 				}
 				else
 				{
@@ -217,7 +207,7 @@ void ConvPair1Handler (void)
 			break;
 			case OK:
 			{
-				if (m.size>=1000)
+				if (m.size>=1000) //超过10次没有过零点产生,则说明交流失电
 				{
 					m.ocnt ++;
 					if (m.ocnt>10)
@@ -227,14 +217,14 @@ void ConvPair1Handler (void)
 					}
 				}
 				
-				if (m.size>512)
+				if (m.size>511)	//对交流输入电压的频率进行微调
 				{
-					if (PD1<19000) PD1 += 1;
+					incr(PD1);
 					PHASE1 = PD1;
 				}
-				else if (m.size<512)
+				else if (m.size<511)
 				{
-					if (PD1>17000) PD1 -= 1;
+					decr(PD1);
 					PHASE1 = PD1;
 				}
 
@@ -252,22 +242,22 @@ void ConvPair1Handler (void)
 
 							if (err>2)	//err==perr,即inv.i且m.i不等于0
 							{
-								PD0 += 1;
+								incr(PD0);
 							}
 							else if (err<-2)
 							{
-								PD0 -= 1;
+								decr(PD0);
 							}
 							perr = err;
 						}
 					}
 					else if (PD0<PD1)
 					{
-						if (PD0<19000) PD0 += 1;
+						incr(PD0);
 					}
 					else if (PD0>PD1)
 					{
-						if (PD0>17000) PD0 -= 1;
+						decr(PD0);
 					}
 
 					if (PD0>17000 && PD0<19000)

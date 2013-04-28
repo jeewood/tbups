@@ -90,14 +90,14 @@ file_011=uart.h
 file_012=data_struct.h
 file_013=i2c.h
 file_014=p33FJ16GS504.h
-file_015=C:\Program Files\Microchip\mplabc30\v3.30\lib\libq-coff.a
+file_015=C:\Program Files\Microchip\MPLAB C30\lib\libq-coff.a
 [SUITE_INFO]
 suite_guid={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 suite_state=
 [TOOL_SETTINGS]
 TS{7D9C6ECE-785D-44CB-BA22-17BF2E119622}=-g
 TS{25AC22BD-2378-4FDB-BFB6-7345A15512D3}=-g -Wall
-TS{7DAC9A1D-4C45-45D6-B25A-D117C74E8F5A}=-o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)" -Map="$(BINDIR_)$(TARGETBASE).map" --report-mem
+TS{7DAC9A1D-4C45-45D6-B25A-D117C74E8F5A}=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
 TS{509E5861-1E2A-483B-8B6B-CA8DB7F2DD78}=
 [INSTRUMENTED_TRACE]
 enable=0
@@ -110,7 +110,7 @@ Post-Build=
 Post-BuildEnabled=1
 [TOOL_LOCKING]
 ToolsAreLocked=1
-T{DE18EB1A-B46B-486B-B96F-A811A635DFAC}=C:\Program Files\Microchip\mplabc30\v3.30\bin\pic30-as.exe
-T{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\Program Files\Microchip\mplabc30\v3.30\bin\pic30-gcc.exe
-T{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\Program Files\Microchip\mplabc30\v3.30\bin\pic30-ld.exe
-T{159ECAA5-9E6A-480A-B384-7EFD8D3BE1B4}=C:\Program Files\Microchip\mplabc30\v3.30\bin\pic30-ar.exe
+T{DE18EB1A-B46B-486B-B96F-A811A635DFAC}=C:\Program Files\Microchip\MPLAB C30\bin\pic30-as.exe
+T{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\Program Files\Microchip\MPLAB C30\bin\pic30-gcc.exe
+T{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\Program Files\Microchip\MPLAB C30\bin\\pic30-ld.exe
+T{159ECAA5-9E6A-480A-B384-7EFD8D3BE1B4}=C:\Program Files\Microchip\MPLAB C30\bin\pic30-ar.exe

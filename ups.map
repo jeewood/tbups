@@ -1,25 +1,25 @@
-Microchip Technology Inc, vv3_30 (A) >
+Microchip Technology Inc, vv3_31 (A) ^
 
 Tool Name:
-  c:\program files\microchip\mplabc30\v3.30\bin\bin\..\bin/pic30-coff-ld.exe
+  c:\program files\microchip\mplab c30\bin\bin\..\bin/pic30-coff-ld.exe
 
 Command:
   -p33FJ16GS504 \
   -oups.cof \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/.. \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/PIC24E \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/PIC24E/gld \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/PIC24F \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/PIC24F/gld \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/PIC24H \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/PIC24H/gld \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC30F \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/dsPIC30F/gld \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC33E \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/dsPIC33E/gld \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC33F \
-  -Lc:/program files/microchip/mplabc30/v3.30/bin/bin/../../support/dsPIC33F/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/.. \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/PIC24E \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/PIC24E/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/PIC24F \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/PIC24F/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/PIC24H \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/PIC24H/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/dsPIC30F \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/dsPIC30F/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/dsPIC33E \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/dsPIC33E/gld \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../lib/dsPIC33F \
+  -Lc:/program files/microchip/mplab c30/bin/bin/../../support/dsPIC33F/gld \
   clock.o \
   pwm.o \
   main.o \
@@ -27,7 +27,7 @@ Command:
   uart.o \
   i2c.o \
   data_struct.o \
-  C:\Program Files\Microchip\mplabc30\v3.30\lib\libq-coff.a \
+  C:\Program Files\Microchip\MPLAB C30\lib\libq-coff.a \
   -Tp33FJ16GS504.gld.00 \
   --defsym=__MPLAB_BUILD=1 \
   -Map=ups.map \
@@ -40,13 +40,13 @@ Command:
 
 Archive member included because of file (symbol)
 
-c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
                               (_resetPRI)
-c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
-                              c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o) (_data_init_standard)
-c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(divmoddi3.o)
-                              pwm.o (__udivdi3)
-c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+                              c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o) (_data_init_standard)
+c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(divsi3.o)
+                              pwm.o (__divsi3)
+c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
                               data_struct.o (__udivsi3)
 
 
@@ -54,27 +54,27 @@ Program Memory  [Origin = 0x200, Length = 0x29fe]
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x2d2           0x43b  (1083)
-.const                       0x4d2                0x20            0x30  (48)
-.text                        0x4f2              0x11d6          0x1ac1  (6849)
-.dinit                      0x16c8               0x146           0x1e9  (489)
-.text                       0x180e               0x138           0x1d4  (468)
+.text                        0x200                0xda           0x147  (327)
+.const                       0x2da                0x20            0x30  (48)
+.text                        0x2fa              0x1268          0x1b9c  (7068)
+.dinit                      0x1562               0x13a           0x1d7  (471)
+.text                       0x169c               0x138           0x1d4  (468)
 
-                     Total program memory used (bytes):         0x22e9  (8937) 55%
+                     Total program memory used (bytes):         0x20be  (8382) 51%
 
 
 Data Memory  [Origin = 0x800, Length = 0x800]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.ndata                       0x800                   0           0x160  (352)
-.nbss                        0x960                   0            0x46  (70)
-.ndata                       0x9a6                   0            0x24  (36)
-.nbss                        0x9ca                   0            0x10  (16)
-.ndata                       0x9da                   0            0x16  (22)
-.nbss                        0x9f0                   0             0x2  (2)
+.ndata                       0x800                   0           0x14e  (334)
+.nbss                        0x94e                   0            0x46  (70)
+.ndata                       0x994                   0            0x24  (36)
+.nbss                        0x9b8                   0             0xa  (10)
+.ndata                       0x9c2                   0            0x16  (22)
+.nbss                        0x9d8                   0             0x2  (2)
 
-                        Total data memory used (bytes):          0x1f2  (498) 24%
+                        Total data memory used (bytes):          0x1da  (474) 23%
 
 
 Dynamic Memory Usage
@@ -82,194 +82,170 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x9f2                               0x60e  (1550)
+stack                        0x9da                               0x626  (1574)
 
-                        Maximum dynamic memory (bytes):          0x60e  (1550)
+                        Maximum dynamic memory (bytes):          0x626  (1574)
 
 
 External Symbols in Data Memory (by address):
 
                     0x0902                  _PD1
                     0x0906                  _PD0
-                    0x090a                  _InvIntCnt
-                    0x090c                  _finvRMS
-                    0x090d                  _facRMS
-                    0x090e                  _Duty
-                    0x0910                  _scFlag
-                    0x0912                  _scFlag1
-                    0x0914                  _Distance
-                    0x0916                  _MIntCnt
-                    0x0918                  _inv
-                    0x0932                  _m
-                    0x094e                  _smv
-                    0x0956                  _siv
-                    0x095e                  _sum
-                    0x0960                  _rsBuf
-                    0x09a4                  _Rcved
-                    0x09a6                  _Value
-                    0x09c0                  _sValue
-                    0x09c8                  _bFlag
-                    0x09ca                  _inverterOutputCurrent
-                    0x09cc                  _err
-                    0x09ce                  _perr
-                    0x09d0                  _pmcnt
-                    0x09d2                  _jumpTable
-                    0x09d8                  _tmpi
-                    0x09da                  _LEDCnt
-                    0x09dc                  _StartUpCnt
-                    0x09e0                  _ByPassCnt
-                    0x09e4                  _DisCnt
-                    0x09e8                  _tx
-                    0x09ea                  _RcvCnt
-                    0x09eb                  _SndCnt
-                    0x09ec                  _SndPosi
-                    0x09ee                  _CET
-                    0x09f0                  _State
+                    0x090a                  _Duty
+                    0x090c                  _inv
+                    0x0926                  _m
+                    0x0942                  _smv
+                    0x0946                  _siv
+                    0x094a                  _finvRMS
+                    0x094b                  _facRMS
+                    0x094c                  _perr
+                    0x094e                  _rsBuf
+                    0x0992                  _Rcved
+                    0x0994                  _Value
+                    0x09ae                  _sValue
+                    0x09b6                  _bFlag
+                    0x09b8                  _err
+                    0x09ba                  _jumpTable
+                    0x09c0                  _tmpi
+                    0x09c2                  _LEDCnt
+                    0x09c4                  _StartUpCnt
+                    0x09c8                  _ByPassCnt
+                    0x09cc                  _DisCnt
+                    0x09d0                  _tx
+                    0x09d2                  _RcvCnt
+                    0x09d3                  _SndCnt
+                    0x09d4                  _SndPosi
+                    0x09d6                  _CET
+                    0x09d8                  _State
 
 External Symbols in Data Memory (by name):
 
-                    0x09e0                  _ByPassCnt
-                    0x09ee                  _CET
-                    0x09e4                  _DisCnt
-                    0x0914                  _Distance
-                    0x090e                  _Duty
-                    0x090a                  _InvIntCnt
-                    0x09da                  _LEDCnt
-                    0x0916                  _MIntCnt
+                    0x09c8                  _ByPassCnt
+                    0x09d6                  _CET
+                    0x09cc                  _DisCnt
+                    0x090a                  _Duty
+                    0x09c2                  _LEDCnt
                     0x0906                  _PD0
                     0x0902                  _PD1
-                    0x09ea                  _RcvCnt
-                    0x09a4                  _Rcved
-                    0x09eb                  _SndCnt
-                    0x09ec                  _SndPosi
-                    0x09dc                  _StartUpCnt
-                    0x09f0                  _State
-                    0x09a6                  _Value
-                    0x09c8                  _bFlag
-                    0x09cc                  _err
-                    0x090d                  _facRMS
-                    0x090c                  _finvRMS
-                    0x0918                  _inv
-                    0x09ca                  _inverterOutputCurrent
-                    0x09d2                  _jumpTable
-                    0x0932                  _m
-                    0x09ce                  _perr
-                    0x09d0                  _pmcnt
-                    0x0960                  _rsBuf
-                    0x09c0                  _sValue
-                    0x0910                  _scFlag
-                    0x0912                  _scFlag1
-                    0x0956                  _siv
-                    0x094e                  _smv
-                    0x095e                  _sum
-                    0x09d8                  _tmpi
-                    0x09e8                  _tx
+                    0x09d2                  _RcvCnt
+                    0x0992                  _Rcved
+                    0x09d3                  _SndCnt
+                    0x09d4                  _SndPosi
+                    0x09c4                  _StartUpCnt
+                    0x09d8                  _State
+                    0x0994                  _Value
+                    0x09b6                  _bFlag
+                    0x09b8                  _err
+                    0x094b                  _facRMS
+                    0x094a                  _finvRMS
+                    0x090c                  _inv
+                    0x09ba                  _jumpTable
+                    0x0926                  _m
+                    0x094c                  _perr
+                    0x094e                  _rsBuf
+                    0x09ae                  _sValue
+                    0x0946                  _siv
+                    0x0942                  _smv
+                    0x09c0                  _tmpi
+                    0x09d0                  _tx
 
 External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x000222                  __psv_init
-                  0x000232                  __data_init
                   0x000232                  __data_init_standard
+                  0x000232                  __data_init
                   0x000298                  __DefaultInterrupt
-                  0x0002c2                  ___udivmoddi3
-                  0x000390                  ___udivdi3
-                  0x00039e                  ___umoddi3
-                  0x0003a6                  ___divdi3
-                  0x0003e0                  ___moddi3
-                  0x0004b2                  ___udivsi3
-                  0x0004d2                  _CRC16Table
-                  0x0004f2                  _jabs
-                  0x00050c                  _ConvPair0Handler
-                  0x0006d4                  _ConvPair1Handler
-                  0x0009fc                  _initADC
-                  0x000a62                  _StartADC
-                  0x000a6a                  _initPWM
-                  0x000b12                  _StartPWM
-                  0x000b20                  _duty
-                  0x000bca                  __ADCInterrupt
-                  0x000bec                  _RMS_CALC
-                  0x000cbe                  _InitI2C
-                  0x000ccc                  _start
-                  0x000d34                  _stop
-                  0x000d8c                  _chkack
-                  0x000de4                  _ack
-                  0x000e32                  _noack
-                  0x000e80                  _write_byte
-                  0x000f2a                  _read_byte
-                  0x000faa                  _i2cWrite
-                  0x000fe2                  _i2cWriteStr
-                  0x00103e                  _i2cRead
-                  0x00108e                  _i2cReadStr
-                  0x001104                  _initUart
-                  0x001150                  _UART_DRV
-                  0x001174                  __U1RXInterrupt
-                  0x0011dc                  __U1TXInterrupt
-                  0x001230                  _Sender
-                  0x001250                  _crc16
-                  0x0012b2                  _swap
-                  0x0012c2                  _MSFunc3
-                  0x0013b4                  _MSFunc6
-                  0x0013ea                  _MSFunc16
-                  0x00143e                  _ModbusSlave
-                  0x0014ce                  _initStateMachineTimer
-                  0x0014f8                  __T2Interrupt
-                  0x00180e                  _Root
-                  0x0018b0                  _initClock
-                  0x00190a                  _main
+                  0x00029c                  ___divsi3
+                  0x0002ba                  ___udivsi3
+                  0x0002da                  _CRC16Table
+                  0x0002fa                  _jabs
+                  0x000314                  _ConvPair0Handler
+                  0x0004c6                  _ConvPair1Handler
+                  0x0008ae                  _initADC
+                  0x000914                  _StartADC
+                  0x00091c                  _initPWM
+                  0x0009c4                  _StartPWM
+                  0x0009d2                  _duty
+                  0x000a7c                  __ADCInterrupt
+                  0x000a9e                  _RMS_CALC
+                  0x000b58                  _InitI2C
+                  0x000b66                  _start
+                  0x000bce                  _stop
+                  0x000c26                  _chkack
+                  0x000c7e                  _ack
+                  0x000ccc                  _noack
+                  0x000d1a                  _write_byte
+                  0x000dc4                  _read_byte
+                  0x000e44                  _i2cWrite
+                  0x000e7c                  _i2cWriteStr
+                  0x000ed8                  _i2cRead
+                  0x000f28                  _i2cReadStr
+                  0x000f9e                  _initUart
+                  0x000fea                  _UART_DRV
+                  0x00100e                  __U1RXInterrupt
+                  0x001076                  __U1TXInterrupt
+                  0x0010ca                  _Sender
+                  0x0010ea                  _crc16
+                  0x00114c                  _swap
+                  0x00115c                  _MSFunc3
+                  0x00124e                  _MSFunc6
+                  0x001284                  _MSFunc16
+                  0x0012d8                  _ModbusSlave
+                  0x001368                  _initStateMachineTimer
+                  0x001392                  __T2Interrupt
+                  0x00169c                  _Root
+                  0x00173e                  _initClock
+                  0x001798                  _main
 
 External Symbols in Program Memory (by name):
 
-                  0x0004d2                  _CRC16Table
-                  0x00050c                  _ConvPair0Handler
-                  0x0006d4                  _ConvPair1Handler
-                  0x000cbe                  _InitI2C
-                  0x0013ea                  _MSFunc16
-                  0x0012c2                  _MSFunc3
-                  0x0013b4                  _MSFunc6
-                  0x00143e                  _ModbusSlave
-                  0x000bec                  _RMS_CALC
-                  0x00180e                  _Root
-                  0x001230                  _Sender
-                  0x000a62                  _StartADC
-                  0x000b12                  _StartPWM
-                  0x001150                  _UART_DRV
-                  0x000bca                  __ADCInterrupt
+                  0x0002da                  _CRC16Table
+                  0x000314                  _ConvPair0Handler
+                  0x0004c6                  _ConvPair1Handler
+                  0x000b58                  _InitI2C
+                  0x001284                  _MSFunc16
+                  0x00115c                  _MSFunc3
+                  0x00124e                  _MSFunc6
+                  0x0012d8                  _ModbusSlave
+                  0x000a9e                  _RMS_CALC
+                  0x00169c                  _Root
+                  0x0010ca                  _Sender
+                  0x000914                  _StartADC
+                  0x0009c4                  _StartPWM
+                  0x000fea                  _UART_DRV
+                  0x000a7c                  __ADCInterrupt
                   0x000298                  __DefaultInterrupt
-                  0x0014f8                  __T2Interrupt
-                  0x001174                  __U1RXInterrupt
-                  0x0011dc                  __U1TXInterrupt
-                  0x0003a6                  ___divdi3
-                  0x0003e0                  ___moddi3
-                  0x000390                  ___udivdi3
-                  0x0002c2                  ___udivmoddi3
-                  0x0004b2                  ___udivsi3
-                  0x00039e                  ___umoddi3
+                  0x001392                  __T2Interrupt
+                  0x00100e                  __U1RXInterrupt
+                  0x001076                  __U1TXInterrupt
+                  0x00029c                  ___divsi3
+                  0x0002ba                  ___udivsi3
                   0x000232                  __data_init
                   0x000232                  __data_init_standard
                   0x000222                  __psv_init
                   0x000200                  __resetPRI
-                  0x000de4                  _ack
-                  0x000d8c                  _chkack
-                  0x001250                  _crc16
-                  0x000b20                  _duty
-                  0x00103e                  _i2cRead
-                  0x00108e                  _i2cReadStr
-                  0x000faa                  _i2cWrite
-                  0x000fe2                  _i2cWriteStr
-                  0x0009fc                  _initADC
-                  0x0018b0                  _initClock
-                  0x000a6a                  _initPWM
-                  0x0014ce                  _initStateMachineTimer
-                  0x001104                  _initUart
-                  0x0004f2                  _jabs
-                  0x00190a                  _main
-                  0x000e32                  _noack
-                  0x000f2a                  _read_byte
-                  0x000ccc                  _start
-                  0x000d34                  _stop
-                  0x0012b2                  _swap
-                  0x000e80                  _write_byte
+                  0x000c7e                  _ack
+                  0x000c26                  _chkack
+                  0x0010ea                  _crc16
+                  0x0009d2                  _duty
+                  0x000ed8                  _i2cRead
+                  0x000f28                  _i2cReadStr
+                  0x000e44                  _i2cWrite
+                  0x000e7c                  _i2cWriteStr
+                  0x0008ae                  _initADC
+                  0x00173e                  _initClock
+                  0x00091c                  _initPWM
+                  0x001368                  _initStateMachineTimer
+                  0x000f9e                  _initUart
+                  0x0002fa                  _jabs
+                  0x001798                  _main
+                  0x000ccc                  _noack
+                  0x000dc4                  _read_byte
+                  0x000b66                  _start
+                  0x000bce                  _stop
+                  0x00114c                  _swap
+                  0x000d1a                  _write_byte
 
 Memory Configuration
 
@@ -277,6 +253,7 @@ Name             Origin             Length             Attributes
 data             0x000800           0x000800           a !xr
 reset            0x000000           0x000004  
 ivt              0x000004           0x0000fc  
+_reserved        0x000100           0x000004  
 aivt             0x000104           0x0000fc  
 program          0x000200           0x0029fe           xr
 FBS              0xf80000           0x000002  
@@ -299,8 +276,8 @@ LOAD StateMachine.o
 LOAD uart.o
 LOAD i2c.o
 LOAD data_struct.o
-LOAD C:\Program Files\Microchip\mplabc30\v3.30\lib\libq-coff.a
-LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC33F\libp33FJ16GS504-coff.a
+LOAD C:\Program Files\Microchip\MPLAB C30\lib\libq-coff.a
+LOAD c:/program files/microchip/mplab c30/bin/bin/../../lib/dsPIC33F\libp33FJ16GS504-coff.a
                     0xf80000                  __FBS = 0xf80000
                     0xf80004                  __FGS = 0xf80004
                     0xf80006                  __FOSCSEL = 0xf80006
@@ -325,13 +302,13 @@ LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC33F\libp33
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x2d2
+.text             0x000200         0xda
  *(.init)
- .init            0x000200         0x32 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+ .init            0x000200         0x32 c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
                   0x000200                  _resetPRI
                   0x000200                  _reset
                   0x000222                  _psv_init
- .init            0x000232         0x5e c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+ .init            0x000232         0x5e c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
                   0x000232                  _data_init_standard
                   0x000232                  _data_init
  *(.user_init)
@@ -341,14 +318,10 @@ LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib/dsPIC33F\libp33
                   0x000298                  _DefaultInterrupt
  *(.libc)
  *(.libm)
- .libm            0x00029c        0x216 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(divmoddi3.o)
-                  0x0002c2                  __udivmoddi3
-                  0x000390                  __udivdi3
-                  0x00039e                  __umoddi3
-                  0x0003a6                  __divdi3
-                  0x0003e0                  __moddi3
- .libm            0x0004b2         0x20 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
-                  0x0004b2                  __udivsi3
+ .libm            0x00029c         0x1e c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(divsi3.o)
+                  0x00029c                  __divsi3
+ .libm            0x0002ba         0x20 c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+                  0x0002ba                  __udivsi3
  *(.libdsp)
  *(.lib*)
 
@@ -356,36 +329,36 @@ usercode
  *(usercode)
 
 __FBS
- *(__FBS.sec)
+ *(__FBS.sec*)
 
 __FGS
- *(__FGS.sec)
+ *(__FGS.sec*)
 
 __FOSCSEL         0xf80006          0x2
- *(__FOSCSEL.sec)
+ *(__FOSCSEL.sec*)
  __FOSCSEL.sec    0xf80006          0x2 main.o
 
 __FOSC            0xf80008          0x2
- *(__FOSC.sec)
+ *(__FOSC.sec*)
  __FOSC.sec       0xf80008          0x2 main.o
 
 __FWDT            0xf8000a          0x2
- *(__FWDT.sec)
+ *(__FWDT.sec*)
  __FWDT.sec       0xf8000a          0x2 main.o
 
 __FPOR            0xf8000c          0x2
- *(__FPOR.sec)
+ *(__FPOR.sec*)
  __FPOR.sec       0xf8000c          0x2 main.o
 
 __FICD            0xf8000e          0x2
- *(__FICD.sec)
+ *(__FICD.sec*)
  __FICD.sec       0xf8000e          0x2 main.o
 
 __FUID0
- *(__FUID0.sec)
+ *(__FUID0.sec*)
 
 __FUID1
- *(__FUID1.sec)
+ *(__FUID1.sec*)
 
 .comment
  *(.comment)
@@ -437,13 +410,13 @@ __FUID1
                   0x00001c          0x4 LONG 0x298 DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x298 DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x298 DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000022          0x4 LONG 0x14f8 DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000022          0x4 LONG 0x1392 DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000024          0x4 LONG 0x298 DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000026          0x4 LONG 0x298 DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000028          0x4 LONG 0x298 DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002a          0x4 LONG 0x1174 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002c          0x4 LONG 0x11dc DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002e          0x4 LONG 0xbca DEFINED (__ADCInterrupt)?ABSOLUTE (__ADCInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002a          0x4 LONG 0x100e DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002c          0x4 LONG 0x1076 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002e          0x4 LONG 0xa7c DEFINED (__ADCInterrupt)?ABSOLUTE (__ADCInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000030          0x4 LONG 0x298 DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x298 DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x298 DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -565,13 +538,13 @@ __FUID1
                   0x00011c          0x4 LONG 0x298 DEFINED (__AltInterrupt4)?ABSOLUTE (__AltInterrupt4):DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x298 DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x298 DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000122          0x4 LONG 0x14f8 DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000122          0x4 LONG 0x1392 DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000124          0x4 LONG 0x298 DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000126          0x4 LONG 0x298 DEFINED (__AltSPI1ErrInterrupt)?ABSOLUTE (__AltSPI1ErrInterrupt):DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000128          0x4 LONG 0x298 DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012a          0x4 LONG 0x1174 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012c          0x4 LONG 0x11dc DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012e          0x4 LONG 0xbca DEFINED (__AltADCInterrupt)?ABSOLUTE (__AltADCInterrupt):DEFINED (__ADCInterrupt)?ABSOLUTE (__ADCInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012a          0x4 LONG 0x100e DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012c          0x4 LONG 0x1076 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012e          0x4 LONG 0xa7c DEFINED (__AltADCInterrupt)?ABSOLUTE (__AltADCInterrupt):DEFINED (__ADCInterrupt)?ABSOLUTE (__ADCInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000130          0x4 LONG 0x298 DEFINED (__AltInterrupt14)?ABSOLUTE (__AltInterrupt14):DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x298 DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x298 DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1403,9 +1376,9 @@ __FUID1
                     0x0220                  _UART1 = 0x220
                     0x0001                  __MPLAB_BUILD = 0x1
 START GROUP
-LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a
-LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a
-LOAD c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libc-coff.a
+LOAD c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a
+LOAD c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a
+LOAD c:/program files/microchip/mplab c30/bin/bin/../../lib\libc-coff.a
 END GROUP
 OUTPUT(ups.cof coff-pic30)
 LOAD jump_table
@@ -1429,122 +1402,114 @@ __c30_signature
  __c30_signature
                   0x000024          0x6 data_struct.o
  __c30_signature
-                  0x00002a          0x6 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+                  0x00002a          0x6 c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
  __c30_signature
-                  0x000030          0x6 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+                  0x000030          0x6 c:/program files/microchip/mplab c30/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
  __c30_signature
-                  0x000036          0x6 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(divmoddi3.o)
+                  0x000036          0x6 c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(divsi3.o)
  __c30_signature
-                  0x00003c          0x6 c:/program files/microchip/mplabc30/v3.30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+                  0x00003c          0x6 c:/program files/microchip/mplab c30/bin/bin/../../lib\libm-coff.a(udivsi3.o)
 
-.ndata              0x0800        0x160
- .ndata             0x0800        0x160 pwm.o
+.ndata              0x0800        0x14e
+ .ndata             0x0800        0x14e pwm.o
                     0x0902                  PD1
                     0x0906                  PD0
-                    0x090a                  InvIntCnt
-                    0x090c                  finvRMS
-                    0x090d                  facRMS
-                    0x090e                  Duty
-                    0x0910                  scFlag
-                    0x0912                  scFlag1
-                    0x0914                  Distance
-                    0x0916                  MIntCnt
-                    0x0918                  inv
-                    0x0932                  m
-                    0x094e                  smv
-                    0x0956                  siv
-                    0x095e                  sum
+                    0x090a                  Duty
+                    0x090c                  inv
+                    0x0926                  m
+                    0x0942                  smv
+                    0x0946                  siv
+                    0x094a                  finvRMS
+                    0x094b                  facRMS
+                    0x094c                  perr
 
-.nbss               0x0960         0x46
- .nbss              0x0960         0x46 uart.o
-                    0x0960                  rsBuf
-                    0x09a4                  Rcved
+.nbss               0x094e         0x46
+ .nbss              0x094e         0x46 uart.o
+                    0x094e                  rsBuf
+                    0x0992                  Rcved
 
-.ndata              0x09a6         0x24
- .ndata             0x09a6         0x24 data_struct.o
-                    0x09a6                  Value
-                    0x09c0                  sValue
-                    0x09c8                  bFlag
+.ndata              0x0994         0x24
+ .ndata             0x0994         0x24 data_struct.o
+                    0x0994                  Value
+                    0x09ae                  sValue
+                    0x09b6                  bFlag
 
-.nbss               0x09ca         0x10
- .nbss              0x09ca         0x10 pwm.o
-                    0x09ca                  inverterOutputCurrent
-                    0x09cc                  err
-                    0x09ce                  perr
-                    0x09d0                  pmcnt
-                    0x09d2                  jumpTable
-                    0x09d8                  tmpi
+.nbss               0x09b8          0xa
+ .nbss              0x09b8          0xa pwm.o
+                    0x09b8                  err
+                    0x09ba                  jumpTable
+                    0x09c0                  tmpi
 
-.ndata              0x09da         0x16
- .ndata             0x09da          0xa StateMachine.o
-                    0x09da                  LEDCnt
-                    0x09dc                  StartUpCnt
-                    0x09e0                  ByPassCnt
- .ndata             0x09e4          0x6 main.o
-                    0x09e4                  DisCnt
-                    0x09e8                  tx
- .ndata             0x09ea          0x6 uart.o
-                    0x09ea                  RcvCnt
-                    0x09eb                  SndCnt
-                    0x09ec                  SndPosi
-                    0x09ee                  CET
+.ndata              0x09c2         0x16
+ .ndata             0x09c2          0xa StateMachine.o
+                    0x09c2                  LEDCnt
+                    0x09c4                  StartUpCnt
+                    0x09c8                  ByPassCnt
+ .ndata             0x09cc          0x6 main.o
+                    0x09cc                  DisCnt
+                    0x09d0                  tx
+ .ndata             0x09d2          0x6 uart.o
+                    0x09d2                  RcvCnt
+                    0x09d3                  SndCnt
+                    0x09d4                  SndPosi
+                    0x09d6                  CET
 
-.nbss               0x09f0          0x2
- .nbss              0x09f0          0x2 StateMachine.o
-                    0x09f0                  State
+.nbss               0x09d8          0x2
+ .nbss              0x09d8          0x2 StateMachine.o
+                    0x09d8                  State
 
-.const              0x84d2         0x20 load address 0x0004d2  
- .const             0x84d2         0x20 uart.o
-                    0x84d2                  CRC16Table
+.const              0x82da         0x20 load address 0x0002da  
+ .const             0x82da         0x20 uart.o
+                    0x82da                  CRC16Table
 
-.text             0x0004f2       0x11d6
- .text            0x0004f2        0x7cc pwm.o
-                  0x0004f2                  jabs
-                  0x00050c                  ConvPair0Handler
-                  0x0006d4                  ConvPair1Handler
-                  0x0009fc                  initADC
-                  0x000a62                  StartADC
-                  0x000a6a                  initPWM
-                  0x000b12                  StartPWM
-                  0x000b20                  duty
-                  0x000bca                  _ADCInterrupt
-                  0x000bec                  RMS_CALC
- .text            0x000cbe        0x446 i2c.o
-                  0x000cbe                  InitI2C
-                  0x000ccc                  start
-                  0x000d34                  stop
-                  0x000d8c                  chkack
-                  0x000de4                  ack
-                  0x000e32                  noack
-                  0x000e80                  write_byte
-                  0x000f2a                  read_byte
-                  0x000faa                  i2cWrite
-                  0x000fe2                  i2cWriteStr
-                  0x00103e                  i2cRead
-                  0x00108e                  i2cReadStr
- .text            0x001104        0x3ca uart.o
-                  0x001104                  initUart
-                  0x001150                  UART_DRV
-                  0x001174                  _U1RXInterrupt
-                  0x0011dc                  _U1TXInterrupt
-                  0x001230                  Sender
-                  0x001250                  crc16
-                  0x0012b2                  swap
-                  0x0012c2                  MSFunc3
-                  0x0013b4                  MSFunc6
-                  0x0013ea                  MSFunc16
-                  0x00143e                  ModbusSlave
- .text            0x0014ce        0x1fa StateMachine.o
-                  0x0014ce                  initStateMachineTimer
-                  0x0014f8                  _T2Interrupt
+.text             0x0002fa       0x1268
+ .text            0x0002fa        0x85e pwm.o
+                  0x0002fa                  jabs
+                  0x000314                  ConvPair0Handler
+                  0x0004c6                  ConvPair1Handler
+                  0x0008ae                  initADC
+                  0x000914                  StartADC
+                  0x00091c                  initPWM
+                  0x0009c4                  StartPWM
+                  0x0009d2                  duty
+                  0x000a7c                  _ADCInterrupt
+                  0x000a9e                  RMS_CALC
+ .text            0x000b58        0x446 i2c.o
+                  0x000b58                  InitI2C
+                  0x000b66                  start
+                  0x000bce                  stop
+                  0x000c26                  chkack
+                  0x000c7e                  ack
+                  0x000ccc                  noack
+                  0x000d1a                  write_byte
+                  0x000dc4                  read_byte
+                  0x000e44                  i2cWrite
+                  0x000e7c                  i2cWriteStr
+                  0x000ed8                  i2cRead
+                  0x000f28                  i2cReadStr
+ .text            0x000f9e        0x3ca uart.o
+                  0x000f9e                  initUart
+                  0x000fea                  UART_DRV
+                  0x00100e                  _U1RXInterrupt
+                  0x001076                  _U1TXInterrupt
+                  0x0010ca                  Sender
+                  0x0010ea                  crc16
+                  0x00114c                  swap
+                  0x00115c                  MSFunc3
+                  0x00124e                  MSFunc6
+                  0x001284                  MSFunc16
+                  0x0012d8                  ModbusSlave
+ .text            0x001368        0x1fa StateMachine.o
+                  0x001368                  initStateMachineTimer
+                  0x001392                  _T2Interrupt
 
-.dinit            0x0016c8        0x146
- .dinit           0x0016c8        0x146 data_init
+.dinit            0x001562        0x13a
+ .dinit           0x001562        0x13a data_init
 
-.text             0x00180e        0x138
- .text            0x00180e         0xa2 data_struct.o
-                  0x00180e                  Root
- .text            0x0018b0         0x5a clock.o
-                  0x0018b0                  initClock
- .text            0x00190a         0x3c main.o
-                  0x00190a                  main
+.text             0x00169c        0x138
+ .text            0x00169c         0xa2 data_struct.o
+                  0x00169c                  Root
+ .text            0x00173e         0x5a clock.o
+                  0x00173e                  initClock
+ .text            0x001798         0x3c main.o
+                  0x001798                  main
