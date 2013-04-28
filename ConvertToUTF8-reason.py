@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # unable to work, that is a ConvertToUTF8.py in User directory
-# 真正不能工作的原因是,在User目录下有一个同名文件ConvertToUTF8.py,删除后正常.
+# 鐪熸�涓嶈兘宸ヤ綔鐨勫師鍥犳槸,鍦║ser鐩�綍涓嬫湁涓�釜鍚屽悕鏂囦欢ConvertToUTF8.py,鍒犻櫎鍚庢�甯�
 
 import sublime
 import sublime_plugin
