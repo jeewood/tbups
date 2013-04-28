@@ -189,11 +189,11 @@ void ConvPair1Handler (void)
 			break;
 			case ADJ:
 			{
-				if (m.size>512)
+				if (m.size>511)
 				{
 					if (PD1<19000) PD1 += 1;	//采样周期变长,采样速度下降
 				}
-				else if (m.size < 510)
+				else if (m.size < 511)
 				{
 					if (PD1>17000) PD1 -= 1;	//采样周期变短长,采样速度上升
 				}
