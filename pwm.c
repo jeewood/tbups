@@ -59,6 +59,10 @@ int err,perr,sum =0,pmcnt;
 #define CONVERSION_PAIRS 2
 
 //逆变电压,电流
+/**
+ * [ConvPair0Handler description]
+ * Inverter output Voltage current gatharing
+ */
 void ConvPair0Handler (void)
 {
 	//inverterOutputCurrent = (ADCBUF0 << 5) - DC_OFFSET;
@@ -86,18 +90,20 @@ void ConvPair0Handler (void)
 			inv.ofs = (inv.maxv + inv.minv)>>1;
 			inv.size = inv.cnt;
 			finvRMS = READY_TO_CALCULATE;
-		}		
-		inv.size = inv.cnt;//(mulss(inv.size,Q15(0.90))>>15)
-					//+(mulss(inv.cnt,Q15(0.1))>>15);
+		}
+
+		inv.size = inv.cnt;
+		//this is only for debug,
 		Value.InvF = inv.size;
+
 		inv.cnt = 0;
 
-		if (inv.state != ADJ)
+		if (inv.state != OK && Value.InvV>1000)
 		{
 			inv.cycle ++;
 			if (inv.cycle>20)
 			{
-				inv.state = ADJ;
+				inv.state = OK;
 			}
 		}
 		
@@ -121,7 +127,7 @@ void ConvPair0Handler (void)
 		IOCON2bits.OVRDAT = 0;	//50Hz方波高电平
 	}
 	
-	PDC2 = (SIN(inv.idx));//duty(inv.idx,Q15(0.9));
+	PDC2 = mulss(SIN(inv.idx),Duty)>>15;
 
 	inv.idx = (inv.idx + 1) % SINE_TABLE_SIZE;
 
@@ -129,6 +135,10 @@ void ConvPair0Handler (void)
 }
 
 //交流电压,电流
+/**
+ * [ConvPair1Handler description]
+ * AC input voltage current gathering
+ */
 void ConvPair1Handler (void)
 {
 	m.cv = (ADCBUF2 << 5) - DC_OFFSET;// - m.ofs;
@@ -148,14 +158,8 @@ void ConvPair1Handler (void)
 
 	if ((iszc(m,ZCTHV)) || (m.cnt>1000)) //市电电压采样控制
 	{
-		m.size = m.cnt;//(mulss(m.size,Q15(0.90))>>15)
-				//+(mulss(m.cnt,Q15(0.1))>>15);
+		m.size = m.cnt;
 		m.cnt = 0;
-		if (sum)
-		{
-			//PD0 += -(sum);
-			//PHASE2 = PD0;
-		}
 		
 		if(facRMS == CALCULATION_DONE)
 		{
@@ -187,11 +191,11 @@ void ConvPair1Handler (void)
 			{
 				if (m.size>512)
 				{
-					PD1 += 1;	//采样周期变长,采样速度下降
+					if (PD1<19000) PD1 += 1;	//采样周期变长,采样速度下降
 				}
 				else if (m.size < 510)
 				{
-					PD1 -= 1;	//采样周期变短长,采样速度上升
+					if (PD1>17000) PD1 -= 1;	//采样周期变短长,采样速度上升
 				}
 				else
 				{
@@ -222,33 +226,45 @@ void ConvPair1Handler (void)
 				
 				if (m.size>512)
 				{
-					PD1 += 1;
+					if (PD1<19000) PD1 += 1;
 					PHASE1 = PD1;
 				}
 				else if (m.size<512)
 				{
-					PD1 -= 1;
+					if (PD1>17000) PD1 -= 1;
 					PHASE1 = PD1;
 				}
-				
-				if ((inv.state == ADJ))
+
+				if ((inv.state == OK))
 				{
-					if (jabs(PD1-PD0)<20)
+					if (jabs(PD1-PD0)<50)
 					{
 						err = (inv.i - m.i);
 						if (jabs(err)>0)
 						{
-							PD0 += (err) - (perr>>1);
+							if (err>128) err = 128;
+							if (err<-128) err = -128;
+							
+							PD0 += (err>>0) - (perr>>0);
+
+							if (err>2)	//err==perr,即inv.i且m.i不等于0
+							{
+								PD0 += 1;
+							}
+							else if (err<-2)
+							{
+								PD0 -= 1;
+							}
 							perr = err;
 						}
 					}
 					else if (PD0<PD1)
 					{
-						PD0 += 1;
+						if (PD0<19000) PD0 += 1;
 					}
 					else if (PD0>PD1)
 					{
-						PD0 -= 1;
+						if (PD0>17000) PD0 -= 1;
 					}
 
 					if (PD0>17000 && PD0<19000)
@@ -259,11 +275,10 @@ void ConvPair1Handler (void)
 			}
 			break;
 		}
-		Value.Power = m.i;
-		Value.Factor = inv.i;
-		Value.BatV = err;
+
 		Value.ACInF = m.size;
 		Value.ACInI = m.state;
+		
 	}
 	
 	m.pv = m.cv;

@@ -2,7 +2,7 @@
 ;                                                                     
 ;                     Software License Agreement                      
 ;                                                                     
-;     ©2007 Microchip Technology Inc
+;     ï¿½007 Microchip Technology Inc
 ;     Mirochip Technology Inc. ("Microchip") licenses this software to 
 ;     you solely for the use with Microchip Products. The software is
 ;     owned by Microchip and is protected under applicable copyright

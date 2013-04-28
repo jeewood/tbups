@@ -1,0 +1,499 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"lorem",
+				"lorem	lorem - One sentence"
+			],
+			[
+				"duty",
+				"Duty"
+			],
+			[
+				"DUT",
+				"DUTY_PERIOD0"
+			],
+			[
+				"st",
+				"stamp"
+			],
+			[
+				"mes",
+				"message_dialog"
+			],
+			[
+				"dete",
+				"detect_on_fail"
+			],
+			[
+				"det",
+				"detect_on_fail"
+			],
+			[
+				"conv",
+				"convert_to_utf8"
+			],
+			[
+				"tmp",
+				"tmp_file"
+			],
+			[
+				"p",
+				"path"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"ac",
+				"ACVALUE"
+			],
+			[
+				"AD",
+				"AD_IDLE"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/User/dsPIC make.sublime-build",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"gu",
+				"Gist: Update File"
+			],
+			[
+				"og",
+				"Gist: Open Gist"
+			],
+			[
+				"gistb",
+				"Gist: Create Public Gist"
+			],
+			[
+				"g s",
+				"Git: Status"
+			],
+			[
+				"gda",
+				"Git: Diff All"
+			],
+			[
+				"gi",
+				"Git: Init"
+			],
+			[
+				"git",
+				"Git: Init"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"op",
+				"Gist: Open Gist"
+			],
+			[
+				"gist u",
+				"Gist: Update File"
+			],
+			[
+				"open",
+				"Gist: Open Gist"
+			],
+			[
+				"create",
+				"Gist: Create Public Gist"
+			],
+			[
+				"crea",
+				"Gist: Create Public Gist"
+			],
+			[
+				"gist",
+				"Gist: Update File"
+			],
+			[
+				"ogis",
+				"Gist: Open Gist"
+			],
+			[
+				"ope",
+				"Gist: Open Gist"
+			],
+			[
+				"cre",
+				"Gist: Create Public Gist"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"intall",
+				"Package Control: Install Package"
+			],
+			[
+				"openg",
+				"Gist: Open Gist"
+			],
+			[
+				"opn",
+				"Gist: Open Gist"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"diff",
+				"Git: Diff All"
+			],
+			[
+				"gis",
+				"Gist: Open Gist"
+			],
+			[
+				"set c++",
+				"Set Syntax: C++"
+			],
+			[
+				"setpy",
+				"Set Syntax: Python"
+			],
+			[
+				"set php",
+				"Set Syntax: PHP"
+			],
+			[
+				"tasknew",
+				"Tasks: New"
+			],
+			[
+				"taskn",
+				"Tasks: New"
+			],
+			[
+				"settas",
+				"Set Syntax: Tasks"
+			],
+			[
+				"todo",
+				"Set Syntax: iTodo"
+			],
+			[
+				"prj",
+				"Project: Add Folder"
+			],
+			[
+				"removep",
+				"Package Control: Remove Package"
+			],
+			[
+				"doc",
+				"DocBlockr: Reparse comment block"
+			],
+			[
+				"set javsc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"gisto",
+				"Gist: Open Gist"
+			],
+			[
+				"g",
+				"Git: Init"
+			],
+			[
+				"remove	",
+				"Package Control: Remove Package"
+			],
+			[
+				"set syn",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"theme",
+				"BracketHighlighter: Toggle String Bracket Escape Mode"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"sspy",
+				"Set Syntax: Python"
+			],
+			[
+				"jquery",
+				"Set Syntax: jQuery (JavaScript)"
+			]
+		],
+		"width": 528.0
+	},
+	"console":
+	{
+		"height": 412.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/UPS/xSingle2/pwm.c",
+		"/D/Tools/Sublime Text/Data/Packages/User/Preferences.sublime-settings",
+		"/D/Tools/Sublime Text/Data/Packages/Default/Preferences.sublime-settings",
+		"/D/Tools/Sublime Text/Data/Packages/Git/Git.sublime-settings",
+		"/D/Tools/Sublime Text/Data/Packages/User/Git.sublime-settings",
+		"/D/UPS/xSingle2/pid.s",
+		"/D/UPS/xSingle2/BUILD_PTG.cmd",
+		"/D/Tools/Sublime Text/Data/Packages/User/dsPIC make.sublime-build",
+		"/D/Tools/Sublime Text/Data/Packages/C++/C++.sublime-build",
+		"/D/Tools/Sublime Text/Data/Packages/User/bh_core.sublime-settings",
+		"/D/Tools/Sublime Text/Data/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/D/UPS/xSingle2/menu.c",
+		"/D/UPS/xSingle2/Makefile",
+		"/D/UPS/xSingle2/main.c",
+		"/C/Program Files/Microchip/MPLAB IDE/Readmes/Readme for PK3CMD.txt",
+		"/D/UPS/xSingle2/run.bat",
+		"/D/Tools/Sublime Text/Data/Packages/User/SideBarEnhancements/Open With/Side Bar.sublime-menu",
+		"/D/UPS/xSingle2/data_struct.h",
+		"/D/UPS/xSingle2/pwm.h",
+		"/D/UPS/xSingle2/i2c.c",
+		"/D/Backup/Disk D/Learning UPS/PIC/Offline UPS Reference Design Source Code_/Offline UPS Reference Design Source Code/SourceCode_OfflineUPS_220V/offline_ups_isr.c",
+		"/D/UPS/xSingle2/clock.c",
+		"/D/UPS/xSingle2/StateMachine.c",
+		"/D/UPS/xSingle2/adc_common.c",
+		"/D/UPS/xSingle2/define.h",
+		"/C/Documents and Settings/jwz/.ssh/id_rsa",
+		"/C/Documents and Settings/jwz/.ssh/id_rsa.pub",
+		"/C/WINDOWS/system32/cmd.exe",
+		"/D/msysgit/git-cmd.bat",
+		"/D/Tools/Sublime Text/Data/Packages/Default/Default (Windows).sublime-keymap",
+		"/D/Tools/Sublime Text/Data/Packages/AdvancedNewFile/Default (Windows).sublime-keymap",
+		"/D/jfxtion/jfxion/J2MEFxion_Lib/String.cpp",
+		"/D/jfxtion/jfxion/J2MEFxion_Lib/String.h",
+		"/D/Tools/Sublime Text/sublime_plugin.py",
+		"/D/UPS/xSingle1/pwm.c",
+		"/D/Tools/Sublime Text/Data/Packages/User/ConvertToUTF8.sublime-settings"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"D:\\UPS\\xSingle2,D:\\Tools\\Sublime Text",
+			"D:\\UPS\\xSingle2",
+			"D:\\Tools\\Sublime Text\\Data\\Packages\\ConvertToUTF8"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"\\\\",
+			" ",
+			" +",
+			"\\",
+			"512",
+			"/",
+			"\\",
+			"ctrl+a",
+			"TRIANGLE_PERIOD",
+			"DUTY_PERIOD0",
+			"DUTY_PERIOD",
+			"fACRMSCalculation",
+			"fRMSCalculation",
+			"fACRMSCalculation",
+			"jumpTable",
+			"ADBASE",
+			"systemState",
+			"//",
+			"			//",
+			"			// err = m.i - inv.i;// - 34;\n			// sum += err;\n			// if (sum>32000) sum = 32000;\n			// if (sum<-32000) sum = -32000;\n			\n			// pmcnt = (mulss(err,Q15(0.5))>>15)\n			// 		// + \n			// 		//(mulss(sum,Q15(0.0001))>>15)\n			// 		+(err - perr)*9\n			// 		;	\n\n			// if (pmcnt>16) pmcnt = 16;\n			// if (pmcnt<-16) pmcnt = -16;\n			\n			// if (jabs(m.size-inv.size)>3)\n			// {\n			// 	if (inv.size<m.size)\n			// 	{\n			// 		DUTY_PERIOD0 += jabs(pmcnt);\n			// 	}\n			// 	else\n			// 	{\n			// 		DUTY_PERIOD0 -= jabs(pmcnt);\n			// 	}\n			// }	\n			// else\n			// {	\n			// 	DUTY_PERIOD0 -= pmcnt;\n			// 	if (err==0 && ((Value.ACInV - Value.InvV<50) || Duty == Q15(DUTY_SCALE))) \n			// 	{\n			// 		inv.synced++;\n			// 	}	\n			// }\n			\n			\n			// if (DUTY_PERIOD0<15000) DUTY_PERIOD0 = 15000;\n			// if (DUTY_PERIOD0>19000) DUTY_PERIOD0 = 19000;",
+			"_ADCP0Interrupt",
+			"init_encoding_vars",
+			"converttoutf8",
+			"detect_on_fail",
+			"detectonfail",
+			"ConvertToUtf8",
+			"converttoutf8",
+			"convert_to_utf8",
+			"preview_action",
+			"convert_to_utf8",
+			"run_command",
+			"detect_on_fail",
+			"preview",
+			"status_message",
+			"message_d",
+			"invV",
+			"Vac",
+			"mulss",
+			"urllib.quote_plus",
+			"utf8 instead",
+			"this",
+			"cstr",
+			"name",
+			"goods",
+			"shopping",
+			"：",
+			"\\",
+			":\\",
+			"int",
+			"application_command_classes",
+			"AD_CALC",
+			"code char *WorkMode[]={\"在线式\",\"离线式\"};\ncode char *StartMode[]={\"自动\",\"手动\"};\n\ncode char *BaudRate[]={\"1200\",\"2400\",\"4800\",\"9600\"};\ncode char *DataBits[]={\"8\",\"7\"};\ncode char *StopBits[]={\"1\",\"2\"};\ncode char *OddEven[]={\"无\",\"奇\",\"偶\"};\n\ncode strArr SettingArray[]=\n",
+			"code char *WorkMode[]={\"在线式\",\"离线式\"};\ncode char *StartMode[]={\"自动\",\"手动\"};\n\ncode char *BaudRate[]={\"1200\",\"2400\",\"4800\",\"9600\"};\ncode char *DataBits[]={\"8\",\"7\"};\ncode char *StopBits[]={\"1\",\"2\"};\ncode char *OddEven[]={\"无\",\"奇\",\"偶\"};\n\ncode strArr SettingArray[]=\n{",
+			"idx",
+			"IDX",
+			"idx",
+			"i",
+			"l",
+			"mon\ntue\nwed\nthu\nfri\nsat\nsun\n",
+			"ItemStr"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 368.0
+	},
+	"output.git":
+	{
+		"height": 100.0
+	},
+	"output.jsconsole_view":
+	{
+		"height": 484.0
+	},
+	"output.jshint_view":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 0.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": false,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"pwm",
+				"xSingle2/pwm.c"
+			],
+			[
+				"init",
+				"/D/Tools/Sublime Text/Data/Packages/GBK Encoding Support/tmp/i2c.c                G%3A%5CxS1%5CxSingle1%5Ci2c.c"
+			],
+			[
+				"de",
+				"/C/Users/jwz/Documents/demo.c"
+			],
+			[
+				"m",
+				"/D/Tools/Sublime Text/Data/Packages/GBK Encoding Support/tmp/Menu3.c                G%3A%5C__%E8%BE%85%E4%BB%B6%E8%AE%BE%E8%AE%A1___%5CUPS%5CADLIB%5CPrj%5CDisplay_Soft%5CMenu3.c"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}

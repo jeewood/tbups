@@ -130,6 +130,7 @@ char i2cWrite(unsigned char addr,unsigned char byte)
 	return 1;
 }
 
+//Means writing with array
 char i2cWriteStr(unsigned char addr,unsigned char * buf,unsigned char len)
 {
 	unsigned char i;
@@ -166,6 +167,7 @@ unsigned char i2cRead(unsigned char addr)
 	return byte;
 }
 
+//Means reading with array
 char i2cReadStr(unsigned char addr,unsigned char *buf,unsigned char len)
 {
 	unsigned char i;

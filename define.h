@@ -108,7 +108,7 @@ extern INVSTRUCT inv;
 
 extern char ADJEN;
 extern long ByPassCnt;
-#define DUTY_SCALE 0.9
+#define DUTY_SCALE 0.99
 
 #define LED LATCbits.LATC7
 #define BEEP LATCbits.LATC2

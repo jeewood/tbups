@@ -104,6 +104,7 @@ ADIP	D:\UPS\xSingle2\p33FJ16GS504.h	531;"	m	line:531	struct:tagIPC3BITS::<anonym
 ADIP0	D:\UPS\xSingle2\p33FJ16GS504.h	538;"	m	line:538	struct:tagIPC3BITS::<anonymous>::<anonymous>
 ADIP1	D:\UPS\xSingle2\p33FJ16GS504.h	539;"	m	line:539	struct:tagIPC3BITS::<anonymous>::<anonymous>
 ADIP2	D:\UPS\xSingle2\p33FJ16GS504.h	540;"	m	line:540	struct:tagIPC3BITS::<anonymous>::<anonymous>
+ADJ::1	D:\UPS\xSingle2\define.h	58;"	d	line:58
 ADON	D:\UPS\xSingle2\p33FJ16GS504.h	1516;"	m	line:1516	struct:tagADCONBITS::<anonymous>::<anonymous>
 ADPCFGBITS	D:\UPS\xSingle2\p33FJ16GS504.h	1541;"	t	line:1541
 ADSIDL	D:\UPS\xSingle2\p33FJ16GS504.h	1514;"	m	line:1514	struct:tagADCONBITS::<anonymous>::<anonymous>
@@ -375,7 +376,7 @@ CNPU1BITS	D:\UPS\xSingle2\p33FJ16GS504.h	222;"	t	line:222
 CNPU2BITS	D:\UPS\xSingle2\p33FJ16GS504.h	241;"	t	line:241
 COEFFS_IN_DATA::0xFF00	D:\UPS\xSingle2\dsp.h	88;"	d	line:88
 CONTROLBYTE::0b10100000	D:\UPS\xSingle2\i2c.c	8;"	d	line:8	file:
-CONVERSION_PAIRS::2	D:\UPS\xSingle2\pwm.c	77;"	d	line:77	file:
+CONVERSION_PAIRS::2	D:\UPS\xSingle2\pwm.c	59;"	d	line:59	file:
 CORCONBITS	D:\UPS\xSingle2\p33FJ16GS504.h	99;"	t	line:99
 COSC	D:\UPS\xSingle2\p33FJ16GS504.h	3604;"	m	line:3604	struct:tagOSCCONBITS::<anonymous>::<anonymous>
 COSC0	D:\UPS\xSingle2\p33FJ16GS504.h	3612;"	m	line:3612	struct:tagOSCCONBITS::<anonymous>::<anonymous>
@@ -391,8 +392,8 @@ CURRENT_LIMIT_CLEARED::0	D:\UPS\xSingle2\define.h	25;"	d	line:25
 CValue	D:\UPS\xSingle2\data_struct.h	31;"	t	line:31
 ChargeStatus	D:\UPS\xSingle2\data_struct.h	29;"	m	line:29
 ClrWdt::{__asm__volatile("clrwdt");}	D:\UPS\xSingle2\p33FJ16GS504.h	5981;"	d	line:5981
-ConvPair0Handler	D:\UPS\xSingle2\pwm.c	80;"	f	line:80	signature:(void)
-ConvPair1Handler	D:\UPS\xSingle2\pwm.c	172;"	f	line:172	signature:(void)
+ConvPair0Handler	D:\UPS\xSingle2\pwm.c	66;"	f	line:66	signature:(void)
+ConvPair1Handler	D:\UPS\xSingle2\pwm.c	139;"	f	line:139	signature:(void)
 CosFactorInit	D:\UPS\xSingle2\dsp.h	1479;"	p	line:1479	signature:( int log2N, fractcomplex* cosFactors )
 DA	D:\UPS\xSingle2\p33FJ16GS504.h	58;"	m	line:58	struct:tagSRBITS::<anonymous>::<anonymous>
 DACOE	D:\UPS\xSingle2\p33FJ16GS504.h	2585;"	m	line:2585	struct:tagCMPCON1BITS::<anonymous>::<anonymous>
@@ -403,7 +404,7 @@ DATA_TYPE::FRACTIONAL	D:\UPS\xSingle2\dsp.h	60;"	d	line:60
 DC	D:\UPS\xSingle2\p33FJ16GS504.h	57;"	m	line:57	struct:tagSRBITS::<anonymous>::<anonymous>
 DCT	D:\UPS\xSingle2\dsp.h	1496;"	p	line:1496	signature:( int log2N, fractional* dstV, fractional* srcV, fractcomplex* cosFactors, fractcomplex* twidFactors, int factPage )
 DCTIP	D:\UPS\xSingle2\dsp.h	1545;"	p	line:1545	signature:( int log2N, fractional* srcV, fractcomplex* cosFactors, fractcomplex* twidFactors, int factPage )
-DC_OFFSET::0x3FF0	D:\UPS\xSingle2\pwm.c	18;"	d	line:18	file:
+DC_OFFSET::0x3FF0	D:\UPS\xSingle2\pwm.c	11;"	d	line:11	file:
 DISI	D:\UPS\xSingle2\p33FJ16GS504.h	271;"	m	line:271	struct:tagINTCON2BITS
 DISSCK	D:\UPS\xSingle2\p33FJ16GS504.h	1274;"	m	line:1274	struct:tagSPI1CON1BITS::<anonymous>::<anonymous>
 DISSDO	D:\UPS\xSingle2\p33FJ16GS504.h	1273;"	m	line:1273	struct:tagSPI1CON1BITS::<anonymous>::<anonymous>
@@ -437,15 +438,13 @@ DTM	D:\UPS\xSingle2\p33FJ16GS504.h	1859;"	m	line:1859	struct:tagTRGCON1BITS::<an
 DTM	D:\UPS\xSingle2\p33FJ16GS504.h	2084;"	m	line:2084	struct:tagTRGCON2BITS::<anonymous>::<anonymous>
 DTM	D:\UPS\xSingle2\p33FJ16GS504.h	2291;"	m	line:2291	struct:tagTRGCON3BITS::<anonymous>::<anonymous>
 DTM	D:\UPS\xSingle2\p33FJ16GS504.h	2498;"	m	line:2498	struct:tagTRGCON4BITS::<anonymous>::<anonymous>
-DUTY_PERIOD	D:\UPS\xSingle2\pwm.c	20;"	v	line:20
-DUTY_PERIOD0	D:\UPS\xSingle2\pwm.c	21;"	v	line:21
-DUTY_SCALE::0.9	D:\UPS\xSingle2\define.h	111;"	d	line:111
+DUTY_SCALE::0.99	D:\UPS\xSingle2\define.h	111;"	d	line:111
 D_A	D:\UPS\xSingle2\p33FJ16GS504.h	1074;"	m	line:1074	struct:tagI2C1STATBITS
 D_A	D:\UPS\xSingle2\p33FJ16GS504.h	1093;"	m	line:1093	struct:tagI2CSTATBITS
 DataBits	D:\UPS\xSingle2\data_struct.h	40;"	m	line:40
 DisCnt	D:\UPS\xSingle2\main.c	18;"	v	line:18
-Distance	D:\UPS\xSingle2\pwm.c	44;"	v	line:44
-Duty	D:\UPS\xSingle2\pwm.c	41;"	v	line:41
+Distance	D:\UPS\xSingle2\pwm.c	25;"	v	line:25
+Duty	D:\UPS\xSingle2\pwm.c	22;"	v	line:22
 EDT	D:\UPS\xSingle2\p33FJ16GS504.h	89;"	m	line:89	struct:tagCORCONBITS::<anonymous>::<anonymous>
 EIE	D:\UPS\xSingle2\p33FJ16GS504.h	1508;"	m	line:1508	struct:tagADCONBITS::<anonymous>::<anonymous>
 EIPU	D:\UPS\xSingle2\p33FJ16GS504.h	1691;"	m	line:1691	struct:tagPTCONBITS::<anonymous>::<anonymous>
@@ -814,13 +813,8 @@ INT2R5	D:\UPS\xSingle2\p33FJ16GS504.h	2798;"	m	line:2798	struct:tagRPINR1BITS::<
 INTCON1BITS	D:\UPS\xSingle2\p33FJ16GS504.h	262;"	t	line:262
 INTCON2BITS	D:\UPS\xSingle2\p33FJ16GS504.h	273;"	t	line:273
 INTTREGBITS	D:\UPS\xSingle2\p33FJ16GS504.h	812;"	t	line:812
-INVERTER_ALTDTR_VALUE::0	D:\UPS\xSingle2\pwm.c	12;"	d	line:12	file:
 INVERTER_CURRENT_MAX_PEAK::6000	D:\UPS\xSingle2\define.h	23;"	d	line:23
-INVERTER_MAX_CONTROL_OUTPUT::INVERTER_PDC_NOMINAL_VALUE	D:\UPS\xSingle2\pwm.c	17;"	d	line:17	file:
-INVERTER_MIN_ON_TIME::0	D:\UPS\xSingle2\pwm.c	13;"	d	line:13	file:
 INVERTER_MODE::2	D:\UPS\xSingle2\define.h	42;"	d	line:42
-INVERTER_PDC_NOMINAL_VALUE	D:\UPS\xSingle2\pwm.c	15;"	d	line:15	file:
-INVERTER_PERIOD_VALUE::TRIANGLE_PERIOD	D:\UPS\xSingle2\pwm.c	11;"	d	line:11	file:
 INVSTRUCT	D:\UPS\xSingle2\define.h	105;"	t	line:105
 INV_SQRT2::SIN_PI_Q	D:\UPS\xSingle2\dsp.h	72;"	d	line:72
 IOCON1BITS	D:\UPS\xSingle2\p33FJ16GS504.h	1785;"	t	line:1785
@@ -876,7 +870,8 @@ Idle::{__asm__volatile("pwrsav#1");}	D:\UPS\xSingle2\p33FJ16GS504.h	5983;"	d	lin
 InitI2C	D:\UPS\xSingle2\i2c.c	20;"	f	line:20	signature:(void)
 InitI2C	D:\UPS\xSingle2\i2c.h	1;"	p	line:1	signature:(void)
 InvF	D:\UPS\xSingle2\data_struct.h	28;"	m	line:28
-InvIntCnt	D:\UPS\xSingle2\pwm.c	29;"	v	line:29
+InvI	D:\UPS\xSingle2\data_struct.h	21;"	m	line:21
+InvIntCnt	D:\UPS\xSingle2\pwm.c	16;"	v	line:16
 InvV	D:\UPS\xSingle2\data_struct.h	20;"	m	line:20
 JTAGEN_OFF::0xFFDF	D:\UPS\xSingle2\p33FJ16GS504.h	6399;"	d	line:6399
 JTAGEN_ON::0xFFFF	D:\UPS\xSingle2\p33FJ16GS504.h	6400;"	d	line:6400
@@ -960,7 +955,6 @@ LEDCnt	D:\UPS\xSingle2\StateMachine.c	11;"	v	line:11
 LOCK	D:\UPS\xSingle2\p33FJ16GS504.h	3599;"	m	line:3599	struct:tagOSCCONBITS::<anonymous>::<anonymous>
 LPBACK	D:\UPS\xSingle2\p33FJ16GS504.h	1137;"	m	line:1137	struct:tagU1MODEBITS::<anonymous>::<anonymous>
 Len	D:\UPS\xSingle2\uart.c	212;"	l	line:212
-LoadI	D:\UPS\xSingle2\data_struct.h	21;"	m	line:21
 LoadRate	D:\UPS\xSingle2\data_struct.h	26;"	m	line:26
 MAINSIZE::200	D:\UPS\xSingle2\define.h	63;"	d	line:63
 MAINSTRUCT	D:\UPS\xSingle2\define.h	84;"	t	line:84
@@ -976,7 +970,7 @@ MI2C1IP	D:\UPS\xSingle2\p33FJ16GS504.h	552;"	m	line:552	struct:tagIPC4BITS::<ano
 MI2C1IP0	D:\UPS\xSingle2\p33FJ16GS504.h	563;"	m	line:563	struct:tagIPC4BITS::<anonymous>::<anonymous>
 MI2C1IP1	D:\UPS\xSingle2\p33FJ16GS504.h	564;"	m	line:564	struct:tagIPC4BITS::<anonymous>::<anonymous>
 MI2C1IP2	D:\UPS\xSingle2\p33FJ16GS504.h	565;"	m	line:565	struct:tagIPC4BITS::<anonymous>::<anonymous>
-MIntCnt	D:\UPS\xSingle2\pwm.c	46;"	v	line:46
+MIntCnt	D:\UPS\xSingle2\pwm.c	27;"	v	line:27
 MODCONBITS	D:\UPS\xSingle2\p33FJ16GS504.h	128;"	t	line:128
 MODE16	D:\UPS\xSingle2\p33FJ16GS504.h	1272;"	m	line:1272	struct:tagSPI1CON1BITS::<anonymous>::<anonymous>
 MSFunc16	D:\UPS\xSingle2\uart.c	190;"	f	line:190	signature:(int addr,int len,unsigned char *buf)
@@ -990,8 +984,8 @@ MatrixMultiply	D:\UPS\xSingle2\dsp.h	689;"	p	line:689	signature:( int numRows1, 
 MatrixScale	D:\UPS\xSingle2\dsp.h	610;"	p	line:610	signature:( int numRows, int numCols, fractional* dstM, fractional* srcM, fractional sclVal )
 MatrixSubtract	D:\UPS\xSingle2\dsp.h	673;"	p	line:673	signature:( int numRows, int numCols, fractional* dstM, fractional* srcM1, fractional* srcM2 )
 MatrixTranspose	D:\UPS\xSingle2\dsp.h	624;"	p	line:624	signature:( int numRows, int numCols, fractional* dstM, fractional* srcM )
-Max::(s,v){(s).maxv=((s).maxv<(v))?	D:\UPS\xSingle2\pwm.c	55;"	d	line:55	file:
-Min::(s,v){(s).minv=((s).minv>(v))?	D:\UPS\xSingle2\pwm.c	56;"	d	line:56	file:
+Max::(s,v){(s).maxv=((s).maxv<(v))?	D:\UPS\xSingle2\pwm.c	37;"	d	line:37	file:
+Min::(s,v){(s).minv=((s).minv>(v))?	D:\UPS\xSingle2\pwm.c	38;"	d	line:38	file:
 ModbusSA	D:\UPS\xSingle2\data_struct.h	35;"	m	line:35
 ModbusSlave	D:\UPS\xSingle2\uart.c	204;"	f	line:204
 ModbusSlave	D:\UPS\xSingle2\uart.h	4;"	p	line:4	signature:()
@@ -1106,7 +1100,6 @@ OSYNC	D:\UPS\xSingle2\p33FJ16GS504.h	1759;"	m	line:1759	struct:tagIOCON1BITS::<a
 OSYNC	D:\UPS\xSingle2\p33FJ16GS504.h	1984;"	m	line:1984	struct:tagIOCON2BITS::<anonymous>::<anonymous>
 OSYNC	D:\UPS\xSingle2\p33FJ16GS504.h	2191;"	m	line:2191	struct:tagIOCON3BITS::<anonymous>::<anonymous>
 OSYNC	D:\UPS\xSingle2\p33FJ16GS504.h	2398;"	m	line:2398	struct:tagIOCON4BITS::<anonymous>::<anonymous>
-OUTPUT_VOLTAGE_SETTING::0	D:\UPS\xSingle2\pwm.c	24;"	d	line:24	file:
 OV	D:\UPS\xSingle2\p33FJ16GS504.h	53;"	m	line:53	struct:tagSRBITS::<anonymous>::<anonymous>
 OVAERR	D:\UPS\xSingle2\p33FJ16GS504.h	260;"	m	line:260	struct:tagINTCON1BITS
 OVATE	D:\UPS\xSingle2\p33FJ16GS504.h	256;"	m	line:256	struct:tagINTCON1BITS
@@ -1158,7 +1151,8 @@ PCLKDIV	D:\UPS\xSingle2\p33FJ16GS504.h	1714;"	m	line:1714	struct:tagPTCON2BITS::
 PCLKDIV0	D:\UPS\xSingle2\p33FJ16GS504.h	1717;"	m	line:1717	struct:tagPTCON2BITS::<anonymous>::<anonymous>
 PCLKDIV1	D:\UPS\xSingle2\p33FJ16GS504.h	1718;"	m	line:1718	struct:tagPTCON2BITS::<anonymous>::<anonymous>
 PCLKDIV2	D:\UPS\xSingle2\p33FJ16GS504.h	1719;"	m	line:1719	struct:tagPTCON2BITS::<anonymous>::<anonymous>
-PDC_NOMINAL::((DUTY_PERIOD-INVERTER_ALTDTR_	D:\UPS\xSingle2\pwm.c	22;"	d	line:22	file:
+PD0	D:\UPS\xSingle2\pwm.c	14;"	v	line:14
+PD1	D:\UPS\xSingle2\pwm.c	13;"	v	line:13
 PDSEL	D:\UPS\xSingle2\p33FJ16GS504.h	1133;"	m	line:1133	struct:tagU1MODEBITS::<anonymous>::<anonymous>
 PDSEL0	D:\UPS\xSingle2\p33FJ16GS504.h	1149;"	m	line:1149	struct:tagU1MODEBITS::<anonymous>::<anonymous>
 PDSEL1	D:\UPS\xSingle2\p33FJ16GS504.h	1150;"	m	line:1150	struct:tagU1MODEBITS::<anonymous>::<anonymous>
@@ -1375,7 +1369,7 @@ REFOMD	D:\UPS\xSingle2\p33FJ16GS504.h	3803;"	m	line:3803	struct:tagPMD4BITS
 RESTORE_CPU_IPL::(saved_to)SET_CPU_IPL(saved_to	D:\UPS\xSingle2\p33FJ16GS504.h	6071;"	d	line:6071
 RIDLE	D:\UPS\xSingle2\p33FJ16GS504.h	1167;"	m	line:1167	struct:tagU1STABITS::<anonymous>::<anonymous>
 RMS_BUFFER_SIZE::SINE_TABLE_SIZE>>1	D:\UPS\xSingle2\define.h	32;"	d	line:32
-RMS_CALC	D:\UPS\xSingle2\pwm.c	747;"	f	line:747
+RMS_CALC	D:\UPS\xSingle2\pwm.c	580;"	f	line:580
 RMS_NOT_READY::3	D:\UPS\xSingle2\define.h	36;"	d	line:36
 RND	D:\UPS\xSingle2\p33FJ16GS504.h	81;"	m	line:81	struct:tagCORCONBITS::<anonymous>::<anonymous>
 RODIV	D:\UPS\xSingle2\p33FJ16GS504.h	3700;"	m	line:3700	struct:tagREFOCONBITS::<anonymous>::<anonymous>
@@ -1891,8 +1885,8 @@ SndCnt	D:\UPS\xSingle2\uart.c	13;"	v	line:13
 SndPosi	D:\UPS\xSingle2\uart.c	14;"	v	line:14
 SquareMagnitudeCplx	D:\UPS\xSingle2\dsp.h	1592;"	p	line:1592	signature:( int numelems, fractcomplex* srcV, fractional* dstV )
 SquareRoot	D:\UPS\xSingle2\data_struct.c	9;"	l	line:9
-StartADC	D:\UPS\xSingle2\pwm.c	430;"	f	line:430	signature:(void)
-StartPWM	D:\UPS\xSingle2\pwm.c	544;"	f	line:544	signature:(void)
+StartADC	D:\UPS\xSingle2\pwm.c	434;"	f	line:434	signature:(void)
+StartPWM	D:\UPS\xSingle2\pwm.c	548;"	f	line:548	signature:(void)
 StartUpCnt	D:\UPS\xSingle2\StateMachine.c	24;"	v	line:24
 State	D:\UPS\xSingle2\StateMachine.c	8;"	v	line:8
 StopBits	D:\UPS\xSingle2\data_struct.h	41;"	m	line:41
@@ -2122,7 +2116,6 @@ TRGSTRT5	D:\UPS\xSingle2\p33FJ16GS504.h	1869;"	m	line:1869	struct:tagTRGCON1BITS
 TRGSTRT5	D:\UPS\xSingle2\p33FJ16GS504.h	2094;"	m	line:2094	struct:tagTRGCON2BITS::<anonymous>::<anonymous>
 TRGSTRT5	D:\UPS\xSingle2\p33FJ16GS504.h	2301;"	m	line:2301	struct:tagTRGCON3BITS::<anonymous>::<anonymous>
 TRGSTRT5	D:\UPS\xSingle2\p33FJ16GS504.h	2508;"	m	line:2508	struct:tagTRGCON4BITS::<anonymous>::<anonymous>
-TRIANGLE_PERIOD::18400	D:\UPS\xSingle2\pwm.c	9;"	d	line:9	file:
 TRIG1BITS	D:\UPS\xSingle2\p33FJ16GS504.h	1850;"	t	line:1850
 TRIG2BITS	D:\UPS\xSingle2\p33FJ16GS504.h	2075;"	t	line:2075
 TRIG3BITS	D:\UPS\xSingle2\p33FJ16GS504.h	2282;"	t	line:2282
@@ -2179,6 +2172,7 @@ TUN2	D:\UPS\xSingle2\p33FJ16GS504.h	3685;"	m	line:3685	struct:tagOSCTUNBITS::<an
 TUN3	D:\UPS\xSingle2\p33FJ16GS504.h	3686;"	m	line:3686	struct:tagOSCTUNBITS::<anonymous>::<anonymous>
 TUN4	D:\UPS\xSingle2\p33FJ16GS504.h	3687;"	m	line:3687	struct:tagOSCTUNBITS::<anonymous>::<anonymous>
 TUN5	D:\UPS\xSingle2\p33FJ16GS504.h	3688;"	m	line:3688	struct:tagOSCTUNBITS::<anonymous>::<anonymous>
+TriPD::18400	D:\UPS\xSingle2\pwm.c	9;"	d	line:9	file:
 TwidFactorInit	D:\UPS\xSingle2\dsp.h	1228;"	p	line:1228	signature:( int log2N, fractcomplex* twidFactors, int conjFlag )
 U1CTSR	D:\UPS\xSingle2\p33FJ16GS504.h	2902;"	m	line:2902	struct:tagRPINR18BITS::<anonymous>::<anonymous>
 U1CTSR0	D:\UPS\xSingle2\p33FJ16GS504.h	2912;"	m	line:2912	struct:tagRPINR18BITS::<anonymous>::<anonymous>
@@ -2348,8 +2342,7 @@ YWM1	D:\UPS\xSingle2\p33FJ16GS504.h	119;"	m	line:119	struct:tagMODCONBITS::<anon
 YWM2	D:\UPS\xSingle2\p33FJ16GS504.h	120;"	m	line:120	struct:tagMODCONBITS::<anonymous>::<anonymous>
 YWM3	D:\UPS\xSingle2\p33FJ16GS504.h	121;"	m	line:121	struct:tagMODCONBITS::<anonymous>::<anonymous>
 Z	D:\UPS\xSingle2\p33FJ16GS504.h	52;"	m	line:52	struct:tagSRBITS::<anonymous>::<anonymous>
-ZCD::1	D:\UPS\xSingle2\define.h	58;"	d	line:58
-ZCTHV::10	D:\UPS\xSingle2\pwm.c	68;"	d	line:68	file:
+ZCTHV::0	D:\UPS\xSingle2\pwm.c	50;"	d	line:50	file:
 _A10M::I2C1CONbits.A10M	D:\UPS\xSingle2\p33FJ16GS504.h	4363;"	d	line:4363
 _ABAUD::U1MODEbits.ABAUD	D:\UPS\xSingle2\p33FJ16GS504.h	4389;"	d	line:4389
 _AC1IE::IEC1bits.AC1IE	D:\UPS\xSingle2\p33FJ16GS504.h	4064;"	d	line:4064
@@ -2380,7 +2373,7 @@ _ACCSAT::CORCONbits.ACCSAT	D:\UPS\xSingle2\p33FJ16GS504.h	3857;"	d	line:3857
 _ACKDT::I2C1CONbits.ACKDT	D:\UPS\xSingle2\p33FJ16GS504.h	4358;"	d	line:4358
 _ACKEN::I2C1CONbits.ACKEN	D:\UPS\xSingle2\p33FJ16GS504.h	4357;"	d	line:4357
 _ACKSTAT::I2C1STATbits.ACKSTAT	D:\UPS\xSingle2\p33FJ16GS504.h	4382;"	d	line:4382
-_ADCInterrupt	D:\UPS\xSingle2\pwm.c	568;"	f	line:568	signature:(void)
+_ADCInterrupt	D:\UPS\xSingle2\pwm.c	572;"	f	line:572	signature:(void)
 _ADCMD::PMD1bits.ADCMD	D:\UPS\xSingle2\p33FJ16GS504.h	5942;"	d	line:5942
 _ADCP0IE::IEC6bits.ADCP0IE	D:\UPS\xSingle2\p33FJ16GS504.h	4085;"	d	line:4085
 _ADCP0IF::IFS6bits.ADCP0IF	D:\UPS\xSingle2\p33FJ16GS504.h	4036;"	d	line:4036
@@ -3651,7 +3644,7 @@ __DSP_LIB__	D:\UPS\xSingle2\dsp.h	44;"	d	line:44
 _invs	D:\UPS\xSingle2\define.h	88;"	s	line:88
 _mains	D:\UPS\xSingle2\define.h	64;"	s	line:64
 abcCoefficients	D:\UPS\xSingle2\dsp.h	1608;"	m	line:1608
-abs::jabs	D:\UPS\xSingle2\pwm.c	62;"	d	line:62	file:
+abs::jabs	D:\UPS\xSingle2\pwm.c	44;"	d	line:44	file:
 ack	D:\UPS\xSingle2\i2c.c	68;"	f	line:68	signature:(void)
 b0	D:\UPS\xSingle2\data_struct.h	50;"	m	line:50
 b1	D:\UPS\xSingle2\data_struct.h	51;"	m	line:51
@@ -3666,7 +3659,7 @@ byte	D:\UPS\xSingle2\i2c.c	153;"	l	line:153
 ch	D:\UPS\xSingle2\uart.c	129;"	l	line:129
 ch	D:\UPS\xSingle2\uart.c	73;"	l	line:73
 chkack	D:\UPS\xSingle2\i2c.c	51;"	f	line:51	signature:(void)
-clr::(v)(v)=0	D:\UPS\xSingle2\pwm.c	65;"	d	line:65	file:
+clr::(v)(v)=0	D:\UPS\xSingle2\pwm.c	47;"	d	line:47	file:
 cnt	D:\UPS\xSingle2\define.h	70;"	m	line:70	struct:_mains
 cnt	D:\UPS\xSingle2\define.h	99;"	m	line:99	struct:_invs
 coeffsBase	D:\UPS\xSingle2\dsp.h	1060;"	m	line:1060
@@ -3683,7 +3676,6 @@ controlReference	D:\UPS\xSingle2\dsp.h	1615;"	m	line:1615
 crc	D:\UPS\xSingle2\uart.c	149;"	l	line:149
 crc	D:\UPS\xSingle2\uart.c	192;"	l	line:192
 crc16	D:\UPS\xSingle2\uart.c	125;"	f	line:125	signature:(unsigned char* buf, unsigned char len)
-currentRMSBuffer	D:\UPS\xSingle2\pwm.c	39;"	v	line:39
 cv	D:\UPS\xSingle2\define.h	66;"	m	line:66	struct:_mains
 cv	D:\UPS\xSingle2\define.h	91;"	m	line:91	struct:_invs
 cycle	D:\UPS\xSingle2\define.h	103;"	m	line:103	struct:_invs
@@ -3696,16 +3688,16 @@ delayBase1	D:\UPS\xSingle2\dsp.h	1110;"	m	line:1110
 delayBase2	D:\UPS\xSingle2\dsp.h	1113;"	m	line:1113
 delayEnd	D:\UPS\xSingle2\dsp.h	799;"	m	line:799
 divss::(n,d)(__builtin_divsd((long)n,	D:\UPS\xSingle2\define.h	8;"	d	line:8
-duty	D:\UPS\xSingle2\pwm.c	554;"	f	line:554	signature:(int idx,int dr)
+duty	D:\UPS\xSingle2\pwm.c	558;"	f	line:558	signature:(int idx,int dr)
 err	D:\UPS\xSingle2\define.h	78;"	m	line:78	struct:_mains
-err	D:\UPS\xSingle2\pwm.c	75;"	v	line:75
+err	D:\UPS\xSingle2\pwm.c	57;"	v	line:57
 f	D:\UPS\xSingle2\define.h	101;"	m	line:101	struct:_invs
 f	D:\UPS\xSingle2\define.h	80;"	m	line:80	struct:_mains
 f	D:\UPS\xSingle2\uart.c	148;"	l	line:148
-fACRMSCalculation	D:\UPS\xSingle2\pwm.c	33;"	v	line:33
-fRMSCalculation	D:\UPS\xSingle2\pwm.c	32;"	v	line:32
+facRMS	D:\UPS\xSingle2\pwm.c	20;"	v	line:20
 finalShift	D:\UPS\xSingle2\dsp.h	1072;"	m	line:1072
 finalShift	D:\UPS\xSingle2\dsp.h	1116;"	m	line:1116
+finvRMS	D:\UPS\xSingle2\pwm.c	19;"	v	line:19
 fractcomplex	D:\UPS\xSingle2\dsp.h	109;"	t	line:109
 fractional	D:\UPS\xSingle2\dsp.h	100;"	t	line:100
 fractional	D:\UPS\xSingle2\dsp.h	102;"	t	line:102
@@ -3734,27 +3726,28 @@ icxbuf	D:\UPS\xSingle2\p33FJ16GS504.h	896;"	m	line:896	struct:tagIC
 icxcon	D:\UPS\xSingle2\p33FJ16GS504.h	897;"	m	line:897	struct:tagIC
 idx	D:\UPS\xSingle2\define.h	90;"	m	line:90	struct:_invs
 imag	D:\UPS\xSingle2\dsp.h	108;"	m	line:108
-inc::(s){(s).cnt=((s).cnt+1)%1024;(	D:\UPS\xSingle2\pwm.c	66;"	d	line:66	file:
-initADC	D:\UPS\xSingle2\pwm.c	284;"	f	line:284	signature:(void)
+inc::(s){(s).cnt=((s).cnt+1)%1024;(	D:\UPS\xSingle2\pwm.c	48;"	d	line:48	file:
+initADC	D:\UPS\xSingle2\pwm.c	287;"	f	line:287	signature:(void)
 initClock	D:\UPS\xSingle2\clock.c	3;"	f	line:3	signature:(void)
-initPWM	D:\UPS\xSingle2\pwm.c	436;"	f	line:436	signature:(void)
+initPWM	D:\UPS\xSingle2\pwm.c	440;"	f	line:440	signature:(void)
 initStateMachineTimer	D:\UPS\xSingle2\StateMachine.c	13;"	f	line:13	signature:(void)
 initStateMachineTimer	D:\UPS\xSingle2\StateMachine.h	2;"	p	line:2	signature:(void)
 initUart	D:\UPS\xSingle2\uart.c	23;"	f	line:23
 initUart	D:\UPS\xSingle2\uart.h	1;"	p	line:1	signature:()
 initialGain	D:\UPS\xSingle2\dsp.h	1071;"	m	line:1071
-inv	D:\UPS\xSingle2\pwm.c	48;"	v	line:48
+inv	D:\UPS\xSingle2\pwm.c	29;"	v	line:29
 invShift::bFlag.b2	D:\UPS\xSingle2\data_struct.h	63;"	d	line:63
-inverterOutputCurrent	D:\UPS\xSingle2\pwm.c	30;"	v	line:30
+inverterOutputCurrent	D:\UPS\xSingle2\pwm.c	17;"	v	line:17
 invf::bFlag.b1	D:\UPS\xSingle2\data_struct.h	62;"	d	line:62
-invfadj::(r,f)r=DUTY_PERIOD=(__builtin_	D:\UPS\xSingle2\pwm.c	53;"	d	line:53	file:
-iszc::(s,v)((s).pv<0)&&((s).cv>=0)&&	D:\UPS\xSingle2\pwm.c	51;"	d	line:51	file:
-jabs	D:\UPS\xSingle2\pwm.c	58;"	f	line:58	signature:(int x)
-jumpTable	D:\UPS\xSingle2\pwm.c	281;"	v	line:281
+invfadj::(r,f)r=PD1=(__builtin_mulsu(f,	D:\UPS\xSingle2\pwm.c	35;"	d	line:35	file:
+issz::(s,v)(((s).cnt>128)&&(((s).pv>	D:\UPS\xSingle2\pwm.c	33;"	d	line:33	file:
+iszc::(s,v)(((s).cnt>360)&&(((s).pv<	D:\UPS\xSingle2\pwm.c	32;"	d	line:32	file:
+jabs	D:\UPS\xSingle2\pwm.c	40;"	f	line:40	signature:(int x)
+jumpTable	D:\UPS\xSingle2\pwm.c	284;"	v	line:284
 k	D:\UPS\xSingle2\i2c.c	107;"	l	line:107
 kappaVals	D:\UPS\xSingle2\dsp.h	1145;"	m	line:1145
 l	D:\UPS\xSingle2\data_struct.h	12;"	m	line:12	struct:_INT::<anonymous>
-m	D:\UPS\xSingle2\pwm.c	49;"	v	line:49
+m	D:\UPS\xSingle2\pwm.c	30;"	v	line:30
 main	D:\UPS\xSingle2\main.c	24;"	f	line:24
 maxv	D:\UPS\xSingle2\define.h	68;"	m	line:68	struct:_mains
 maxv	D:\UPS\xSingle2\define.h	93;"	m	line:93	struct:_invs
@@ -3776,8 +3769,8 @@ ocxrs	D:\UPS\xSingle2\p33FJ16GS504.h	963;"	m	line:963	struct:tagOC
 ofs	D:\UPS\xSingle2\define.h	72;"	m	line:72	struct:_mains
 ofs	D:\UPS\xSingle2\define.h	96;"	m	line:96	struct:_invs
 order	D:\UPS\xSingle2\dsp.h	1143;"	m	line:1143
-perr	D:\UPS\xSingle2\pwm.c	75;"	v	line:75
-pmcnt	D:\UPS\xSingle2\pwm.c	75;"	v	line:75
+perr	D:\UPS\xSingle2\pwm.c	57;"	v	line:57
+pmcnt	D:\UPS\xSingle2\pwm.c	57;"	v	line:57
 pv	D:\UPS\xSingle2\define.h	67;"	m	line:67	struct:_mains
 pv	D:\UPS\xSingle2\define.h	92;"	m	line:92	struct:_invs
 read_byte	D:\UPS\xSingle2\i2c.c	105;"	f	line:105	signature:(void)
@@ -3787,13 +3780,13 @@ realiFft32bIP	D:\UPS\xSingle2\dsp.h	1463;"	p	line:1463	signature:( int log2N, lo
 rsBuf	D:\UPS\xSingle2\uart.c	10;"	v	line:10
 sMode	D:\UPS\xSingle2\data_struct.h	37;"	m	line:37
 sValue	D:\UPS\xSingle2\data_struct.c	4;"	v	line:4
-scFlag	D:\UPS\xSingle2\pwm.c	43;"	v	line:43
-scFlag1	D:\UPS\xSingle2\pwm.c	43;"	v	line:43
-set::(v){m.cv=(v);}	D:\UPS\xSingle2\pwm.c	63;"	d	line:63	file:
-siv	D:\UPS\xSingle2\pwm.c	72;"	v	line:72
+scFlag	D:\UPS\xSingle2\pwm.c	24;"	v	line:24
+scFlag1	D:\UPS\xSingle2\pwm.c	24;"	v	line:24
+set::(v){m.cv=(v);}	D:\UPS\xSingle2\pwm.c	45;"	d	line:45	file:
+siv	D:\UPS\xSingle2\pwm.c	54;"	v	line:54
 size	D:\UPS\xSingle2\define.h	71;"	m	line:71	struct:_mains
 size	D:\UPS\xSingle2\define.h	95;"	m	line:95	struct:_invs
-smv	D:\UPS\xSingle2\pwm.c	71;"	v	line:71
+smv	D:\UPS\xSingle2\pwm.c	53;"	v	line:53
 spixbuf	D:\UPS\xSingle2\p33FJ16GS504.h	1238;"	m	line:1238	struct:tagSPI
 spixcon1	D:\UPS\xSingle2\p33FJ16GS504.h	1235;"	m	line:1235	struct:tagSPI
 spixcon2	D:\UPS\xSingle2\p33FJ16GS504.h	1236;"	m	line:1236	struct:tagSPI
@@ -3802,7 +3795,7 @@ start	D:\UPS\xSingle2\i2c.c	28;"	f	line:28	signature:(void)
 state	D:\UPS\xSingle2\define.h	102;"	m	line:102	struct:_invs
 state	D:\UPS\xSingle2\define.h	82;"	m	line:82	struct:_mains
 stop	D:\UPS\xSingle2\i2c.c	40;"	f	line:40	signature:(void)
-sum	D:\UPS\xSingle2\pwm.c	75;"	v	line:75
+sum	D:\UPS\xSingle2\pwm.c	57;"	v	line:57
 swap	D:\UPS\xSingle2\uart.c	141;"	f	line:141	signature:(unsigned int i)
 synced	D:\UPS\xSingle2\define.h	104;"	m	line:104	struct:_invs
 tPID	D:\UPS\xSingle2\dsp.h	1616;"	t	line:1616
@@ -3973,11 +3966,11 @@ tagU1STABITS	D:\UPS\xSingle2\p33FJ16GS504.h	1160;"	s	line:1160
 tagU1TXREGBITS	D:\UPS\xSingle2\p33FJ16GS504.h	1189;"	s	line:1189
 tagUART	D:\UPS\xSingle2\p33FJ16GS504.h	1110;"	s	line:1110
 tagXBREVBITS	D:\UPS\xSingle2\p33FJ16GS504.h	136;"	s	line:136
-tduty	D:\UPS\xSingle2\pwm.c	556;"	l	line:556
-tmpi	D:\UPS\xSingle2\pwm.c	746;"	v	line:746
+tduty	D:\UPS\xSingle2\pwm.c	560;"	l	line:560
+tmpi	D:\UPS\xSingle2\pwm.c	579;"	v	line:579
 toneGen32b	D:\UPS\xSingle2\dsp.h	1378;"	p	line:1378	signature:( int samp, int tone, int phase, long *tfBuff )
 tx	D:\UPS\xSingle2\main.c	21;"	v	line:21
-ull	D:\UPS\xSingle2\pwm.c	70;"	t	line:70	file:
+ull	D:\UPS\xSingle2\pwm.c	52;"	t	line:52	file:
 unused	D:\UPS\xSingle2\p33FJ16GS504.h	1237;"	m	line:1237	struct:tagSPI
 uxbrg	D:\UPS\xSingle2\p33FJ16GS504.h	1115;"	m	line:1115	struct:tagUART
 uxmode	D:\UPS\xSingle2\p33FJ16GS504.h	1111;"	m	line:1111	struct:tagUART

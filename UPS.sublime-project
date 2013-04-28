@@ -1,0 +1,10 @@
+{
+	"folders":
+	[
+		{
+			"path": "/D/UPS/xSingle2",
+			"file_include_patterns": ["*.c","*.h","*.hex"],
+			"folder_exclude_patterns": ["LCD_Driver"]
+		}
+	]
+}

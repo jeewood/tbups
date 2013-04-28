@@ -10,6 +10,8 @@ void InitADC_Common()
 {
 	jumpTable[0] = &ConvPair0Handler; /* Set up the jump table*/
 	jumpTable[2] = &ConvPair1Handler;
+	ADBASE = (int)(&jumpTable[0]);
+		
 	ADCONbits.FORM = 1; // Output in Integer Format
 	ADCONbits.EIE = 1; // Enable Early Interrupt
 	ADCONbits.ORDER = 0; // Normal Order of conversion
