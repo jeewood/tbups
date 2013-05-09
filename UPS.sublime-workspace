@@ -112,27 +112,55 @@
 	"buffers":
 	[
 		{
-			"contents": "#include <p33fj16gs504.h>\n#include \"dsp.h\"\n#include \"pwm.h\"\n#include \"uart.h\"\n#include \"clock.h\"\n#include \"define.h\"\n#include \"StateMachine.h\"\n#include \"i2c.h\"\n\n/* Configuration bits */\n_FOSCSEL(FNOSC_FRC)\n_FOSC(FCKSM_CSECMD & OSCIOFNC_ON & IOL1WAY_OFF)\n_FWDT(FWDTEN_OFF)	//Watch Dog timer \n_FPOR(FPWRT_PWR128)// & BOREN_OFF) //by jwz. p33fj16gs504 not found BOREN_OFF\n_FICD(ICS_PGD1 & JTAGEN_OFF)\n\nextern int fRMSCalculation;\nunsigned int cnt = 0;\nextern unsigned long StartUpCnt;\nextern int Duty;\nunsigned char tx = 0;\n//this is 主程序\n\nint main()\n{\n	ByPassCnt = 0;	//旁路切换继电器计数器\n	\n	TRISCbits.TRISC2 = 0; \n	TRISCbits.TRISC7 = 0; \n	\n	#ifdef NEWBOARD\n	TRISBbits.TRISB3 = 0; \n	TRISBbits.TRISB4 = 0; \n	#else\n	TRISCbits.TRISC0 = 0; \n	TRISCbits.TRISC13 = 0; \n	#endif\n	TRISCbits.TRISC5 = 0; \n\n	BYPASS = 1;\n	SSTART = 1;\n	SCR = 0;\n\n	initClock();\n	initStateMachineTimer();\n	#ifdef NEWBOARD\n	initUart();\n	#endif\n	initADC();\n	//InitADC_Common();\n	StartADC();\n	initPWM();\n	StartPWM();\n	InitI2C();\n\n	LED = 1;\n	StartUpCnt = 1;\n\n	Duty = 0;	\n	//i2cWrite(0,0xA5);\n	while(1)\n	{\n		cnt++;\n		if (cnt>10000)\n		{\n			tx = sValue.ModbusSA;\n			i2cReadStr(0,(unsigned char*)&sValue,8);\n			if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) \n			{\n				bypassInSwitch = 1;\n			}\n			cnt = 0;\n		}\n		//tx = i2cRead(0);\n         ModbusSlave();\n         RMS_CALC();\n	}\n	return 0;\n}\n\n",
-			"file": "main.c",
-			"file_size": 1361,
-			"file_write_time": 130122808746718750,
+			"contents": "#include \"p33fj16gs504.h\"\n#include \"i2c.h\"\n\n#define SCL			PORTBbits.RB15		//I2C Clock PORTB pin 15\n#define SDA			PORTBbits.RB5		//I2C Data PORTB pin 5\n#define	SCL_TRIS	TRISBbits.TRISB15	//SDA Tris bit\n#define	SDA_TRIS	TRISBbits.TRISB5	//SDA Tris bit\n#define CONTROLBYTE 0b10100000			// Control byte\n#define ACKBIT      0x00				// ACK bit\n#define NAKBIT      0x80				// NAK bit\n\n#define NOP() {int i;for(i=0;i<50;i++) Nop();}\n#define SDA_LOW(b) SDA_TRIS=0;SDA=0;if(b)NOP()\n#define SDA_HIGH(b) SDA_TRIS=1;SDA=1;if(b)NOP()\n#define SCL_LOW(b) SCL_TRIS=0;SCL=0;if(b)NOP()\n#define SCL_HIGH(b) SCL_TRIS=0;SCL=1;if(b)NOP()\n#define SDAR(b) SDA_TRIS=1;ODCBbits.ODCB5=1;if(b)NOP()\n\n//ÕâÊÇI2C\nvoid InitI2C(void) \n{\n	SCL_LOW(0);\n	SDAR(0);\n}	\n\n//A ^^\\___\n//L ^^^^\\_\nvoid start(void)\n{\n	//SCL_LOW(0);\n    SDA_HIGH(1);					// Ensure SDA is high (ÎªÊäÈë)\n    SCL_HIGH(1);					// Ensure SCL is high\n    SDA_LOW(1);					// Configure SDA as an output,Ensure SDA low\n    SCL_LOW(1);\n    //SDAR(0);\n}\n\n//A ___/^^^\n//L _/^^^\\_\nvoid stop(void)\n{\n	//SCL_LOW(0);\n    SDA_LOW(1);					// Configure SDA as an output,Ensure SDA low\n    SCL_HIGH(1);					// Pull SCL high\n    SDA_HIGH(1);					// Allow SDA to be pulled high\n    SDAR(0);	//release SDA line\n}\n\n//A ^^^\\___\n//L _/^^^\\_\nchar chkack(void)\n{\n	unsigned char i=0;\n	SCL_LOW(0);\n	SDAR(0);							//release SDA for input, is high\n	SCL_HIGH(1);\n	/*while((SDA==f) && (i<100)) \n	{\n		i++;\n		NOP();\n	}*/\n	i = SDA;\n	SCL_LOW(1);\n	SDA_HIGH(0);\n	return i;\n}\n\nvoid ack(void)\n{\n	SDA_LOW(1);\n	SCL_HIGH(1);\n	SCL_LOW(1);\n	//SDA_HIGH(0);\n}\n\nvoid noack(void)\n{\n	SDA_HIGH(1);\n	SCL_HIGH(1);\n	SCL_LOW(1);\n}\n//A -[---]-\n//L __/^\\__\nvoid write_byte(unsigned char byte)\n{\n	unsigned char i;\n	SCL_LOW(1);\n	for(i=0;i<8;i++)\n	{\n		if((byte<<i) & 0x80)\n		{\n			SDA_HIGH(1);\n		}\n		else\n		{\n			SDA_LOW(1);\n		}\n		SCL_HIGH(1);\n		SCL_LOW(1);\n	}\n}\n\n//A -[--]--[--]--[--]--[--]--[--]--[--]--\n//L __/^^\\__/^^\\__/^^\\__/^^\\__/^^\\__/^^\\__\nunsigned char read_byte(void)\n{\n	unsigned char i,k=0;\n	SDAR(0);					//release SDA for input, is high\n	SCL_LOW(1);\n	for(i=0;i<8;i++)\n	{\n		SCL_HIGH(1);\n		k=(k<<1);//|SDA;\n		if (SDA) k=k+1;\n		SCL_LOW(1);\n	}\n	return k;\n}\n\n\nchar i2cWrite(unsigned char addr,unsigned char byte)\n{\n	start();\n	write_byte(0xA0);\n	if (chkack()) return 0;\n	write_byte(addr);\n	if (chkack()) return 0;\n	write_byte(byte);\n	stop();\n	return 1;\n}\n\n//Means writing with array\nchar i2cWriteStr(unsigned char addr,unsigned char * buf,unsigned char len)\n{\n	unsigned char i;\n	start();\n	write_byte(0xA0);\n	if (chkack()) return 0;\n	write_byte(addr);\n	if (chkack()) return 0;\n	for(i=0;i<len;i++)\n	{\n		write_byte(*buf);\n		if (chkack()) return 0;\n		buf++;\n	}\n	stop();\n	return 1;\n}\n	\nunsigned char i2cRead(unsigned char addr)\n{\n	unsigned char byte=0;\n	start();\n	write_byte(0xA0);\n	if (!chkack())return 0;\n	write_byte(addr);\n	if (chkack()) return 0;\n	stop();\n	start();\n	write_byte(0xA1);\n	if (chkack()) return 0;\n	byte=read_byte();\n	noack();\n	stop();\n	return byte;\n}\n\n//Means reading with array\nchar i2cReadStr(unsigned char addr,unsigned char *buf,unsigned char len)\n{\n	unsigned char i;\n	start();\n	write_byte(0xA0);\n	if (chkack()) return 0;\n	write_byte(addr);\n	if (chkack()) return 0;\n	start();\n	write_byte(0xA1);\n	if (chkack()) return 0;\n	for(i=0;i<len-1;i++)\n	{\n		*buf = read_byte();\n		ack();\n		buf++;\n	}\n	*buf = read_byte();\n	noack();\n	stop();\n	return 1;	\n}\n	\n		\n\n",
+			"file": "i2c.c",
+			"file_size": 3344,
+			"file_write_time": 130119274240000000,
 			"settings":
 			{
-				"buffer_size": 1348,
+				"buffer_size": 3344,
 				"line_ending": "Unix",
 				"scratch": true
 			}
 		},
 		{
-			"contents": "#include<p33fj16gs504.h>  \n#include<libq.h>\n#include<dsp.h>\n#include \"sineTable_50Hz.h\"\n#include \"define.h\"\n\n//这是现在同步锁相比较好的版本\n//工作于dsPIC33FJ16GS504\n\n// Inverter Constants \n#define TriPD 18400\n\n#define DC_OFFSET 0x3FF0 //0x43E0		//0x3FF0\n\nlong PD3 = TriPD;\nlong PD2 = TriPD;\n\nint Duty = 0;//Q15(1.0);\n\nINVSTRUCT inv = {0};\nMAINSTRUCT m = {0};\n\n#define iszc(s,v) (((s).cnt>360) && (((s).pv < 0 && ((s).cv>=0)) && ((s).cv-(s).pv>(v))))\n#define issz(s,v) (((s).cnt>128) && (((s).pv>0 && ((s).cv <=0)) && ((s).pv-(s).cv>(v))))\n\n#define invfadj(r,f) r = PD3 = (__builtin_mulsu(f,(unsigned int)(PD3))>>9)\n\n//#define Max(s,v) {(s).maxv = ((s).maxv < (v))?(v):((s).maxv);}\n#define Max(s) {(s).maxv = ((s).maxv < (s).cv)?(s).cv:((s).maxv);}\n#define Min(s) {(s).minv = ((s).minv>(s).cv)?(s).cv:((s).minv);}\n\ninline int jabs(int x)	{ return (x < 0)?(-(x)):(x); }\n\n#define abs jabs\n#define set(v) {m.cv=(v);}\n\n#define clr(v) (v) = 0\n#define inc(s) {(s).cnt=((s).cnt+1)%1024;(s).i = ((s).cnt>256)?(s).cnt-512:(s).cnt;}\n\n#define incr(s) ((s)=((s)<20000)?(s)+1:20000)\n#define decr(s) ((s)=((s)>17000)?(s)-1:17000)\n\n#define SetPhase3(v) {if (v>17500 && v < 20000) { PHASE3 = v; /*TRIG3 = STRIG3 = (v)>>1;*/ } }\n#define SetPhase2(v) {if (v>17500 && v < 20000) { PHASE2 = v; /*TRIG2 = STRIG2 = (v)>>1;*/ } }\n\n#define ZCTHV 0\n\n//variable for RMS calculate\nunsigned long long smv = 0;\nunsigned long long siv = 0;\nchar finvRMS = RMS_NOT_READY;\nchar facRMS = RMS_NOT_READY;\n\n#define CONVERSION_PAIRS 2\n\n//逆变电压,电流\n/**\n * [ConvPair0Handler description]\n * Inverter output Voltage current gatharing\n */\nvoid ConvPair0Handler (void)\n{\n	//inverterOutputCurrent = (ADCBUF0 << 5) - DC_OFFSET;\n\n	inv.cv = (ADCBUF1 << 5) - DC_OFFSET - inv.ofs;\n	inv.cnt ++; inv.i ++;\n	\n	if(finvRMS == READY_TO_COLLECT_DATA)\n	{\n		siv	+= mulss(inv.cv,inv.cv);\n		Max(inv);Min(inv);\n	}\n	\n	if ((iszc(inv,ZCTHV)) || (inv.cnt>1000)) //逆变电压采样控制\n	{\n		inv.size = inv.cnt;\n		inv.cnt = 0;\n\n		if(finvRMS == CALCULATION_DONE)\n		{\n			siv = 0;\n			inv.maxv = inv.minv = 0;\n			//BEEP = ~BEEP;\n			finvRMS = READY_TO_COLLECT_DATA;\n		}\n		else\n		{\n			if (inv.maxv+inv.minv>10)\n			{\n				inv.ofs += (inv.ofs<1000)?1:0;\n			}\n			else if (inv.maxv+inv.minv<-10)\n			{\n				inv.ofs -= (inv.ofs>-1000)?1:0;\n			}\n			finvRMS = READY_TO_CALCULATE;\n		}\n\n		//this is only for debug,\n		Value.InvF = inv.size;\n\n		if (inv.state != OK && Value.InvV>1000)\n		{\n			inv.cycle ++;\n			if (inv.cycle>20)\n			{\n				inv.state = OK;\n			}\n		}\n		\n		Value.InvI = inv.state;\n	}\n\n	if (issz(inv,ZCTHV))\n	{\n		inv.i = 0;\n	}\n\n	inv.pv = inv.cv;\n	\n	if ((inv.idx == 0))		//方波产生\n	{\n		IOCON2bits.OVRDAT = 2;	//50Hz方波高电平\n	}	\n	else\n	if (inv.idx == 256)	//SINE_TABLE_SIZE / 2)\n	{\n		IOCON2bits.OVRDAT = 0;	//50Hz方波高电平\n	}\n	\n	PDC2 = mulss(SIN(inv.idx),Duty)>>15;\n\n	inv.idx = (inv.idx + 1) % SINE_TABLE_SIZE;\n\n	ADSTATbits.P0RDY = 0; // Clear the ADSTAT bits \n}\n\n//交流电压,电流\n/**\n * [ConvPair1Handler description]\n * AC input voltage current gathering\n */\nint err,perr = 0;\nvoid ConvPair1Handler (void)\n{\n	m.cv = (ADCBUF2 << 5) - DC_OFFSET - m.ofs;\n	//inc(m);	//inc(inv);\n	m.cnt ++;m.i++;\n\n	if(facRMS == READY_TO_COLLECT_DATA)\n	{\n		smv	+= mulss(m.cv,m.cv);\n		Max(m);Min(m);\n	}\n	\n	if (issz(m,ZCTHV))\n	{\n		m.i = 0;\n	}\n\n	if ((iszc(m,ZCTHV)) || (m.cnt>1000)) //市电电压采样控制\n	{\n		m.size = m.cnt;\n		m.cnt = 0;\n		\n		if(facRMS == CALCULATION_DONE)\n		{\n			smv = 0;\n			m.maxv = m.minv = 0;\n			facRMS = READY_TO_COLLECT_DATA;\n		}\n		else if (m.cnt<1000)\n		{\n			if (m.maxv+m.minv>10)\n			{\n				m.ofs += (m.ofs<1000)?1:0;\n			}\n			else if (m.maxv+m.minv<-10)\n			{\n				m.ofs -= (m.ofs>-1000)?1:0;\n			}\n			\n			facRMS = READY_TO_CALCULATE;\n		}\n		//BEEP = ~BEEP;\n		if (m.size>=1000 || Value.ACInV<1000) //超过10次没有过零点产生,则说明交流失电\n		{\n			m.ocnt ++;\n			if (m.ocnt>5 )\n			{\n				m.state = NOK;\n				m.ocnt = 0;\n			}\n		}\n		else\n		{\n			switch(m.state)\n			{\n				case NOK:	\n				{\n					m.icnt ++;	//有过零点产生,说明有交流输入\n					if (m.icnt > 10 && Value.ACInV > 1000)	//交流电压大于100V\n					{\n						m.state = ADJ;\n						m.icnt = 0;\n					}\n				}\n				break;\n				case ADJ:\n				{\n					if (m.size > 511)\n					{\n						incr(PD3);	//采样周期变长,采样速度下降\n					}\n					else if (m.size < 511)\n					{\n						decr(PD3);	//采样周期变短长,采样速度上升\n					}\n					else\n					{\n						m.cycle ++;\n						if (m.cycle>20)\n						{\n							m.state = OK;\n							m.cycle = 0;\n						}\n					}\n					SetPhase3(PD3);\n				}\n				break;\n				case OK:\n				{\n					if (m.size > 511)	//对交流输入电压的频率进行微调\n					{\n						incr(PD3);\n						SetPhase3(PD3)\n					}\n					else if (m.size < 511)\n					{\n						decr(PD3);\n						SetPhase3(PD3)\n					}\n					\n					if ((inv.state == OK))\n					{\n						if (jabs(PD3-PD2)  <  50)\n						{\n							err = (inv.i - m.i);\n							if (jabs(err) > 0)\n							{\n								if (err >  128) err =  128;\n								if (err < -128) err = -128;\n								\n								PD2 += (err>>0) - (perr>>0);\n\n								if (err > 2)	//err==perr,即inv.i且m.i不等于0\n								{\n									incr(PD2);\n								}\n								else if (err < -2)\n								{\n									decr(PD2);\n								}\n								perr = err;\n							}\n							if (jabs(err) < 2)\n							{\n								inv.cycle++;\n								if (inv.cycle > 50)\n								{\n									inv.synced = 1;\n									inv.cycle = 0;\n								}\n								inv.ocnt = 0;\n							}\n							else if (jabs(err)>10)\n							{\n								inv.ocnt++;\n								if (inv.ocnt>20)\n								{\n									inv.synced = 0;\n									inv.ocnt = 0;\n								}\n							}\n						}\n						else if (PD2 < PD3)\n						{\n							incr(PD2);\n						}\n						else if (PD2>PD3)\n						{\n							decr(PD2);\n						}\n\n						SetPhase2(PD2);\n					}\n				}\n				break;\n			}\n		}\n		Value.Power = PD3;\n		Value.Factor = PD2;\n\n		Value.BatV = sValue.ModbusSA + inv.synced;\n		Value.BatI = m.ofs;\n		Value.ChargeStatus = inv.ofs;\n\n		Value.ACInF = m.size;\n		Value.ACInI = m.state;\n		\n	}\n	\n	m.pv = m.cv;\n\n	ADSTATbits.P1RDY = 0; // Clear the ADSTAT bits\n}\n\nvoid (*jumpTable[CONVERSION_PAIRS*2-1])(void);\n\n\nvoid initADC(void)\n{\n    // Common ADC configuration \n    ADCONbits.ADON = 0;\n									// ADON ： A/D 工作模式位\n									// 1 = A/D 转换器模块在工作\n									// 0 = A/D 转换器关闭    \n    ADCONbits.ADSIDL = 0;\n									// ADSIDL：  在空闲模式下停止位\n									// 1 = 当器件进入空闲模式时，模块停止工作\n									// 0 = 在空闲模式下模块继续工作    \n   	ADCONbits.SLOWCLK = 1; \n									// SLOWCLK：低频时钟分频比使能位\n									// 1 =  使用针对低频ADC输入时钟的时钟分频比。\n									// 		此分频比提供低分频比用来在较慢的输入时钟下获得\n									// 		速度最快的ADC操作。\n									// 0 =  使用针对高频ADC输入时钟的时钟分频比。\n									// 		此分频比提供高分频比。   	\n 	ADCONbits.FORM = 0;             \n									// FORM ：数据输出格式位\n									// 1 = 小数（DOUT =  dddd dddd dd00 0000）\n									// 0 = 整数（DOUT = 0000 00dd dddd dddd） 	\n	ADCONbits.EIE = 1;              // Disable Early Interrupt ,此处禁用AD中断,使其通过PWM来触发中断\n									// EIE：提前中断允许位\n									// 1 = 在第一次转换完成后产生中断\n									// 0 = 在第二次转换完成后产生中断	\n	ADCONbits.ORDER = 0;            \n									// ORDER：转换顺序位\n									// 1 = 先转换奇数编号的模拟输入，然后转换偶数编号的输入\n									// 0 = 先转换偶数编号的模拟输入，然后转换奇数编号的输入	\n	ADCONbits.SEQSAMP = 0;          \n									// SEQSAMP ：顺序采样使能位\n									// 1 = 如果ORDER =0，在第二次转换开始时对共用采样/ 保持（S&H）\n									// 电路进行采样。如果ORDER =  1，则在第一次转换开始时对共用S&H\n									// 电路进行采样。\n									// 0 = 如果在现有转换过程中共用S&H不处于忙状态，则在采样专用\n									// S&H的同时对共用S&H进行采样。\n									// 如果在采样专用S&H时共用S&H处于忙状态，则在新转换周期开始时\n									// 对共用S&H进行采样。	\n	ADCONbits.ASYNCSAMP = 1;\n									// ASYNCSAMP：异步专用S&H采样使能位\n									// 1 = 专用S&H在不断采样，一经检测到触发脉冲即终止采样。 \n									// 0 = 当检测到触发事件时专用S&H开始采样，并在两个ADC时钟周期内\n									// 完成采样过程。	\n	ADCONbits.ADCS = 5;             // Clock Divider is set up for Fadc/6 \n									// TAD=41.66ns\n									// For simultaneus sampling total conversion time for one pair is 0.625us \n									// ADCS < 2:0>：A/D 转换时钟分频值选择位\n									// 如果SLOWCLK = 0，ADC时钟分频值如下：\n									// 111  = FADC/7 \n									// 110  = FADC/6.5 \n									// 101  = FADC/6 \n									// 100  = FADC/5.5 \n									// 011  = FADC/5 （默认）\n									// 010  = FADC/4.5 \n									// 001  = FADC/4 \n									// 000  = FADC/3.5 \n									// 如果SLOWCLK = 1，ADC时钟分频值如下：\n									// 111  = FADC/8\n									// 110  = FADC/7\n									// 101  = FADC/6\n									// 100  = FADC/5\n									// 011  = FADC/4 （默认）\n									// 010  = FADC/3\n									// 001  = FADC/2\n									// 000  = FADC/1	\n	ADSTAT = 0;                     // Clear the ADSTAT register \n									// ADSTAT ：A/D 状态寄存器\n									// bit 15-7 未实现：读为0\n									// bit 6 P6RDY：输入对6 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 5 P5RDY：输入对5 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 4 P4RDY：输入对4 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 3 P3RDY：输入对3 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 2 P2RDY：输入对2 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 1 P1RDY：  输入对1 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n									// bit 0 P0RDY：  输入对0 转换数据就绪位\n									// 当缓冲区中数据就绪时此位被置1，当写入0 时此位被清零。\n   	// ADPCFG：A/D 端口配置寄存器   ADC configuration for Full-Bridge Inverter \n   	ADPCFGbits.PCFG0 = 0;           // AN0 逆变电流 \n   	ADPCFGbits.PCFG1 = 0;           // AN1 逆变电压\n\n   	ADCPC0bits.TRGSRC0 = 5;		    // AN0 and AN1 被PWM2触发\n									// TRGSRC0 < 4:0>：触发0 触发源选择位\n									// 为模拟通道AN1 和AN0 的转换选择触发源。\n									// 00000  = 不使能转换\n									// 00001  = 选择独立软件触发\n									// 00010  = 选择全局软件触发\n									// 00011  = 选择PWM 特殊事件触发\n									// 00100  = 选择PWM 发生器1 主触发\n									// 00101  = 选择PWM 发生器2 主触发\n									// 00110  = 选择PWM 发生器3 主触发\n									// 00111  = 选择PWM 发生器4 主触发\n									// 01000  = 保留\n									// 01100  = Timer1 周期匹配\n									// 01101  = 保留\n									// 01110  = 选择PWM 发生器1 辅助触发\n									// 01111  = 选择PWM 发生器2 辅助触发\n									// 10000  = 选择PWM 发生器3 辅助触发\n									// 10001  = 选择PWM 发生器4 辅助触发\n									// 10010  = 保留\n									// 10110  = 保留\n									// 10111  = PWM 发生器1 限流ADC触发\n									// 11000  = PWM 发生器2 限流ADC触发\n									// 11001  = PWM 发生器3 限流ADC触发\n									// 11010  = PWM 发生器4 限流ADC触发\n									// 11011  = 保留\n									// 11111  = Timer2 周期匹配   	\n	ADCPC0bits.IRQEN0 = 1;			// Global ADC interrupt not requested \n									// IRQEN0 ：  中断请求允许0 位\n									// 1 = 当通道AN1 和AN0 上请求的转换完成时允许产生中断请求\n									// 0 = 不产生中断请求\n	//IPC27bits.ADCP0IP = 7;          // Set ADC Interrupt Priority \n	//IFS6bits.ADCP0IF = 0;	    	// Clear AD Interrupt Flag \n	//IEC6bits.ADCP0IE = 1;           // Enable the ADC Interrupt at start. \n	// End of ADC configuration for ACInput \n\n   	ADPCFGbits.PCFG2 = 0;           // AN2 输入交流电压\n   	ADPCFGbits.PCFG3 = 0;           // AN3 输入交流电流\n\n   	ADCPC0bits.TRGSRC1 = 6;		    // AN0 and AN1 triggered by PWM2 \n	ADCPC0bits.IRQEN1 = 1;			// Global ADC interrupt not requested \n	\n\n	//IPC27bits.ADCP1IP = 7;          // Set ADC Interrupt Priority \n	//IFS6bits.ADCP1IF = 0;	    	// Clear AD Interrupt Flag \n	//IEC6bits.ADCP1IE = 1;           // Enable the ADC Interrupt at start. \n\n	IPC3bits.ADIP = 1;\n	IFS0bits.ADIF = 0;\n	IEC0bits.ADIE = 1;\n\n	jumpTable[0] = &ConvPair0Handler;\n	jumpTable[2] = &ConvPair1Handler;\n	\n	ADBASE = (int)(&jumpTable[0]);\n		\n	// End of ADC configuration for AC Mains sensing \n\n}\n\n\nvoid StartADC(void)\n{\n	ADCONbits.ADON = 1;   // Enable the ADC module early because ADC settling time is about 2us \n}\n\n\nvoid initPWM(void)\n{\n	// PWM setup for Full-Bridge Inverter section \n	PWMCON1bits.ITB     = 1;	// ITB ：独立时基模式位\n								// 1 = PHASEx/SPHASEx 寄存器为此PWM 发生器提供时基周期\n								// 0 = PTPER 寄存器为此PWM 发生器提供时序\n	PWMCON1bits.DTC     = 0;	// DTC < 1:0>：死区控制位\n								// 00 = 对于所有输出模式施加正死区\n								// 01 = 对于所有输出模式施加负死区\n								// 10 = 禁止死区功能\n								// 11 = 保留\n	PWMCON1bits.CAM     = 1;	// CAM\n								// 1 = 使能中心对齐模式\n								// 0 = 禁止中心对齐模式        \n	IOCON1bits.PENH     = 1; 	// PENH:PWMH 输出引脚所有权位\n								// 1 = 由PWM 模块控制PWMxH 引脚\n								// 0 = 由GPIO模块控制PWMxH 引脚\n	IOCON1bits.PENL     = 1; 	// PENL：PWML 输出引脚所有权位\n								// 1 = 由PWM 模块控制PWMxL 引脚\n								// 0 = 由GPIO模块控制PWMxL 引脚\n\n	IOCON1bits.PMOD     = 0;    // PMOD < 1:0>：PWM I/O引脚模式位\n								// 00 = PWM I/O 引脚对处于互补输出模式\n								// 01 = PWM I/O 引脚对处于冗余输出模式\n								// 10 = PWM I/O 引脚对处于推挽输出模式\n								// 11 = PWM I/O 引脚对处于真正独立PWM 输出模式     \n	IOCON1bits.OVRDAT   = 0;  // OVRDAT < 1:0>：使能改写时PWMxH 和PWMxL 引脚的数据位\n								// 如果OVERENH = 1，则OVRDAT < 1> 为PWMxH 提供数据。\n								// 如果OVERENL =  1，则OVRDAT < 0> 为PWMxL 提供数据。    \n	IOCON1bits.OVRENH   = 1; 	// OVRENH：    PWMxH 引脚改写使能位\n								// 1 = OVRDAT < 1> 为PWMxH 引脚提供输出数据\n								// 0 =  由PWM 发生器为PWMxH 引脚提供数据\n	IOCON1bits.OVRENL   = 1;  // OVRENL：   PWMxL 引脚改写使能位\n								// 1 = OVRDAT < 0> 为PWMxL 引脚提供输出数据\n								// 0 = 由PWM 发生器为PWMxL 引脚提供数据\n								\n	ALTDTR1             = 0;	//ALTDTRx < 13:0>：PWMx 死区单元的无符号14位死区值位\n	PHASE1              = 19232;// PHASEx < 15:0>：此PWM发生器的 PWM相移值或独立时基周期位\n	PDC1                = 9616;	// PDCx < 15:0> ：PWM 发生器x 占空比值位\n	TRIG1               = 9616;	// TRGCMP < 15:3>：触发器控制值位\n								// 当主PWM 工作在本地时基时，此寄存器包含比较值，\n								// 可以触发ADC模块。\n	STRIG1              = 9616;	//STRGCMP < 15:3>：辅助触发器控制值位\n								//当辅助PWM 工作在本地时基时，此寄存器包含比较值，\n								//可以触发ADC模块。\n\n	TRGCON1bits.DTM     = 1;	// DTM：双触发器模式位\n								// 1 = 辅助触发事件和主触发事件一起产生PWM 触发信号。\n								// 0 = 辅助触发事件不同主触发事件一起产生PWM 触发信号。\n								// 而是产生两个独立的PWM 触发信号。\n	TRGCON1bits.TRGDIV  = 1;	// TRGDIV < 3:0>：触发信号输出分频比位\n								// 0000 = 每个触发事件输出一次触发信号\n								// 0001 = 每2 个触发事件输出一次触发信号\n								// 0010 = 每3 个触发事件输出一次触发信号\n								// 0011 = 每4 个触发事件输出一次触发信号\n								// 0100 = 每5 个触发事件输出一次触发信号\n								// 0101 = 每6 个触发事件输出一次触发信号\n								// 0110 = 每7 个触发事件输出一次触发信号\n								// 0111 = 每8 个触发事件输出一次触发信号\n								// 1000 = 每9 个触发事件输出一次触发信号\n								// 1001 = 每10个触发事件输出一次触发信号\n								// 1010 = 每11个触发事件输出一次触发信号\n								// 1011 = 每12个触发事件输出一次触发信号\n								// 1100 = 每13个触发事件输出一次触发信号\n								// 1101 = 每14个触发事件输出一次触发信号\n								// 1110 = 每15个触发事件输出一次触发信号\n								// 1111 = 每16个触发事件输出一次触发信号\n	TRGCON1bits.TRGSTRT = 0;	// TRGSTRT < 5:0>：触发器后分频比启动使能选择位\n								// 000000 = 在模块使能后等待0 个PWM 周期产生第一个触发事件\n								// 000001 = 在模块使能后等待1 个PWM 周期产生第一个触发事件\n								// 000010 = 在模块使能后等待1 个PWM 周期产生第一个触发事件\n	FCLCON1             = 0x0003; 		// FLTMOD < 1:0> ：PWM 发生器x 的故障模式位\n								// 00 = 所选故障源强制PWMxH 和PWMxL 引脚为FLTDAT 值（锁定模式）\n								// 01 = 所选故障源强制PWMxH 和PWMxL 引脚为FLTDAT 值（周期模式）\n								// 10 = 保留\n								// 11 = 禁止故障输入                    \n								\n	//-------------------------------------------------------------------------\n	PWMCON2bits.ITB     = 1;    \n	PWMCON2bits.DTC     = 0;    \n	PWMCON2bits.CAM     = 1;\n\n	IOCON2bits.PENH     = 1;                    \n	IOCON2bits.PENL     = 1;                  \n\n	IOCON2bits.POLH     = 1;\n	IOCON2bits.POLL     = 1;\n\n	IOCON2bits.PMOD     = 0;\n	IOCON2bits.OVRDAT   = 0;\n	IOCON2bits.OSYNC    = 1;\n	IOCON2bits.OVRENH   = 1;\n	IOCON2bits.OVRENL   = 1;\n\n	ALTDTR2             = 0;\n	PHASE2              = TriPD;\n	PDC2                = TriPD>>1;\n	TRIG2               = 8;//TriPD>>1;\n	//STRIG2              = TriPD>>1;\n\n	TRGCON2bits.DTM     = 0;                    \n	TRGCON2bits.TRGDIV  = 1;\n	TRGCON2bits.TRGSTRT = 0;\n\n	FCLCON2             = 0x0003;\n\n	//-------------------------------------------------------------------------\n	//-------------------------------------------------------------------------\n	PWMCON3bits.ITB     = 1;    \n	PWMCON3bits.DTC     = 0;    \n	PWMCON3bits.CAM     = 1;\n\n	IOCON3bits.PENH     = 0;                    \n	IOCON3bits.PENL     = 0;                  \n\n	IOCON3bits.POLH     = 1;\n	IOCON3bits.POLL     = 1;\n	/*\n	IOCON3bits.PMOD     = 0;\n	IOCON3bits.OVRDAT   = 0;\n	IOCON3bits.OSYNC    = 1;\n	IOCON3bits.OVRENH   = 1;\n	IOCON3bits.OVRENL   = 1;\n	*/\n	ALTDTR3             = 0;\n	PHASE3              = TriPD;\n	PDC3                = TriPD>>1;\n	TRIG3               = 8;//TriPD>>1;\n	//STRIG3              = TriPD>>1;\n\n	TRGCON3bits.DTM     = 0;                    \n	TRGCON3bits.TRGDIV  = 1;\n	TRGCON3bits.TRGSTRT = 0;\n\n	FCLCON3             = 0x0003;		\n}\n\n\nvoid StartPWM(void)\n{\n	PTCONbits.PTEN      = 1;                     // Enable PWM module Turn ON PWM outputs to enable inverter output\n	IOCON1bits.OVRENH   = 0;\n	IOCON1bits.OVRENL   = 0;\n	//IOCON2bits.OVRENH = 0;\n	IOCON2bits.OVRENL   = 0;\n    \n}\n\n/* Example code for ADC ISR*/\nvoid __attribute__((interrupt, no_auto_psv)) _ADCInterrupt (void)\n{\n	IFS0bits.ADIF = 0; // Clear ADC Pair 0 Interrupt Flag\n	((void (*)()) *((int *)ADBASE))(); // Call the corresponding handler	\n}\n\nint tmpi;\nvoid RMS_CALC()\n{\n	if (finvRMS == READY_TO_CALCULATE)\n	{\n		//Value.LoadI = inv.size;\n		//Value.InvF = inv.f;//((mulss(Value.InvF,Q15(0.95))>>15) + (mulss(inv.ofs,Q15(0.05))>>15));\n		siv /= inv.size;\n		tmpi = Root(siv);\n		inv.V = (\n					(mulss(inv.V,Q15(0.8))>>15)\n					+\n					(mulss(tmpi,Q15(0.2))>>15)\n					);\n		siv = 0;\n		Value.InvV = mulss(inv.V,Q15(0.60225))>>15; //30844\n		finvRMS = CALCULATION_DONE;\n	}\n\n	if (facRMS == READY_TO_CALCULATE)\n	{\n		//Value.ACInI = m.size;\n		//Value.ACInF = ((mulss(Value.ACInF,Q15(0.95))>>15) + (mulss(m.ofs,Q15(0.05))>>15));\n		smv /= m.size;\n		tmpi = Root(smv);\n		m.V = (\n					(mulss(m.V,Q15(0.8))>>15)\n					+\n					(mulss(tmpi,Q15(0.2))>>15)\n					);\n		smv = 0;\n		Value.ACInV = mulss(m.V,Q15(0.60225))>>15;//60225\n		facRMS = CALCULATION_DONE;\n	}\n}\n\n",
-			"file": "pwm.c",
-			"file_size": 18671,
-			"file_write_time": 130124545888593750,
+			"contents": "#include <p33fj16gs504.h>\n#include \"dsp.h\"\n#include \"pwm.h\"\n#include \"uart.h\"\n#include \"clock.h\"\n#include \"define.h\"\n#include \"StateMachine.h\"\n#include \"i2c.h\"\n\n/* Configuration bits */\n_FOSCSEL(FNOSC_FRC)\n_FOSC(FCKSM_CSECMD & OSCIOFNC_ON & IOL1WAY_OFF)\n_FWDT(FWDTEN_OFF)	//Watch Dog timer \n_FPOR(FPWRT_PWR128)// & BOREN_OFF) //by jwz. p33fj16gs504 not found BOREN_OFF\n_FICD(ICS_PGD1 & JTAGEN_OFF)\n\nextern int fRMSCalculation;\nunsigned int cnt = 0;\nextern unsigned long StartUpCnt;\nextern int Duty;\nunsigned char tx = 0;\n//this is Ö÷³ÌÐò\n\nint main()\n{\n	ByPassCnt = 0;	//ÅÔÂ·ÇÐ»»¼ÌµçÆ÷¼ÆÊýÆ÷\n	\n	TRISCbits.TRISC2 = 0; \n	TRISCbits.TRISC7 = 0; \n	\n	#ifdef NEWBOARD\n	TRISBbits.TRISB3 = 0; \n	TRISBbits.TRISB4 = 0; \n	#else\n	TRISCbits.TRISC0 = 0; \n	TRISCbits.TRISC13 = 0; \n	#endif\n	TRISCbits.TRISC5 = 0; \n	TRISCbits.TRISC6 = 1; \n\n	BYPASS = 1;\n	SSTART = 1;\n	SCR = 0;\n\n	initClock();\n	initStateMachineTimer();\n	#ifdef NEWBOARD\n	initUart();\n	#endif\n	initADC();\n	//InitADC_Common();\n	StartADC();\n	initPWM();\n	StartPWM();\n	InitI2C();\n\n	LED = 1;\n	StartUpCnt = 1;\n\n	Duty = 0;	\n	//i2cWrite(0,0xA5);\n	while(1)\n	{\n		cnt++;\n		if (cnt>10000)\n		{\n			//tx = sValue.ModbusSA;\n			//i2cReadStr(0,(unsigned char*)&sValue,8);\n			//if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) \n			{\n				//bypassInSwitch = 1;\n			}\n			cnt = 0;\n		}\n		if (tx != MANCTRL)\n		{\n			tx = MANCTRL;\n			bypassInSwitch = 1;\n		}\n		//tx = i2cRead(0);\n         ModbusSlave();\n         RMS_CALC();\n	}\n	return 0;\n}\n\n",
+			"file": "main.c",
+			"file_size": 1462,
+			"file_write_time": 130122969134242123,
 			"settings":
 			{
-				"buffer_size": 16715,
+				"buffer_size": 1462,
 				"line_ending": "Unix",
 				"scratch": true
+			}
+		},
+		{
+			"contents": "#include<p33fj16gs504.h>  \n#include<libq.h>\n#include<dsp.h>\n#include \"sineTable_50Hz.h\"\n#include \"define.h\"\n\n//ÕâÊÇÏÖÔÚÍ¬²½ËøÏà±È½ÏºÃµÄ°æ±¾\n//¹¤×÷ÓÚdsPIC33FJ16GS504\n\n// Inverter Constants \n#define TriPD 18400\n\n#define DC_OFFSET 0x3FF0 //0x43E0		//0x3FF0\n\nlong PD3 = TriPD;\nlong PD2 = TriPD;\n\nint Duty = 0;//Q15(1.0);\n\nINVSTRUCT inv = {0};\nMAINSTRUCT m = {0};\n\n#define iszc(s,v) (((s).cnt>360) && (((s).pv < 0 && ((s).cv>=0)) && ((s).cv-(s).pv>(v))))\n#define issz(s,v) (((s).cnt>128) && (((s).pv>0 && ((s).cv <=0)) && ((s).pv-(s).cv>(v))))\n\n#define invfadj(r,f) r = PD3 = (__builtin_mulsu(f,(unsigned int)(PD3))>>9)\n\n//#define Max(s,v) {(s).maxv = ((s).maxv < (v))?(v):((s).maxv);}\n#define Max(s) {(s).maxv = ((s).maxv < (s).cv)?(s).cv:((s).maxv);}\n#define Min(s) {(s).minv = ((s).minv>(s).cv)?(s).cv:((s).minv);}\n\ninline int jabs(int x)	{ return (x < 0)?(-(x)):(x); }\n\n#define abs jabs\n#define set(v) {m.cv=(v);}\n\n#define clr(v) (v) = 0\n#define inc(s) {(s).cnt=((s).cnt+1)%1024;(s).i = ((s).cnt>256)?(s).cnt-512:(s).cnt;}\n\n#define incr(s) ((s)=((s)<20000)?(s)+1:20000)\n#define decr(s) ((s)=((s)>17000)?(s)-1:17000)\n\n#define SetPhase3(v) {if (v>17500 && v < 20000) { PHASE3 = v; /*TRIG3 = STRIG3 = (v)>>1;*/ } }\n#define SetPhase2(v) {if (v>17500 && v < 20000) { PHASE2 = v; /*TRIG2 = STRIG2 = (v)>>1;*/ } }\n\n#define ZCTHV 0\n\n//variable for RMS calculate\nunsigned long long smv = 0;\nunsigned long long siv = 0;\nchar finvRMS = RMS_NOT_READY;\nchar facRMS = RMS_NOT_READY;\n\n#define CONVERSION_PAIRS 2\n\n//Äæ±äµçÑ¹,µçÁ÷\n/**\n * [ConvPair0Handler description]\n * Inverter output Voltage current gatharing\n */\nvoid ConvPair0Handler (void)\n{\n	//inverterOutputCurrent = (ADCBUF0 << 5) - DC_OFFSET;\n\n	inv.cv = (ADCBUF1 << 5) - DC_OFFSET - inv.ofs;\n	inv.cnt ++; inv.i ++;\n	\n	if(finvRMS == READY_TO_COLLECT_DATA)\n	{\n		siv	+= mulss(inv.cv,inv.cv);\n		Max(inv);Min(inv);\n	}\n	\n	if ((iszc(inv,ZCTHV)) || (inv.cnt>1000)) //Äæ±äµçÑ¹²ÉÑù¿ØÖÆ\n	{\n		inv.size = inv.cnt;\n		inv.cnt = 0;\n\n		if(finvRMS == CALCULATION_DONE)\n		{\n			siv = 0;\n			inv.maxv = inv.minv = 0;\n			//BEEP = ~BEEP;\n			finvRMS = READY_TO_COLLECT_DATA;\n		}\n		else\n		{\n			if (inv.maxv+inv.minv>10)\n			{\n				inv.ofs += (inv.ofs<1000)?1:0;\n			}\n			else if (inv.maxv+inv.minv<-10)\n			{\n				inv.ofs -= (inv.ofs>-1000)?1:0;\n			}\n			finvRMS = READY_TO_CALCULATE;\n		}\n\n		//this is only for debug,\n		Value.InvF = inv.size;\n\n		if (inv.state != OK && Value.InvV>1000)\n		{\n			inv.cycle ++;\n			if (inv.cycle>20)\n			{\n				inv.state = OK;\n			}\n		}\n		\n		Value.InvI = inv.state;\n	}\n\n	if (issz(inv,ZCTHV))\n	{\n		inv.i = 0;\n	}\n\n	inv.pv = inv.cv;\n	\n	if ((inv.idx == 0))		//·½²¨²úÉú\n	{\n		IOCON2bits.OVRDAT = 2;	//50Hz·½²¨¸ßµçÆ½\n	}	\n	else\n	if (inv.idx == 256)	//SINE_TABLE_SIZE / 2)\n	{\n		IOCON2bits.OVRDAT = 0;	//50Hz·½²¨¸ßµçÆ½\n	}\n	\n	PDC2 = mulss(SIN(inv.idx),Duty)>>15;\n\n	inv.idx = (inv.idx + 1) % SINE_TABLE_SIZE;\n\n	ADSTATbits.P0RDY = 0; // Clear the ADSTAT bits \n}\n\n//½»Á÷µçÑ¹,µçÁ÷\n/**\n * [ConvPair1Handler description]\n * AC input voltage current gathering\n */\nint err,perr = 0;\nvoid ConvPair1Handler (void)\n{\n	m.cv = (ADCBUF2 << 5) - DC_OFFSET - m.ofs;\n	//inc(m);	//inc(inv);\n	m.cnt ++;m.i++;\n\n	if(facRMS == READY_TO_COLLECT_DATA)\n	{\n		smv	+= mulss(m.cv,m.cv);\n		Max(m);Min(m);\n	}\n	\n	if (issz(m,ZCTHV))\n	{\n		m.i = 0;\n	}\n\n	if ((iszc(m,ZCTHV)) || (m.cnt>1000)) //ÊÐµçµçÑ¹²ÉÑù¿ØÖÆ\n	{\n		m.size = m.cnt;\n		m.cnt = 0;\n		\n		if(facRMS == CALCULATION_DONE)\n		{\n			smv = 0;\n			m.maxv = m.minv = 0;\n			facRMS = READY_TO_COLLECT_DATA;\n		}\n		else if (m.cnt<1000)\n		{\n			if (m.maxv+m.minv>10)\n			{\n				m.ofs += (m.ofs<1000)?1:0;\n			}\n			else if (m.maxv+m.minv<-10)\n			{\n				m.ofs -= (m.ofs>-1000)?1:0;\n			}\n			\n			facRMS = READY_TO_CALCULATE;\n		}\n		//BEEP = ~BEEP;\n		if (m.size>=1000 || Value.ACInV<1000) //³¬¹ý10´ÎÃ»ÓÐ¹ýÁãµã²úÉú,ÔòËµÃ÷½»Á÷Ê§µç\n		{\n			m.ocnt ++;\n			if (m.ocnt>5 )\n			{\n				m.state = NOK;\n				m.ocnt = 0;\n			}\n		}\n		else\n		{\n			switch(m.state)\n			{\n				case NOK:	\n				{\n					m.icnt ++;	//ÓÐ¹ýÁãµã²úÉú,ËµÃ÷ÓÐ½»Á÷ÊäÈë\n					if (m.icnt > 10 && Value.ACInV > 1000)	//½»Á÷µçÑ¹´óÓÚ100V\n					{\n						m.state = ADJ;\n						m.icnt = 0;\n					}\n				}\n				break;\n				case ADJ:\n				{\n					if (m.size > 511)\n					{\n						incr(PD3);	//²ÉÑùÖÜÆÚ±ä³¤,²ÉÑùËÙ¶ÈÏÂ½µ\n					}\n					else if (m.size < 511)\n					{\n						decr(PD3);	//²ÉÑùÖÜÆÚ±ä¶Ì³¤,²ÉÑùËÙ¶ÈÉÏÉý\n					}\n					else\n					{\n						m.cycle ++;\n						if (m.cycle>20)\n						{\n							m.state = OK;\n							m.cycle = 0;\n						}\n					}\n					SetPhase3(PD3);\n				}\n				break;\n				case OK:\n				{\n					if (m.size > 511)	//¶Ô½»Á÷ÊäÈëµçÑ¹µÄÆµÂÊ½øÐÐÎ¢µ÷\n					{\n						incr(PD3);\n						SetPhase3(PD3)\n					}\n					else if (m.size < 511)\n					{\n						decr(PD3);\n						SetPhase3(PD3)\n					}\n\n					if ((inv.state == OK))\n					{\n						if (jabs(PD3-PD2)  <  50)\n						{\n							err = (inv.i - m.i);\n							if (jabs(err) > 0)\n							{\n								if (err >  128) err =  128;\n								if (err < -128) err = -128;\n								\n								PD2 += (err>>0) - (perr>>0);\n\n								if (err > 2)	//err==perr,¼´inv.iÇÒm.i²»µÈÓÚ0\n								{\n									incr(PD2);\n								}\n								else if (err < -2)\n								{\n									decr(PD2);\n								}\n								perr = err;\n							}\n							if (jabs(err) < 2)\n							{\n								inv.cycle++;\n								if (inv.cycle > 50)\n								{\n									inv.synced = 1;\n									inv.cycle = 0;\n								}\n								inv.ocnt = 0;\n							}\n							else if (jabs(err)>10)\n							{\n								inv.ocnt++;\n								if (inv.ocnt>20)\n								{\n									inv.synced = 0;\n									inv.ocnt = 0;\n								}\n							}\n						}\n						else if (PD2 < PD3)\n						{\n							incr(PD2);\n						}\n						else if (PD2>PD3)\n						{\n							decr(PD2);\n						}\n\n						SetPhase2(PD2);\n					}\n				}\n				break;\n			}\n		}\n		Value.Power = PD3;\n		Value.Factor = PD2;\n\n		Value.BatV = inv.synced + MANCTRL;\n		Value.BatI = m.ofs;\n		Value.ChargeStatus = inv.ofs;\n\n		Value.ACInF = m.size;\n		Value.ACInI = m.state;\n		\n	}\n	\n	m.pv = m.cv;\n\n	ADSTATbits.P1RDY = 0; // Clear the ADSTAT bits\n}\n\nvoid (*jumpTable[CONVERSION_PAIRS*2-1])(void);\n\n\nvoid initADC(void)\n{\n    // Common ADC configuration \n    ADCONbits.ADON = 0;\n									// ADON £º A/D ¹¤×÷Ä£Ê½Î»\n									// 1 = A/D ×ª»»Æ÷Ä£¿éÔÚ¹¤×÷\n									// 0 = A/D ×ª»»Æ÷¹Ø±Õ    \n    ADCONbits.ADSIDL = 0;\n									// ADSIDL£º  ÔÚ¿ÕÏÐÄ£Ê½ÏÂÍ£Ö¹Î»\n									// 1 = µ±Æ÷¼þ½øÈë¿ÕÏÐÄ£Ê½Ê±£¬Ä£¿éÍ£Ö¹¹¤×÷\n									// 0 = ÔÚ¿ÕÏÐÄ£Ê½ÏÂÄ£¿é¼ÌÐø¹¤×÷    \n   	ADCONbits.SLOWCLK = 1; \n									// SLOWCLK£ºµÍÆµÊ±ÖÓ·ÖÆµ±ÈÊ¹ÄÜÎ»\n									// 1 =  Ê¹ÓÃÕë¶ÔµÍÆµADCÊäÈëÊ±ÖÓµÄÊ±ÖÓ·ÖÆµ±È¡£\n									// 		´Ë·ÖÆµ±ÈÌá¹©µÍ·ÖÆµ±ÈÓÃÀ´ÔÚ½ÏÂýµÄÊäÈëÊ±ÖÓÏÂ»ñµÃ\n									// 		ËÙ¶È×î¿ìµÄADC²Ù×÷¡£\n									// 0 =  Ê¹ÓÃÕë¶Ô¸ßÆµADCÊäÈëÊ±ÖÓµÄÊ±ÖÓ·ÖÆµ±È¡£\n									// 		´Ë·ÖÆµ±ÈÌá¹©¸ß·ÖÆµ±È¡£   	\n 	ADCONbits.FORM = 0;             \n									// FORM £ºÊý¾ÝÊä³ö¸ñÊ½Î»\n									// 1 = Ð¡Êý£¨DOUT =  dddd dddd dd00 0000£©\n									// 0 = ÕûÊý£¨DOUT = 0000 00dd dddd dddd£© 	\n	ADCONbits.EIE = 1;              // Disable Early Interrupt ,´Ë´¦½ûÓÃADÖÐ¶Ï,Ê¹ÆäÍ¨¹ýPWMÀ´´¥·¢ÖÐ¶Ï\n									// EIE£ºÌáÇ°ÖÐ¶ÏÔÊÐíÎ»\n									// 1 = ÔÚµÚÒ»´Î×ª»»Íê³Éºó²úÉúÖÐ¶Ï\n									// 0 = ÔÚµÚ¶þ´Î×ª»»Íê³Éºó²úÉúÖÐ¶Ï	\n	ADCONbits.ORDER = 0;            \n									// ORDER£º×ª»»Ë³ÐòÎ»\n									// 1 = ÏÈ×ª»»ÆæÊý±àºÅµÄÄ£ÄâÊäÈë£¬È»ºó×ª»»Å¼Êý±àºÅµÄÊäÈë\n									// 0 = ÏÈ×ª»»Å¼Êý±àºÅµÄÄ£ÄâÊäÈë£¬È»ºó×ª»»ÆæÊý±àºÅµÄÊäÈë	\n	ADCONbits.SEQSAMP = 0;          \n									// SEQSAMP £ºË³Ðò²ÉÑùÊ¹ÄÜÎ»\n									// 1 = Èç¹ûORDER =0£¬ÔÚµÚ¶þ´Î×ª»»¿ªÊ¼Ê±¶Ô¹²ÓÃ²ÉÑù/ ±£³Ö£¨S&H£©\n									// µçÂ·½øÐÐ²ÉÑù¡£Èç¹ûORDER =  1£¬ÔòÔÚµÚÒ»´Î×ª»»¿ªÊ¼Ê±¶Ô¹²ÓÃS&H\n									// µçÂ·½øÐÐ²ÉÑù¡£\n									// 0 = Èç¹ûÔÚÏÖÓÐ×ª»»¹ý³ÌÖÐ¹²ÓÃS&H²»´¦ÓÚÃ¦×´Ì¬£¬ÔòÔÚ²ÉÑù×¨ÓÃ\n									// S&HµÄÍ¬Ê±¶Ô¹²ÓÃS&H½øÐÐ²ÉÑù¡£\n									// Èç¹ûÔÚ²ÉÑù×¨ÓÃS&HÊ±¹²ÓÃS&H´¦ÓÚÃ¦×´Ì¬£¬ÔòÔÚÐÂ×ª»»ÖÜÆÚ¿ªÊ¼Ê±\n									// ¶Ô¹²ÓÃS&H½øÐÐ²ÉÑù¡£	\n	ADCONbits.ASYNCSAMP = 1;\n									// ASYNCSAMP£ºÒì²½×¨ÓÃS&H²ÉÑùÊ¹ÄÜÎ»\n									// 1 = ×¨ÓÃS&HÔÚ²»¶Ï²ÉÑù£¬Ò»¾­¼ì²âµ½´¥·¢Âö³å¼´ÖÕÖ¹²ÉÑù¡£ \n									// 0 = µ±¼ì²âµ½´¥·¢ÊÂ¼þÊ±×¨ÓÃS&H¿ªÊ¼²ÉÑù£¬²¢ÔÚÁ½¸öADCÊ±ÖÓÖÜÆÚÄÚ\n									// Íê³É²ÉÑù¹ý³Ì¡£	\n	ADCONbits.ADCS = 5;             // Clock Divider is set up for Fadc/6 \n									// TAD=41.66ns\n									// For simultaneus sampling total conversion time for one pair is 0.625us \n									// ADCS < 2:0>£ºA/D ×ª»»Ê±ÖÓ·ÖÆµÖµÑ¡ÔñÎ»\n									// Èç¹ûSLOWCLK = 0£¬ADCÊ±ÖÓ·ÖÆµÖµÈçÏÂ£º\n									// 111  = FADC/7 \n									// 110  = FADC/6.5 \n									// 101  = FADC/6 \n									// 100  = FADC/5.5 \n									// 011  = FADC/5 £¨Ä¬ÈÏ£©\n									// 010  = FADC/4.5 \n									// 001  = FADC/4 \n									// 000  = FADC/3.5 \n									// Èç¹ûSLOWCLK = 1£¬ADCÊ±ÖÓ·ÖÆµÖµÈçÏÂ£º\n									// 111  = FADC/8\n									// 110  = FADC/7\n									// 101  = FADC/6\n									// 100  = FADC/5\n									// 011  = FADC/4 £¨Ä¬ÈÏ£©\n									// 010  = FADC/3\n									// 001  = FADC/2\n									// 000  = FADC/1	\n	ADSTAT = 0;                     // Clear the ADSTAT register \n									// ADSTAT £ºA/D ×´Ì¬¼Ä´æÆ÷\n									// bit 15-7 Î´ÊµÏÖ£º¶ÁÎª0\n									// bit 6 P6RDY£ºÊäÈë¶Ô6 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 5 P5RDY£ºÊäÈë¶Ô5 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 4 P4RDY£ºÊäÈë¶Ô4 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 3 P3RDY£ºÊäÈë¶Ô3 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 2 P2RDY£ºÊäÈë¶Ô2 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 1 P1RDY£º  ÊäÈë¶Ô1 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n									// bit 0 P0RDY£º  ÊäÈë¶Ô0 ×ª»»Êý¾Ý¾ÍÐ÷Î»\n									// µ±»º³åÇøÖÐÊý¾Ý¾ÍÐ÷Ê±´ËÎ»±»ÖÃ1£¬µ±Ð´Èë0 Ê±´ËÎ»±»ÇåÁã¡£\n   	// ADPCFG£ºA/D ¶Ë¿ÚÅäÖÃ¼Ä´æÆ÷   ADC configuration for Full-Bridge Inverter \n   	ADPCFGbits.PCFG0 = 0;           // AN0 Äæ±äµçÁ÷ \n   	ADPCFGbits.PCFG1 = 0;           // AN1 Äæ±äµçÑ¹\n\n   	ADCPC0bits.TRGSRC0 = 5;		    // AN0 and AN1 ±»PWM2´¥·¢\n									// TRGSRC0 < 4:0>£º´¥·¢0 ´¥·¢Ô´Ñ¡ÔñÎ»\n									// ÎªÄ£ÄâÍ¨µÀAN1 ºÍAN0 µÄ×ª»»Ñ¡Ôñ´¥·¢Ô´¡£\n									// 00000  = ²»Ê¹ÄÜ×ª»»\n									// 00001  = Ñ¡Ôñ¶ÀÁ¢Èí¼þ´¥·¢\n									// 00010  = Ñ¡ÔñÈ«¾ÖÈí¼þ´¥·¢\n									// 00011  = Ñ¡ÔñPWM ÌØÊâÊÂ¼þ´¥·¢\n									// 00100  = Ñ¡ÔñPWM ·¢ÉúÆ÷1 Ö÷´¥·¢\n									// 00101  = Ñ¡ÔñPWM ·¢ÉúÆ÷2 Ö÷´¥·¢\n									// 00110  = Ñ¡ÔñPWM ·¢ÉúÆ÷3 Ö÷´¥·¢\n									// 00111  = Ñ¡ÔñPWM ·¢ÉúÆ÷4 Ö÷´¥·¢\n									// 01000  = ±£Áô\n									// 01100  = Timer1 ÖÜÆÚÆ¥Åä\n									// 01101  = ±£Áô\n									// 01110  = Ñ¡ÔñPWM ·¢ÉúÆ÷1 ¸¨Öú´¥·¢\n									// 01111  = Ñ¡ÔñPWM ·¢ÉúÆ÷2 ¸¨Öú´¥·¢\n									// 10000  = Ñ¡ÔñPWM ·¢ÉúÆ÷3 ¸¨Öú´¥·¢\n									// 10001  = Ñ¡ÔñPWM ·¢ÉúÆ÷4 ¸¨Öú´¥·¢\n									// 10010  = ±£Áô\n									// 10110  = ±£Áô\n									// 10111  = PWM ·¢ÉúÆ÷1 ÏÞÁ÷ADC´¥·¢\n									// 11000  = PWM ·¢ÉúÆ÷2 ÏÞÁ÷ADC´¥·¢\n									// 11001  = PWM ·¢ÉúÆ÷3 ÏÞÁ÷ADC´¥·¢\n									// 11010  = PWM ·¢ÉúÆ÷4 ÏÞÁ÷ADC´¥·¢\n									// 11011  = ±£Áô\n									// 11111  = Timer2 ÖÜÆÚÆ¥Åä   	\n	ADCPC0bits.IRQEN0 = 1;			// Global ADC interrupt not requested \n									// IRQEN0 £º  ÖÐ¶ÏÇëÇóÔÊÐí0 Î»\n									// 1 = µ±Í¨µÀAN1 ºÍAN0 ÉÏÇëÇóµÄ×ª»»Íê³ÉÊ±ÔÊÐí²úÉúÖÐ¶ÏÇëÇó\n									// 0 = ²»²úÉúÖÐ¶ÏÇëÇó\n	//IPC27bits.ADCP0IP = 7;          // Set ADC Interrupt Priority \n	//IFS6bits.ADCP0IF = 0;	    	// Clear AD Interrupt Flag \n	//IEC6bits.ADCP0IE = 1;           // Enable the ADC Interrupt at start. \n	// End of ADC configuration for ACInput \n\n   	ADPCFGbits.PCFG2 = 0;           // AN2 ÊäÈë½»Á÷µçÑ¹\n   	ADPCFGbits.PCFG3 = 0;           // AN3 ÊäÈë½»Á÷µçÁ÷\n\n   	ADCPC0bits.TRGSRC1 = 6;		    // AN0 and AN1 triggered by PWM2 \n	ADCPC0bits.IRQEN1 = 1;			// Global ADC interrupt not requested \n	\n\n	//IPC27bits.ADCP1IP = 7;          // Set ADC Interrupt Priority \n	//IFS6bits.ADCP1IF = 0;	    	// Clear AD Interrupt Flag \n	//IEC6bits.ADCP1IE = 1;           // Enable the ADC Interrupt at start. \n\n	IPC3bits.ADIP = 1;\n	IFS0bits.ADIF = 0;\n	IEC0bits.ADIE = 1;\n\n	jumpTable[0] = &ConvPair0Handler;\n	jumpTable[2] = &ConvPair1Handler;\n	\n	ADBASE = (int)(&jumpTable[0]);\n		\n	// End of ADC configuration for AC Mains sensing \n\n}\n\n\nvoid StartADC(void)\n{\n	ADCONbits.ADON = 1;   // Enable the ADC module early because ADC settling time is about 2us \n}\n\n\nvoid initPWM(void)\n{\n	// PWM setup for Full-Bridge Inverter section \n	PWMCON1bits.ITB     = 1;	// ITB £º¶ÀÁ¢Ê±»ùÄ£Ê½Î»\n								// 1 = PHASEx/SPHASEx ¼Ä´æÆ÷Îª´ËPWM ·¢ÉúÆ÷Ìá¹©Ê±»ùÖÜÆÚ\n								// 0 = PTPER ¼Ä´æÆ÷Îª´ËPWM ·¢ÉúÆ÷Ìá¹©Ê±Ðò\n	PWMCON1bits.DTC     = 0;	// DTC < 1:0>£ºËÀÇø¿ØÖÆÎ»\n								// 00 = ¶ÔÓÚËùÓÐÊä³öÄ£Ê½Ê©¼ÓÕýËÀÇø\n								// 01 = ¶ÔÓÚËùÓÐÊä³öÄ£Ê½Ê©¼Ó¸ºËÀÇø\n								// 10 = ½ûÖ¹ËÀÇø¹¦ÄÜ\n								// 11 = ±£Áô\n	PWMCON1bits.CAM     = 1;	// CAM\n								// 1 = Ê¹ÄÜÖÐÐÄ¶ÔÆëÄ£Ê½\n								// 0 = ½ûÖ¹ÖÐÐÄ¶ÔÆëÄ£Ê½        \n	IOCON1bits.PENH     = 1; 	// PENH:PWMH Êä³öÒý½ÅËùÓÐÈ¨Î»\n								// 1 = ÓÉPWM Ä£¿é¿ØÖÆPWMxH Òý½Å\n								// 0 = ÓÉGPIOÄ£¿é¿ØÖÆPWMxH Òý½Å\n	IOCON1bits.PENL     = 1; 	// PENL£ºPWML Êä³öÒý½ÅËùÓÐÈ¨Î»\n								// 1 = ÓÉPWM Ä£¿é¿ØÖÆPWMxL Òý½Å\n								// 0 = ÓÉGPIOÄ£¿é¿ØÖÆPWMxL Òý½Å\n\n	IOCON1bits.PMOD     = 0;    // PMOD < 1:0>£ºPWM I/OÒý½ÅÄ£Ê½Î»\n								// 00 = PWM I/O Òý½Å¶Ô´¦ÓÚ»¥²¹Êä³öÄ£Ê½\n								// 01 = PWM I/O Òý½Å¶Ô´¦ÓÚÈßÓàÊä³öÄ£Ê½\n								// 10 = PWM I/O Òý½Å¶Ô´¦ÓÚÍÆÍìÊä³öÄ£Ê½\n								// 11 = PWM I/O Òý½Å¶Ô´¦ÓÚÕæÕý¶ÀÁ¢PWM Êä³öÄ£Ê½     \n	IOCON1bits.OVRDAT   = 0;  // OVRDAT < 1:0>£ºÊ¹ÄÜ¸ÄÐ´Ê±PWMxH ºÍPWMxL Òý½ÅµÄÊý¾ÝÎ»\n								// Èç¹ûOVERENH = 1£¬ÔòOVRDAT < 1> ÎªPWMxH Ìá¹©Êý¾Ý¡£\n								// Èç¹ûOVERENL =  1£¬ÔòOVRDAT < 0> ÎªPWMxL Ìá¹©Êý¾Ý¡£    \n	IOCON1bits.OVRENH   = 1; 	// OVRENH£º    PWMxH Òý½Å¸ÄÐ´Ê¹ÄÜÎ»\n								// 1 = OVRDAT < 1> ÎªPWMxH Òý½ÅÌá¹©Êä³öÊý¾Ý\n								// 0 =  ÓÉPWM ·¢ÉúÆ÷ÎªPWMxH Òý½ÅÌá¹©Êý¾Ý\n	IOCON1bits.OVRENL   = 1;  // OVRENL£º   PWMxL Òý½Å¸ÄÐ´Ê¹ÄÜÎ»\n								// 1 = OVRDAT < 0> ÎªPWMxL Òý½ÅÌá¹©Êä³öÊý¾Ý\n								// 0 = ÓÉPWM ·¢ÉúÆ÷ÎªPWMxL Òý½ÅÌá¹©Êý¾Ý\n								\n	ALTDTR1             = 0;					//ALTDTRx < 13:0>£ºPWMx ËÀÇøµ¥ÔªµÄÎÞ·ûºÅ14Î»ËÀÇøÖµÎ»\n	PHASE1              = TriPD;		// PHASEx < 15:0>£º´ËPWM·¢ÉúÆ÷µÄ PWMÏàÒÆÖµ»ò¶ÀÁ¢Ê±»ùÖÜÆÚÎ»\n	PDC1                = TriPD>>1;	// PDCx < 15:0> £ºPWM ·¢ÉúÆ÷x Õ¼¿Õ±ÈÖµÎ»\n	TRIG1               = TriPD>>1;	// TRGCMP < 15:3>£º´¥·¢Æ÷¿ØÖÆÖµÎ»\n								// µ±Ö÷PWM ¹¤×÷ÔÚ±¾µØÊ±»ùÊ±£¬´Ë¼Ä´æÆ÷°üº¬±È½ÏÖµ£¬\n								// ¿ÉÒÔ´¥·¢ADCÄ£¿é¡£\n	STRIG1              = TriPD>>1;	//STRGCMP < 15:3>£º¸¨Öú´¥·¢Æ÷¿ØÖÆÖµÎ»\n								//µ±¸¨ÖúPWM ¹¤×÷ÔÚ±¾µØÊ±»ùÊ±£¬´Ë¼Ä´æÆ÷°üº¬±È½ÏÖµ£¬\n								//¿ÉÒÔ´¥·¢ADCÄ£¿é¡£\n\n	TRGCON1bits.DTM     = 1;	// DTM£ºË«´¥·¢Æ÷Ä£Ê½Î»\n								// 1 = ¸¨Öú´¥·¢ÊÂ¼þºÍÖ÷´¥·¢ÊÂ¼þÒ»Æð²úÉúPWM ´¥·¢ÐÅºÅ¡£\n								// 0 = ¸¨Öú´¥·¢ÊÂ¼þ²»Í¬Ö÷´¥·¢ÊÂ¼þÒ»Æð²úÉúPWM ´¥·¢ÐÅºÅ¡£\n								// ¶øÊÇ²úÉúÁ½¸ö¶ÀÁ¢µÄPWM ´¥·¢ÐÅºÅ¡£\n	TRGCON1bits.TRGDIV  = 1;	// TRGDIV < 3:0>£º´¥·¢ÐÅºÅÊä³ö·ÖÆµ±ÈÎ»\n								// 0000 = Ã¿¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0001 = Ã¿2 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0010 = Ã¿3 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0011 = Ã¿4 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0100 = Ã¿5 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0101 = Ã¿6 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0110 = Ã¿7 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 0111 = Ã¿8 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1000 = Ã¿9 ¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1001 = Ã¿10¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1010 = Ã¿11¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1011 = Ã¿12¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1100 = Ã¿13¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1101 = Ã¿14¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1110 = Ã¿15¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n								// 1111 = Ã¿16¸ö´¥·¢ÊÂ¼þÊä³öÒ»´Î´¥·¢ÐÅºÅ\n	TRGCON1bits.TRGSTRT = 0;	// TRGSTRT < 5:0>£º´¥·¢Æ÷ºó·ÖÆµ±ÈÆô¶¯Ê¹ÄÜÑ¡ÔñÎ»\n								// 000000 = ÔÚÄ£¿éÊ¹ÄÜºóµÈ´ý0 ¸öPWM ÖÜÆÚ²úÉúµÚÒ»¸ö´¥·¢ÊÂ¼þ\n								// 000001 = ÔÚÄ£¿éÊ¹ÄÜºóµÈ´ý1 ¸öPWM ÖÜÆÚ²úÉúµÚÒ»¸ö´¥·¢ÊÂ¼þ\n								// 000010 = ÔÚÄ£¿éÊ¹ÄÜºóµÈ´ý1 ¸öPWM ÖÜÆÚ²úÉúµÚÒ»¸ö´¥·¢ÊÂ¼þ\n	FCLCON1             = 0x0003; 		// FLTMOD < 1:0> £ºPWM ·¢ÉúÆ÷x µÄ¹ÊÕÏÄ£Ê½Î»\n								// 00 = ËùÑ¡¹ÊÕÏÔ´Ç¿ÖÆPWMxH ºÍPWMxL Òý½ÅÎªFLTDAT Öµ£¨Ëø¶¨Ä£Ê½£©\n								// 01 = ËùÑ¡¹ÊÕÏÔ´Ç¿ÖÆPWMxH ºÍPWMxL Òý½ÅÎªFLTDAT Öµ£¨ÖÜÆÚÄ£Ê½£©\n								// 10 = ±£Áô\n								// 11 = ½ûÖ¹¹ÊÕÏÊäÈë                    \n								\n	//-------------------------------------------------------------------------\n	PWMCON2bits.ITB     = 1;    \n	PWMCON2bits.DTC     = 0;    \n	PWMCON2bits.CAM     = 1;\n\n	IOCON2bits.PENH     = 1;                    \n	IOCON2bits.PENL     = 1;                  \n\n	IOCON2bits.POLH     = 1;\n	IOCON2bits.POLL     = 1;\n\n	IOCON2bits.PMOD     = 0;\n	IOCON2bits.OVRDAT   = 0;\n	IOCON2bits.OSYNC    = 1;\n	IOCON2bits.OVRENH   = 1;\n	IOCON2bits.OVRENL   = 1;\n\n	ALTDTR2             = 0;\n	PHASE2              = TriPD;\n	PDC2                = TriPD>>1;\n	TRIG2               = 8;//TriPD>>1;\n	//STRIG2              = TriPD>>1;\n\n	TRGCON2bits.DTM     = 0;                    \n	TRGCON2bits.TRGDIV  = 1;\n	TRGCON2bits.TRGSTRT = 0;\n\n	FCLCON2             = 0x0003;\n\n	//-------------------------------------------------------------------------\n	//-------------------------------------------------------------------------\n	PWMCON3bits.ITB     = 1;    \n	PWMCON3bits.DTC     = 0;    \n	PWMCON3bits.CAM     = 1;\n\n	IOCON3bits.PENH     = 0;                    \n	IOCON3bits.PENL     = 0;                  \n\n	IOCON3bits.POLH     = 1;\n	IOCON3bits.POLL     = 1;\n	/*\n	IOCON3bits.PMOD     = 0;\n	IOCON3bits.OVRDAT   = 0;\n	IOCON3bits.OSYNC    = 1;\n	IOCON3bits.OVRENH   = 1;\n	IOCON3bits.OVRENL   = 1;\n	*/\n	ALTDTR3             = 0;\n	PHASE3              = TriPD;\n	PDC3                = TriPD>>1;\n	TRIG3               = 8;//TriPD>>1;\n	//STRIG3              = TriPD>>1;\n\n	TRGCON3bits.DTM     = 0;                    \n	TRGCON3bits.TRGDIV  = 1;\n	TRGCON3bits.TRGSTRT = 0;\n\n	FCLCON3             = 0x0003;		\n}\n\n\nvoid StartPWM(void)\n{\n	PTCONbits.PTEN      = 1;                     // Enable PWM module Turn ON PWM outputs to enable inverter output\n	IOCON1bits.OVRENH   = 0;\n	IOCON1bits.OVRENL   = 0;\n	//IOCON2bits.OVRENH = 0;\n	IOCON2bits.OVRENL   = 0;\n    \n}\n\n/* Example code for ADC ISR*/\nvoid __attribute__((interrupt, no_auto_psv)) _ADCInterrupt (void)\n{\n	IFS0bits.ADIF = 0; // Clear ADC Pair 0 Interrupt Flag\n	((void (*)()) *((int *)ADBASE))(); // Call the corresponding handler	\n}\n\nint tmpi;\nvoid RMS_CALC()\n{\n	if (finvRMS == READY_TO_CALCULATE)\n	{\n		//Value.LoadI = inv.size;\n		//Value.InvF = inv.f;//((mulss(Value.InvF,Q15(0.95))>>15) + (mulss(inv.ofs,Q15(0.05))>>15));\n		siv /= inv.size;\n		tmpi = Root(siv);\n		inv.V = (\n					(mulss(inv.V,Q15(0.8))>>15)\n					+\n					(mulss(tmpi,Q15(0.2))>>15)\n					);\n		siv = 0;\n		Value.InvV = mulss(inv.V,Q15(0.35))>>14; //30844\n		finvRMS = CALCULATION_DONE;\n	}\n\n	if (facRMS == READY_TO_CALCULATE)\n	{\n		//Value.ACInI = m.size;\n		//Value.ACInF = ((mulss(Value.ACInF,Q15(0.95))>>15) + (mulss(m.ofs,Q15(0.05))>>15));\n		smv /= m.size;\n		tmpi = Root(smv);\n		m.V = (\n					(mulss(m.V,Q15(0.8))>>15)\n					+\n					(mulss(tmpi,Q15(0.2))>>15)\n					);\n		smv = 0;\n		Value.ACInV = mulss(m.V,Q15(0.45))>>15;//60225\n		facRMS = CALCULATION_DONE;\n	}\n}\n\n",
+			"file": "pwm.c",
+			"file_size": 18670,
+			"file_write_time": 130122963002329352,
+			"settings":
+			{
+				"buffer_size": 18670,
+				"line_ending": "Unix",
+				"scratch": true
+			}
+		},
+		{
+			"file": "/D/Tools/st3dev/sublime_plugin.py",
+			"settings":
+			{
+				"buffer_size": 17218,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "clock.c",
+			"settings":
+			{
+				"buffer_size": 1414,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -327,7 +355,11 @@
 	},
 	"console":
 	{
-		"height": 412.0
+		"height": 412.0,
+		"history":
+		[
+			"import urllib2,os;pf='Package Control.sublime-package';ipp=sublime.installed_packages_path();os.makedirs(ipp) if not os.path.exists(ipp) else None;open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read())"
+		]
 	},
 	"distraction_free":
 	{
@@ -340,17 +372,19 @@
 	},
 	"file_history":
 	[
-		"/D/UPS/tbupsv20/pwm.c",
-		"/D/UPS/tbupsv20/StateMachine.c",
-		"/C/Program Files/Microsoft Visual Studio/VC98/Include/DOS.H",
-		"/D/UPS/tbupsv20/data_struct.h",
-		"/D/UPS/tbupsv20/define.h",
-		"/D/UPS/tbupsv20/i2c.c",
-		"/D/UPS/tbupsv20/uart.c",
-		"/D/UPS/tbupsv20/clock.c",
-		"/D/Tools/st3dev/sublime_text.exe",
-		"/D/Tools/Sublime Text/Data/Packages/User/Preferences.sublime-settings",
+		"/D/Tools/st3dev/Data/Packages/Default/Preferences.sublime-settings",
 		"/D/Tools/st3dev/Data/Packages/User/Preferences.sublime-settings",
+		"/D/Tools/st3dev/注册右键.bat",
+		"/D/Tools/Sublime Text/Data/Packages/User/Preferences.sublime-settings",
+		"/D/UPS/tbupsv20/clock.c",
+		"/D/UPS/tbupsv20/uart.c",
+		"/D/UPS/tbupsv20/i2c.c",
+		"/D/Tools/Sublime Text3/Data/Packages/User/Preferences.sublime-settings",
+		"/D/UPS/tbupsv20/main.c",
+		"/D/UPS/tbupsv20/define.h",
+		"/D/UPS/tbupsv20/data_struct.h",
+		"/D/UPS/tbupsv20/StateMachine.c",
+		"/D/UPS/tbupsv20/pwm.c",
 		"/D/Tools/Sublime Text/Data/Packages/User/dsPIC make.sublime-build",
 		"/D/UPS/tbupsv20/dsp.h",
 		"/C/Documents and Settings/jwz/桌面/msvdm.dll",
@@ -362,7 +396,6 @@
 		"/D/UPS/tbupsv20/README.md",
 		"/D/UPS/tbupsv20/ups.tagsrc",
 		"/D/UPS/tbupsv20/分析.cpp",
-		"/D/UPS/tbupsv20/main.c",
 		"/D/UPS/tbupsv20/UPS.sublime-workspace",
 		"/D/UPS/tbupsv20/BUILD_PTG.cmd",
 		"/D/UPS/xSingle2/Makefile",
@@ -407,7 +440,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -425,6 +458,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"highl",
+			"bracket",
 			"80000",
 			"SCR",
 			"invshift",
@@ -508,7 +543,7 @@
 		"replace_history":
 		[
 		],
-		"reverse": true,
+		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": true,
@@ -517,134 +552,61 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "main.c",
+					"file": "i2c.c",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1348,
+						"buffer_size": 3344,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								750,
-								750
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"BracketHighlighterBusy": false,
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"bh_regions":
-							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110.0
-							],
-							"gjslint_options":
-							[
-							],
 							"in_converting": true,
-							"incomplete_sync": null,
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
 							"origin_encoding": "GBK",
-							"pep8": true,
-							"pep8_ignore":
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 405.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "main.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1462,
+						"regions":
+						{
+						},
+						"selection":
+						[
 							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"remote_loading": false,
-							"revert_to_scratch": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2.0,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"synced": false,
-							"syntax": "Packages/C++/C.tmLanguage",
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"in_converting": true,
+							"origin_encoding": "GBK",
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
@@ -654,42 +616,87 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 2,
 					"file": "pwm.c",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16715,
+						"buffer_size": 18670,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2609,
-								2609
+								4355,
+								4355
 							]
 						],
 						"settings":
 						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close"
-							],
 							"in_converting": true,
 							"origin_encoding": "GBK",
-							"syntax": "Packages/C++/C.tmLanguage",
+							"revert_to_scratch": true,
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2139.0,
+						"translation.y": 2453.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/D/Tools/st3dev/sublime_plugin.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17218,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "clock.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1414,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								414,
+								414
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -748,6 +755,7 @@
 	{
 		"height": 0.0
 	},
+	"project": "UPS.sublime-project",
 	"replace":
 	{
 		"height": 64.0
@@ -785,10 +793,24 @@
 		],
 		"width": 0.0
 	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
 	"side_bar_width": 124.0,
-	"status_bar_visible": true
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
 }

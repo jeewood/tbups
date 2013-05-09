@@ -1,5 +1,5 @@
 /*******************************************************************************
-* © 2005 Microchip Technology Inc.
+* ï¿½ 2005 Microchip Technology Inc.
 *
 * SOFTWARE LICENSE AGREEMENT:
 * Microchip Technology Incorporated ("Microchip") retains all ownership and 

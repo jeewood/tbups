@@ -7,7 +7,7 @@
 
 int State;
 extern int Duty;
-
+extern unsigned char tx;
 int LEDCnt = 0;
 
 void initStateMachineTimer(void)
@@ -24,6 +24,8 @@ void initStateMachineTimer(void)
 unsigned long StartUpCnt = 0;
 extern unsigned char InvMode;
 
+extern void TestDrv();
+
 long ByPassCnt = 0,ScrCnt = 0;
 int sCntx = 0;
 void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
@@ -38,6 +40,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 	m.f+=mf;
 	inv.f+=invf;
 	
+	TestDrv();
+
 	UART_DRV();
 			
 	switch(State)
@@ -102,26 +106,17 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 				}
 			}
 			//#endif
-			
 			if (inv.synced)
 			{
 				if (bypassInSwitch)
 				{
 					SCR = 1;
-					ScrCnt = 80;
+					ScrCnt = 600;
 					bypassInSwitch = 0;
 				}
-	
-				if (ScrCnt==60)
+				else if (ScrCnt==580)
 				{
-					if (sValue.ModbusSA==1)
-					{
-						BYPASS = 0;	
-					}
-					else if (sValue.ModbusSA == 0)
-					{
-						BYPASS = 1;
-					}					
+					BYPASS = !tx;
 				}
 
 				if ((ScrCnt--)==1)

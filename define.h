@@ -125,6 +125,7 @@ extern long ByPassCnt;
 #endif
 
 #define SCR LATCbits.LATC5
+#define MANCTRL PORTCbits.RC6
 
 
 

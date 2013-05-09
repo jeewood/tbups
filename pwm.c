@@ -9,6 +9,7 @@
 
 // Inverter Constants 
 #define TriPD 18400
+#define TriPDX 23600
 
 #define DC_OFFSET 0x3FF0 //0x43E0		//0x3FF0
 
@@ -240,7 +241,7 @@ void ConvPair1Handler (void)
 						decr(PD3);
 						SetPhase3(PD3)
 					}
-					
+
 					if ((inv.state == OK))
 					{
 						if (jabs(PD3-PD2)  <  50)
@@ -301,7 +302,7 @@ void ConvPair1Handler (void)
 		Value.Power = PD3;
 		Value.Factor = PD2;
 
-		Value.BatV = sValue.ModbusSA + inv.synced;
+		Value.BatV = inv.synced + MANCTRL;
 		Value.BatI = m.ofs;
 		Value.ChargeStatus = inv.ofs;
 
@@ -507,13 +508,13 @@ void initPWM(void)
 								// 1 = OVRDAT < 0> 为PWMxL 引脚提供输出数据
 								// 0 = 由PWM 发生器为PWMxL 引脚提供数据
 								
-	ALTDTR1             = 0;	//ALTDTRx < 13:0>：PWMx 死区单元的无符号14位死区值位
-	PHASE1              = 19232;// PHASEx < 15:0>：此PWM发生器的 PWM相移值或独立时基周期位
-	PDC1                = 9616;	// PDCx < 15:0> ：PWM 发生器x 占空比值位
-	TRIG1               = 9616;	// TRGCMP < 15:3>：触发器控制值位
+	ALTDTR1             = 0;					//ALTDTRx < 13:0>：PWMx 死区单元的无符号14位死区值位
+	PHASE1              = TriPDX;		// PHASEx < 15:0>：此PWM发生器的 PWM相移值或独立时基周期位
+	PDC1                = TriPDX>>1;	// PDCx < 15:0> ：PWM 发生器x 占空比值位
+	TRIG1               = TriPDX>>1;	// TRGCMP < 15:3>：触发器控制值位
 								// 当主PWM 工作在本地时基时，此寄存器包含比较值，
 								// 可以触发ADC模块。
-	STRIG1              = 9616;	//STRGCMP < 15:3>：辅助触发器控制值位
+	STRIG1              = TriPDX>>1;	//STRGCMP < 15:3>：辅助触发器控制值位
 								//当辅助PWM 工作在本地时基时，此寄存器包含比较值，
 								//可以触发ADC模块。
 
@@ -641,7 +642,7 @@ void RMS_CALC()
 					(mulss(tmpi,Q15(0.2))>>15)
 					);
 		siv = 0;
-		Value.InvV = mulss(inv.V,Q15(0.60225))>>15; //30844
+		Value.InvV = mulss(inv.V,Q15(0.35))>>14; //30844
 		finvRMS = CALCULATION_DONE;
 	}
 
@@ -657,7 +658,7 @@ void RMS_CALC()
 					(mulss(tmpi,Q15(0.2))>>15)
 					);
 		smv = 0;
-		Value.ACInV = mulss(m.V,Q15(0.60225))>>15;//60225
+		Value.ACInV = mulss(m.V,Q15(0.45))>>15;//60225
 		facRMS = CALCULATION_DONE;
 	}
 }

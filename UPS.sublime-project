@@ -12,12 +12,7 @@
 			[
 				"LCD_Driver"
 			],
-			"follow_symlinks": true,
-			"path": "D:\\UPS\\tbupsv20"
-		},
-		{
-			"follow_symlinks": true,
-			"path": "D:\\jwz\\__辅件设计___\\UPS\\ADLIB\\Prj\\Display_Soft"
+			"path": "/D/UPS/tbupsv20"
 		}
 	]
 }

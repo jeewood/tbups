@@ -20,6 +20,41 @@ extern unsigned long StartUpCnt;
 extern int Duty;
 unsigned char tx = 0;
 //this is Ö÷³ÌÐò
+unsigned long tick = 0,stick = 0;
+#define SOUNDDLY 5000
+unsigned long bcnt = SOUNDDLY;
+void TestDrv()
+{
+
+	if (MANCTRL && inv.synced)
+	{
+		tick ++;
+		if (tick>60010)
+		{
+			tick = 0;
+			tx = !tx;
+			bypassInSwitch = 1;
+		}
+	}
+
+	if (inv.synced)
+	{
+		if (bcnt>0)
+		{
+			if (bcnt==SOUNDDLY) BEEP = 1;
+			bcnt --;
+		}
+		else
+		{
+			BEEP = 0;
+			bcnt = 0;
+		}
+	}
+	else
+	{
+		bcnt = SOUNDDLY;
+	}
+}
 
 int main()
 {
@@ -36,6 +71,7 @@ int main()
 	TRISCbits.TRISC13 = 0; 
 	#endif
 	TRISCbits.TRISC5 = 0; 
+	TRISCbits.TRISC6 = 1; 
 
 	BYPASS = 1;
 	SSTART = 1;
@@ -55,7 +91,7 @@ int main()
 
 	LED = 1;
 	StartUpCnt = 1;
-
+	BEEP = 0;
 	Duty = 0;	
 	//i2cWrite(0,0xA5);
 	while(1)
@@ -63,15 +99,20 @@ int main()
 		cnt++;
 		if (cnt>10000)
 		{
-			tx = sValue.ModbusSA;
-			i2cReadStr(0,(unsigned char*)&sValue,8);
-			if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) 
+			//tx = sValue.ModbusSA;
+			//i2cReadStr(0,(unsigned char*)&sValue,8);
+			//if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) 
 			{
-				bypassInSwitch = 1;
+				//bypassInSwitch = 1;
 			}
 			cnt = 0;
 		}
-		//tx = i2cRead(0);
+/*		if (tx != MANCTRL)
+		{
+			tx = MANCTRL;
+			bypassInSwitch = 1;
+		}
+*/		//tx = i2cRead(0);
          ModbusSlave();
          RMS_CALC();
 	}
