@@ -2,8 +2,8 @@
 #include <libq.h>
 #include <dsp.h>
 #include "define.h"
-#include "menu.h"
 #include "uart.h"
+#include "pwm.h"
 
 int State;
 extern int Duty;
@@ -24,15 +24,14 @@ void initStateMachineTimer(void)
 unsigned long StartUpCnt = 0;
 extern unsigned char InvMode;
 
-long ByPassCnt = 0;
+long ByPassCnt = 0,ScrCnt = 0;
+int sCntx = 0;
 void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 {
 	if (LEDCnt>3000)
 	{
 		LEDCnt = 0;
-		//BEEP = ~BEEP;
 		LED = ~LED;
-		//Sender();
 	}
 	LEDCnt++;	
 	
@@ -50,17 +49,12 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 		{
 			if (Value.ACInV>2000)
 			{
-				if (Duty<Q15(DUTY_SCALE)) 
+				if (Value.InvV<Value.ACInV-100)
 				{
-					if (Value.InvV<Value.ACInV)
-					{
-						Duty++;
+						if (Duty<Q15(DUTY_SCALE)) Duty++;
 						ByPassCnt = 0;
-					}
 				}
-
-				//BEEP = 1;
-
+				else
 				{
 					ByPassCnt++;
 					if (ByPassCnt>30000)
@@ -92,30 +86,48 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 		if (m.state == OK)
 		{
 			//#ifndef TEST
+			if (Value.ACInV > 1000 && jabs(Value.ACInV-Value.InvV)>50)
 			{
+				sCntx++;
+				if (sCntx>5)
 				{
-					if (Duty < Q15(DUTY_SCALE))	Duty ++;
-				}
-				{
-					if (Duty > Q15(0.1))Duty --;
+					if (Value.InvV<Value.ACInV)
+					{
+						if (Duty < Q15(DUTY_SCALE))	Duty ++;
+					}
+					else if (Value.InvV>Value.ACInV)
+					{
+						if (Duty > Q15(0.1))Duty --;
+					}
 				}
 			}
 			//#endif
-			if (BYPASS)
+			
+			if (inv.synced)
 			{
-				if (LEDCnt==2000)BEEP = ~BEEP;
-				
-				if (inv.synced>=5)
+				if (bypassInSwitch)
 				{
-					ByPassCnt++;
-					if (ByPassCnt>30000)
+					SCR = 1;
+					ScrCnt = 80;
+					bypassInSwitch = 0;
+				}
+	
+				if (ScrCnt==60)
+				{
+					if (sValue.ModbusSA==1)
 					{
-						ByPassCnt = 0;
-						BYPASS = 0;
-						SCR = 0;
-						LED = 0;
-						BEEP = 0;
+						BYPASS = 0;	
 					}
+					else if (sValue.ModbusSA == 0)
+					{
+						BYPASS = 1;
+					}					
+				}
+
+				if ((ScrCnt--)==1)
+				{
+					SCR = 0;
+					ScrCnt = 0;
 				}
 			}
 		}
@@ -142,10 +154,13 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 		if (StartUpCnt>60000)
 		{
 			StartUpCnt = 0;
-			SSTART = 0;
-			BYPASS = 0;
-			SCR = 0;
-			State = SYSTEM_STARTUP;
+			if (m.state == OK || (m.state == NOK))
+			{
+				SSTART = 0;
+				//BYPASS = 0;
+				//SCR = 0;
+				State = SYSTEM_STARTUP;
+			}
 		}
 	}
 	break;

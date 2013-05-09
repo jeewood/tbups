@@ -1,8 +1,7 @@
-#include <p33fj16gs504.h>  
-#include <libq.h>
-#include <dsp.h>
+#include<p33fj16gs504.h>  
+#include<libq.h>
+#include<dsp.h>
 #include "sineTable_50Hz.h"
-//#include "menu.h"
 #include "define.h"
 
 //这是现在同步锁相比较好的版本
@@ -13,23 +12,24 @@
 
 #define DC_OFFSET 0x3FF0 //0x43E0		//0x3FF0
 
-long PD1 = TriPD;
-long PD0 = TriPD;
+long PD3 = TriPD;
+long PD2 = TriPD;
 
 int Duty = 0;//Q15(1.0);
 
 INVSTRUCT inv = {0};
 MAINSTRUCT m = {0};
 
-#define iszc(s,v) (((s).cnt>360) && (((s).pv<0 && ((s).cv>=0)) && ((s).cv-(s).pv>(v))))
-#define issz(s,v) (((s).cnt>128) && (((s).pv>0 && ((s).cv<=0)) && ((s).pv-(s).cv>(v))))
+#define iszc(s,v) (((s).cnt>360) && (((s).pv < 0 && ((s).cv>=0)) && ((s).cv-(s).pv>(v))))
+#define issz(s,v) (((s).cnt>128) && (((s).pv>0 && ((s).cv <=0)) && ((s).pv-(s).cv>(v))))
 
-#define invfadj(r,f) r = PD1 = (__builtin_mulsu(f,(unsigned int)(PD1))>>9)
+#define invfadj(r,f) r = PD3 = (__builtin_mulsu(f,(unsigned int)(PD3))>>9)
 
-#define Max(s,v) {(s).maxv = ((s).maxv<(v))?(v):((s).maxv);}
-#define Min(s,v) {(s).minv = ((s).minv>(v))?(v):((s).minv);}
+//#define Max(s,v) {(s).maxv = ((s).maxv < (v))?(v):((s).maxv);}
+#define Max(s) {(s).maxv = ((s).maxv < (s).cv)?(s).cv:((s).maxv);}
+#define Min(s) {(s).minv = ((s).minv>(s).cv)?(s).cv:((s).minv);}
 
-inline int jabs(int x)	{ return (x<0)?(-(x)):(x); }
+inline int jabs(int x)	{ return (x < 0)?(-(x)):(x); }
 
 #define abs jabs
 #define set(v) {m.cv=(v);}
@@ -37,14 +37,17 @@ inline int jabs(int x)	{ return (x<0)?(-(x)):(x); }
 #define clr(v) (v) = 0
 #define inc(s) {(s).cnt=((s).cnt+1)%1024;(s).i = ((s).cnt>256)?(s).cnt-512:(s).cnt;}
 
-#define incr(s) ((s)+=((s)<19000)?1:0)
-#define decr(s) ((s)-=((s)>17000)?1:0)
+#define incr(s) ((s)=((s)<20000)?(s)+1:20000)
+#define decr(s) ((s)=((s)>17000)?(s)-1:17000)
+
+#define SetPhase3(v) {if (v>17500 && v < 20000) { PHASE3 = v; /*TRIG3 = STRIG3 = (v)>>1;*/ } }
+#define SetPhase2(v) {if (v>17500 && v < 20000) { PHASE2 = v; /*TRIG2 = STRIG2 = (v)>>1;*/ } }
 
 #define ZCTHV 0
 
 //variable for RMS calculate
-long smv = 0;
-long siv = 0;
+unsigned long long smv = 0;
+unsigned long long siv = 0;
 char finvRMS = RMS_NOT_READY;
 char facRMS = RMS_NOT_READY;
 
@@ -59,17 +62,20 @@ void ConvPair0Handler (void)
 {
 	//inverterOutputCurrent = (ADCBUF0 << 5) - DC_OFFSET;
 
-	inv.cv = (ADCBUF1 << 5) - DC_OFFSET;// - inv.ofs;
+	inv.cv = (ADCBUF1 << 5) - DC_OFFSET - inv.ofs;
 	inv.cnt ++; inv.i ++;
 	
 	if(finvRMS == READY_TO_COLLECT_DATA)
 	{
 		siv	+= mulss(inv.cv,inv.cv);
-		Max(inv,inv.cv);Min(inv,inv.cv);
+		Max(inv);Min(inv);
 	}
 	
 	if ((iszc(inv,ZCTHV)) || (inv.cnt>1000)) //逆变电压采样控制
 	{
+		inv.size = inv.cnt;
+		inv.cnt = 0;
+
 		if(finvRMS == CALCULATION_DONE)
 		{
 			siv = 0;
@@ -79,16 +85,19 @@ void ConvPair0Handler (void)
 		}
 		else
 		{
-			inv.ofs = (inv.maxv + inv.minv)>>1;
-			inv.size = inv.cnt;
+			if (inv.maxv+inv.minv>10)
+			{
+				inv.ofs += (inv.ofs<1000)?1:0;
+			}
+			else if (inv.maxv+inv.minv<-10)
+			{
+				inv.ofs -= (inv.ofs>-1000)?1:0;
+			}
 			finvRMS = READY_TO_CALCULATE;
 		}
 
-		inv.size = inv.cnt;
 		//this is only for debug,
 		Value.InvF = inv.size;
-
-		inv.cnt = 0;
 
 		if (inv.state != OK && Value.InvV>1000)
 		{
@@ -134,14 +143,14 @@ void ConvPair0Handler (void)
 int err,perr = 0;
 void ConvPair1Handler (void)
 {
-	m.cv = (ADCBUF2 << 5) - DC_OFFSET;// - m.ofs;
+	m.cv = (ADCBUF2 << 5) - DC_OFFSET - m.ofs;
 	//inc(m);	//inc(inv);
 	m.cnt ++;m.i++;
 
 	if(facRMS == READY_TO_COLLECT_DATA)
 	{
 		smv	+= mulss(m.cv,m.cv);
-		Max(m,m.cv);Min(m,m.cv);
+		Max(m);Min(m);
 	}
 	
 	if (issz(m,ZCTHV))
@@ -160,114 +169,141 @@ void ConvPair1Handler (void)
 			m.maxv = m.minv = 0;
 			facRMS = READY_TO_COLLECT_DATA;
 		}
-		else
+		else if (m.cnt<1000)
 		{
-			m.ofs = (m.maxv + m.minv)>>1;
+			if (m.maxv+m.minv>10)
+			{
+				m.ofs += (m.ofs<1000)?1:0;
+			}
+			else if (m.maxv+m.minv<-10)
+			{
+				m.ofs -= (m.ofs>-1000)?1:0;
+			}
+			
 			facRMS = READY_TO_CALCULATE;
 		}
 		//BEEP = ~BEEP;
-		switch(m.state)
+		if (m.size>=1000 || Value.ACInV<1000) //超过10次没有过零点产生,则说明交流失电
 		{
-			case NOK:	
+			m.ocnt ++;
+			if (m.ocnt>5 )
 			{
-				if (m.cnt<1000) m.icnt ++;	//有过零点产生,说明有交流输入
-				if (m.icnt>10 && Value.ACInV > 1000)	//交流电压大于100V
-				{
-					m.state = ADJ;
-					PD1 = TriPD;
-					PD0 = TriPD;
-					m.icnt = 0;
-				}
+				m.state = NOK;
+				m.ocnt = 0;
 			}
-			break;
-			case ADJ:
+		}
+		else
+		{
+			switch(m.state)
 			{
-				if (m.size>511)
+				case NOK:	
 				{
-					incr(PD1);	//采样周期变长,采样速度下降
-				}
-				else if (m.size < 511)
-				{
-					decr(PD1);	//采样周期变短长,采样速度上升
-				}
-				else
-				{
-					m.cycle ++;
-					if (m.cycle>10)
+					m.icnt ++;	//有过零点产生,说明有交流输入
+					if (m.icnt > 10 && Value.ACInV > 1000)	//交流电压大于100V
 					{
-						m.state = OK;
-						m.cycle = 0;
+						m.state = ADJ;
+						m.icnt = 0;
 					}
 				}
-				if (PD1>17500 && PD1<19000)
+				break;
+				case ADJ:
 				{
-					PHASE1 = PD1;
-				}
-			}
-			break;
-			case OK:
-			{
-				if (m.size>=1000) //超过10次没有过零点产生,则说明交流失电
-				{
-					m.ocnt ++;
-					if (m.ocnt>10)
+					if (m.size > 511)
 					{
-						m.state = NOK;
-						m.ocnt = 0;
+						incr(PD3);	//采样周期变长,采样速度下降
 					}
-				}
-				
-				if (m.size>511)	//对交流输入电压的频率进行微调
-				{
-					incr(PD1);
-					PHASE1 = PD1;
-				}
-				else if (m.size<511)
-				{
-					decr(PD1);
-					PHASE1 = PD1;
-				}
-
-				if ((inv.state == OK))
-				{
-					if (jabs(PD1-PD0)<50)
+					else if (m.size < 511)
 					{
-						err = (inv.i - m.i);
-						if (jabs(err)>0)
+						decr(PD3);	//采样周期变短长,采样速度上升
+					}
+					else
+					{
+						m.cycle ++;
+						if (m.cycle>20)
 						{
-							if (err>128) err = 128;
-							if (err<-128) err = -128;
-							
-							PD0 += (err>>0) - (perr>>0);
-
-							if (err>2)	//err==perr,即inv.i且m.i不等于0
-							{
-								incr(PD0);
-							}
-							else if (err<-2)
-							{
-								decr(PD0);
-							}
-							perr = err;
+							m.state = OK;
+							m.cycle = 0;
 						}
 					}
-					else if (PD0<PD1)
+					SetPhase3(PD3);
+				}
+				break;
+				case OK:
+				{
+					if (m.size > 511)	//对交流输入电压的频率进行微调
 					{
-						incr(PD0);
+						incr(PD3);
+						SetPhase3(PD3)
 					}
-					else if (PD0>PD1)
+					else if (m.size < 511)
 					{
-						decr(PD0);
+						decr(PD3);
+						SetPhase3(PD3)
 					}
+					
+					if ((inv.state == OK))
+					{
+						if (jabs(PD3-PD2)  <  50)
+						{
+							err = (inv.i - m.i);
+							if (jabs(err) > 0)
+							{
+								if (err >  128) err =  128;
+								if (err < -128) err = -128;
+								
+								PD2 += (err>>0) - (perr>>0);
 
-					if (PD0>17000 && PD0<19000)
-					{
-						PHASE2 = PD0;
+								if (err > 2)	//err==perr,即inv.i且m.i不等于0
+								{
+									incr(PD2);
+								}
+								else if (err < -2)
+								{
+									decr(PD2);
+								}
+								perr = err;
+							}
+							if (jabs(err) < 2)
+							{
+								inv.cycle++;
+								if (inv.cycle > 50)
+								{
+									inv.synced = 1;
+									inv.cycle = 0;
+								}
+								inv.ocnt = 0;
+							}
+							else if (jabs(err)>10)
+							{
+								inv.ocnt++;
+								if (inv.ocnt>20)
+								{
+									inv.synced = 0;
+									inv.ocnt = 0;
+								}
+							}
+						}
+						else if (PD2 < PD3)
+						{
+							incr(PD2);
+						}
+						else if (PD2>PD3)
+						{
+							decr(PD2);
+						}
+
+						SetPhase2(PD2);
 					}
 				}
+				break;
 			}
-			break;
 		}
+		Value.Power = PD3;
+		Value.Factor = PD2;
+
+		Value.BatV = sValue.ModbusSA + inv.synced;
+		Value.BatI = m.ofs;
+		Value.ChargeStatus = inv.ofs;
 
 		Value.ACInF = m.size;
 		Value.ACInI = m.state;
@@ -329,7 +365,7 @@ void initADC(void)
 	ADCONbits.ADCS = 5;             // Clock Divider is set up for Fadc/6 
 									// TAD=41.66ns
 									// For simultaneus sampling total conversion time for one pair is 0.625us 
-									// ADCS<2:0>：A/D 转换时钟分频值选择位
+									// ADCS < 2:0>：A/D 转换时钟分频值选择位
 									// 如果SLOWCLK = 0，ADC时钟分频值如下：
 									// 111  = FADC/7 
 									// 110  = FADC/6.5 
@@ -370,7 +406,7 @@ void initADC(void)
    	ADPCFGbits.PCFG1 = 0;           // AN1 逆变电压
 
    	ADCPC0bits.TRGSRC0 = 5;		    // AN0 and AN1 被PWM2触发
-									// TRGSRC0<4:0>：触发0 触发源选择位
+									// TRGSRC0 < 4:0>：触发0 触发源选择位
 									// 为模拟通道AN1 和AN0 的转换选择触发源。
 									// 00000  = 不使能转换
 									// 00001  = 选择独立软件触发
@@ -407,7 +443,7 @@ void initADC(void)
    	ADPCFGbits.PCFG2 = 0;           // AN2 输入交流电压
    	ADPCFGbits.PCFG3 = 0;           // AN3 输入交流电流
 
-   	ADCPC0bits.TRGSRC1 = 4;		    // AN0 and AN1 triggered by PWM2 
+   	ADCPC0bits.TRGSRC1 = 6;		    // AN0 and AN1 triggered by PWM2 
 	ADCPC0bits.IRQEN1 = 1;			// Global ADC interrupt not requested 
 	
 
@@ -441,7 +477,7 @@ void initPWM(void)
 	PWMCON1bits.ITB     = 1;	// ITB ：独立时基模式位
 								// 1 = PHASEx/SPHASEx 寄存器为此PWM 发生器提供时基周期
 								// 0 = PTPER 寄存器为此PWM 发生器提供时序
-	PWMCON1bits.DTC     = 0;	// DTC<1:0>：死区控制位
+	PWMCON1bits.DTC     = 0;	// DTC < 1:0>：死区控制位
 								// 00 = 对于所有输出模式施加正死区
 								// 01 = 对于所有输出模式施加负死区
 								// 10 = 禁止死区功能
@@ -456,28 +492,28 @@ void initPWM(void)
 								// 1 = 由PWM 模块控制PWMxL 引脚
 								// 0 = 由GPIO模块控制PWMxL 引脚
 
-	IOCON1bits.PMOD     = 0;    // PMOD<1:0>：PWM I/O引脚模式位
+	IOCON1bits.PMOD     = 0;    // PMOD < 1:0>：PWM I/O引脚模式位
 								// 00 = PWM I/O 引脚对处于互补输出模式
 								// 01 = PWM I/O 引脚对处于冗余输出模式
 								// 10 = PWM I/O 引脚对处于推挽输出模式
 								// 11 = PWM I/O 引脚对处于真正独立PWM 输出模式     
-	IOCON1bits.OVRDAT   = 0;  // OVRDAT<1:0>：使能改写时PWMxH 和PWMxL 引脚的数据位
-								// 如果OVERENH = 1，则OVRDAT<1> 为PWMxH 提供数据。
-								// 如果OVERENL =  1，则OVRDAT<0> 为PWMxL 提供数据。    
+	IOCON1bits.OVRDAT   = 0;  // OVRDAT < 1:0>：使能改写时PWMxH 和PWMxL 引脚的数据位
+								// 如果OVERENH = 1，则OVRDAT < 1> 为PWMxH 提供数据。
+								// 如果OVERENL =  1，则OVRDAT < 0> 为PWMxL 提供数据。    
 	IOCON1bits.OVRENH   = 1; 	// OVRENH：    PWMxH 引脚改写使能位
-								// 1 = OVRDAT<1> 为PWMxH 引脚提供输出数据
+								// 1 = OVRDAT < 1> 为PWMxH 引脚提供输出数据
 								// 0 =  由PWM 发生器为PWMxH 引脚提供数据
 	IOCON1bits.OVRENL   = 1;  // OVRENL：   PWMxL 引脚改写使能位
-								// 1 = OVRDAT<0> 为PWMxL 引脚提供输出数据
+								// 1 = OVRDAT < 0> 为PWMxL 引脚提供输出数据
 								// 0 = 由PWM 发生器为PWMxL 引脚提供数据
 								
-	ALTDTR1             = 0;					//ALTDTRx<13:0>：PWMx 死区单元的无符号14位死区值位
-	PHASE1              = TriPD;		// PHASEx<15:0>：此PWM发生器的 PWM相移值或独立时基周期位
-	PDC1                = TriPD>>1;	// PDCx<15:0> ：PWM 发生器x 占空比值位
-	TRIG1               = TriPD>>1;	// TRGCMP<15:3>：触发器控制值位
+	ALTDTR1             = 0;	//ALTDTRx < 13:0>：PWMx 死区单元的无符号14位死区值位
+	PHASE1              = 19232;// PHASEx < 15:0>：此PWM发生器的 PWM相移值或独立时基周期位
+	PDC1                = 9616;	// PDCx < 15:0> ：PWM 发生器x 占空比值位
+	TRIG1               = 9616;	// TRGCMP < 15:3>：触发器控制值位
 								// 当主PWM 工作在本地时基时，此寄存器包含比较值，
 								// 可以触发ADC模块。
-	STRIG1              = TriPD>>1;	//STRGCMP<15:3>：辅助触发器控制值位
+	STRIG1              = 9616;	//STRGCMP < 15:3>：辅助触发器控制值位
 								//当辅助PWM 工作在本地时基时，此寄存器包含比较值，
 								//可以触发ADC模块。
 
@@ -485,7 +521,7 @@ void initPWM(void)
 								// 1 = 辅助触发事件和主触发事件一起产生PWM 触发信号。
 								// 0 = 辅助触发事件不同主触发事件一起产生PWM 触发信号。
 								// 而是产生两个独立的PWM 触发信号。
-	TRGCON1bits.TRGDIV  = 1;	// TRGDIV<3:0>：触发信号输出分频比位
+	TRGCON1bits.TRGDIV  = 1;	// TRGDIV < 3:0>：触发信号输出分频比位
 								// 0000 = 每个触发事件输出一次触发信号
 								// 0001 = 每2 个触发事件输出一次触发信号
 								// 0010 = 每3 个触发事件输出一次触发信号
@@ -502,11 +538,11 @@ void initPWM(void)
 								// 1101 = 每14个触发事件输出一次触发信号
 								// 1110 = 每15个触发事件输出一次触发信号
 								// 1111 = 每16个触发事件输出一次触发信号
-	TRGCON1bits.TRGSTRT = 0;	// TRGSTRT<5:0>：触发器后分频比启动使能选择位
+	TRGCON1bits.TRGSTRT = 0;	// TRGSTRT < 5:0>：触发器后分频比启动使能选择位
 								// 000000 = 在模块使能后等待0 个PWM 周期产生第一个触发事件
 								// 000001 = 在模块使能后等待1 个PWM 周期产生第一个触发事件
 								// 000010 = 在模块使能后等待1 个PWM 周期产生第一个触发事件
-	FCLCON1             = 0x0003; 		// FLTMOD<1:0> ：PWM 发生器x 的故障模式位
+	FCLCON1             = 0x0003; 		// FLTMOD < 1:0> ：PWM 发生器x 的故障模式位
 								// 00 = 所选故障源强制PWMxH 和PWMxL 引脚为FLTDAT 值（锁定模式）
 								// 01 = 所选故障源强制PWMxH 和PWMxL 引脚为FLTDAT 值（周期模式）
 								// 10 = 保留
@@ -531,15 +567,45 @@ void initPWM(void)
 
 	ALTDTR2             = 0;
 	PHASE2              = TriPD;
-	PDC2                = TriPD;
-	TRIG2               = TriPD>>1;
-	STRIG2              = TriPD>>1;
+	PDC2                = TriPD>>1;
+	TRIG2               = 8;//TriPD>>1;
+	//STRIG2              = TriPD>>1;
 
-	TRGCON2bits.DTM     = 1;                    
+	TRGCON2bits.DTM     = 0;                    
 	TRGCON2bits.TRGDIV  = 1;
 	TRGCON2bits.TRGSTRT = 0;
 
 	FCLCON2             = 0x0003;
+
+	//-------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
+	PWMCON3bits.ITB     = 1;    
+	PWMCON3bits.DTC     = 0;    
+	PWMCON3bits.CAM     = 1;
+
+	IOCON3bits.PENH     = 0;                    
+	IOCON3bits.PENL     = 0;                  
+
+	IOCON3bits.POLH     = 1;
+	IOCON3bits.POLL     = 1;
+	/*
+	IOCON3bits.PMOD     = 0;
+	IOCON3bits.OVRDAT   = 0;
+	IOCON3bits.OSYNC    = 1;
+	IOCON3bits.OVRENH   = 1;
+	IOCON3bits.OVRENL   = 1;
+	*/
+	ALTDTR3             = 0;
+	PHASE3              = TriPD;
+	PDC3                = TriPD>>1;
+	TRIG3               = 8;//TriPD>>1;
+	//STRIG3              = TriPD>>1;
+
+	TRGCON3bits.DTM     = 0;                    
+	TRGCON3bits.TRGDIV  = 1;
+	TRGCON3bits.TRGSTRT = 0;
+
+	FCLCON3             = 0x0003;		
 }
 
 
@@ -553,25 +619,11 @@ void StartPWM(void)
     
 }
 
-inline unsigned int duty(int idx,int dr)
-{
-	long tduty;
-	tduty = (mulss((SIN(inv.idx)),dr)
-		#ifdef TEST
-		>>16) + PDC_NOMINAL
-		#else
-		>>15)
-		#endif	
-		;
-	return (tduty>PD1)?PD1:(tduty<0)?0:tduty;
-}	
-
 /* Example code for ADC ISR*/
 void __attribute__((interrupt, no_auto_psv)) _ADCInterrupt (void)
 {
 	IFS0bits.ADIF = 0; // Clear ADC Pair 0 Interrupt Flag
 	((void (*)()) *((int *)ADBASE))(); // Call the corresponding handler	
-	//ADBASE();
 }
 
 int tmpi;
@@ -584,12 +636,12 @@ void RMS_CALC()
 		siv /= inv.size;
 		tmpi = Root(siv);
 		inv.V = (
-					(mulss(inv.V,Q15(0.95))>>15)
+					(mulss(inv.V,Q15(0.8))>>15)
 					+
-					(mulss(tmpi,Q15(0.05))>>15)
+					(mulss(tmpi,Q15(0.2))>>15)
 					);
 		siv = 0;
-		Value.InvV = mulss(inv.V,Q15(0.30844))>>15;
+		Value.InvV = mulss(inv.V,Q15(0.60225))>>15; //30844
 		finvRMS = CALCULATION_DONE;
 	}
 
@@ -600,12 +652,12 @@ void RMS_CALC()
 		smv /= m.size;
 		tmpi = Root(smv);
 		m.V = (
-					(mulss(m.V,Q15(0.95))>>15)
+					(mulss(m.V,Q15(0.8))>>15)
 					+
-					(mulss(tmpi,Q15(0.05))>>15)
+					(mulss(tmpi,Q15(0.2))>>15)
 					);
 		smv = 0;
-		Value.ACInV = mulss(m.V,Q15(0.60225))>>15;
+		Value.ACInV = mulss(m.V,Q15(0.60225))>>15;//60225
 		facRMS = CALCULATION_DONE;
 	}
 }

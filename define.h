@@ -101,6 +101,8 @@ typedef struct _invs
 	int f;
 	char state;
 	unsigned char cycle;
+	unsigned char c;
+	int ocnt;
 	char synced;
 }INVSTRUCT;
 

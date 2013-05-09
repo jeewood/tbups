@@ -2,9 +2,22 @@
 	"folders":
 	[
 		{
-			"path": "/D/UPS/xSingle2",
-			"file_include_patterns": ["*.c","*.h","*.hex"],
-			"folder_exclude_patterns": ["LCD_Driver"]
+			"file_include_patterns":
+			[
+				"*.c",
+				"*.h",
+				"*.hex"
+			],
+			"folder_exclude_patterns":
+			[
+				"LCD_Driver"
+			],
+			"follow_symlinks": true,
+			"path": "D:\\UPS\\tbupsv20"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "D:\\jwz\\__辅件设计___\\UPS\\ADLIB\\Prj\\Display_Soft"
 		}
 	]
 }

@@ -15,7 +15,7 @@ _FPOR(FPWRT_PWR128)// & BOREN_OFF) //by jwz. p33fj16gs504 not found BOREN_OFF
 _FICD(ICS_PGD1 & JTAGEN_OFF)
 
 extern int fRMSCalculation;
-unsigned long DisCnt = 0;
+unsigned int cnt = 0;
 extern unsigned long StartUpCnt;
 extern int Duty;
 unsigned char tx = 0;
@@ -39,7 +39,7 @@ int main()
 
 	BYPASS = 1;
 	SSTART = 1;
-	SCR = 1;
+	SCR = 0;
 
 	initClock();
 	initStateMachineTimer();
@@ -60,6 +60,17 @@ int main()
 	//i2cWrite(0,0xA5);
 	while(1)
 	{
+		cnt++;
+		if (cnt>10000)
+		{
+			tx = sValue.ModbusSA;
+			i2cReadStr(0,(unsigned char*)&sValue,8);
+			if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) 
+			{
+				bypassInSwitch = 1;
+			}
+			cnt = 0;
+		}
 		//tx = i2cRead(0);
          ModbusSlave();
          RMS_CALC();

@@ -61,5 +61,6 @@ extern Bits bFlag;
 #define mf bFlag.b0
 #define invf bFlag.b1
 #define invShift bFlag.b2
+#define bypassInSwitch bFlag.b3
 
 #endif //__DATA_STRUCT__

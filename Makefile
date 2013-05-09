@@ -24,7 +24,7 @@ pwm.o : c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h
 main.o : i2c.h StateMachine.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h data_struct.h define.h clock.h uart.h pwm.h c:/program\ files/microchip/mplab\ c30/include/math.h c:/program\ files/microchip/mplab\ c30/include/stddef.h c:/program\ files/microchip/mplab\ c30/include/stdlib.h dsp.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h main.c
 	$(CC) -mcpu=33FJ16GS504 -x c -c "main.c" -o"main.o" -g -Wall
 
-StateMachine.o : uart.h menu.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h data_struct.h define.h c:/program\ files/microchip/mplab\ c30/include/math.h c:/program\ files/microchip/mplab\ c30/include/stddef.h c:/program\ files/microchip/mplab\ c30/include/stdlib.h c:/program\ files/microchip/mplab\ c30/support/generic/h/dsp.h c:/program\ files/microchip/mplab\ c30/support/generic/h/libq.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h StateMachine.c
+StateMachine.o : uart.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h data_struct.h define.h c:/program\ files/microchip/mplab\ c30/include/math.h c:/program\ files/microchip/mplab\ c30/include/stddef.h c:/program\ files/microchip/mplab\ c30/include/stdlib.h c:/program\ files/microchip/mplab\ c30/support/generic/h/dsp.h c:/program\ files/microchip/mplab\ c30/support/generic/h/libq.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h StateMachine.c
 	$(CC) -mcpu=33FJ16GS504 -x c -c "StateMachine.c" -o"StateMachine.o" -g -Wall
 
 uart.o : i2c.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h data_struct.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h data_struct.h define.h c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj16gs504.h uart.c
@@ -37,5 +37,5 @@ data_struct.o : c:/program\ files/microchip/mplab\ c30/support/dsPIC33F/h/p33fj1
 	$(CC) -mcpu=33FJ16GS504 -x c -c "data_struct.c" -o"data_struct.o" -g -Wall
 
 clean : 
-	$(RM) "clock.o" "pwm.o" "main.o" "StateMachine.o" "uart.o" "i2c.o" "data_struct.o" "ups.cof" "ups.hex"
+	$(RM) "clock.o" "pwm.o" "main.o" "StateMachine.o" "uart.o" "i2c.o" "data_struct.o" "ups.cof"
 
