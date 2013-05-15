@@ -18,7 +18,7 @@ typedef struct
 	int ACInV;
 	int ACInI;
 	int InvV;
-	int InvI;
+	int LoadI;
 	int BatV;
 	int BatI;
 	int Factor;
@@ -27,23 +27,25 @@ typedef struct
 	int ACInF;
 	int InvF;
 	int ChargeStatus;
-	INT Mode;
 }CValue;
 
 typedef struct
 {
-	unsigned char ModbusSA;
-	unsigned char wMode;
-	unsigned char sMode;
-	unsigned char BKLtime;
-	unsigned char BaudRate;
-	unsigned char DataBits;
-	unsigned char StopBits;
-	unsigned char OddEven;
+	unsigned int ModbusSA;
+	unsigned int wMode;
+	unsigned int sMode;
+	unsigned int BKLtime;
+	unsigned int BaudRate;
+	unsigned int DataBits;
+	unsigned int StopBits;
+	unsigned int OddEven;
+	unsigned int StartCtrl;
+	unsigned int ByPassCtrl;
 }SValue;
 
 extern CValue Value;
-extern SValue sValue;
+extern int sValue[];
+//extern SValue sValue;
 
 typedef struct
 {
@@ -58,6 +60,8 @@ typedef struct
 }Bits;
 
 extern Bits bFlag;
+extern Bits ControlBits;
+
 #define mf bFlag.b0
 #define invf bFlag.b1
 #define invShift bFlag.b2

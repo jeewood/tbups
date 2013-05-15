@@ -69,7 +69,7 @@ void ConvPair0Handler (void)
 	if(finvRMS == READY_TO_COLLECT_DATA)
 	{
 		siv	+= mulss(inv.cv,inv.cv);
-		Max(inv);Min(inv);
+		Max(inv);Min(inv); 
 	}
 	
 	if ((iszc(inv,ZCTHV)) || (inv.cnt>1000)) //逆变电压采样控制
@@ -109,7 +109,7 @@ void ConvPair0Handler (void)
 			}
 		}
 		
-		Value.InvI = inv.state;
+		Value.LoadI = inv.state;
 	}
 
 	if (issz(inv,ZCTHV))

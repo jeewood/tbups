@@ -1,8 +1,15 @@
 #include "data_struct.h"
 
 CValue Value={0};
-SValue sValue={0};
+//SValue sValue={0};
+int sValue[10] = {0};
+
 Bits bFlag={0};
+Bits ControlBits={0};
+/*
+b0 = work mode
+b1 = start mode
+*/
 
 unsigned int Root(unsigned long Number) {
 	unsigned int i;

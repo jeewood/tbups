@@ -94,25 +94,13 @@ int main()
 	BEEP = 0;
 	Duty = 0;	
 	//i2cWrite(0,0xA5);
+	i2cReadStr(0,(unsigned char*)sValue,16);
+	
+	sValue[8] = sValue[2];
+
+
 	while(1)
 	{
-		cnt++;
-		if (cnt>10000)
-		{
-			//tx = sValue.ModbusSA;
-			//i2cReadStr(0,(unsigned char*)&sValue,8);
-			//if ((sValue.ModbusSA <= 1) && (tx != sValue.ModbusSA)) 
-			{
-				//bypassInSwitch = 1;
-			}
-			cnt = 0;
-		}
-/*		if (tx != MANCTRL)
-		{
-			tx = MANCTRL;
-			bypassInSwitch = 1;
-		}
-*/		//tx = i2cRead(0);
          ModbusSlave();
          RMS_CALC();
 	}

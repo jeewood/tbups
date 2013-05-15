@@ -2,6 +2,7 @@
 #include <libq.h>
 #include <dsp.h>
 #include "define.h"
+#include "data_struct.h"
 #include "uart.h"
 #include "pwm.h"
 
@@ -9,6 +10,13 @@ int State;
 extern int Duty;
 extern unsigned char tx;
 int LEDCnt = 0;
+
+unsigned long StartUpCnt = 0;
+extern unsigned char InvMode;
+
+long ByPassCnt = 0,ScrCnt = 0;
+int sCntx = 0;
+extern void TestDrv();
 
 void initStateMachineTimer(void)
 {
@@ -21,13 +29,6 @@ void initStateMachineTimer(void)
     State = STATE_UNKNOWN;
 }
 
-unsigned long StartUpCnt = 0;
-extern unsigned char InvMode;
-
-extern void TestDrv();
-
-long ByPassCnt = 0,ScrCnt = 0;
-int sCntx = 0;
 void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 {
 	if (LEDCnt>3000)
@@ -49,38 +50,41 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 	case SYSTEM_STARTUP:
 	{
 		inv.synced = 0;
-		if (m.state == OK)
+		if (sValue[8])
 		{
-			if (Value.ACInV>2000)
+			if (m.state == OK)
 			{
-				if (Value.InvV<Value.ACInV-100)
+				if (Value.ACInV>1000)
 				{
-						if (Duty<Q15(DUTY_SCALE)) Duty++;
-						ByPassCnt = 0;
-				}
-				else
-				{
-					ByPassCnt++;
-					if (ByPassCnt>30000)
+					if (Value.InvV<Value.ACInV-100)
 					{
-						ByPassCnt = 0;
-						State = INVERTER_MODE;
-						//BEEP = 0;
-					}	
+							if (Duty<Q15(DUTY_SCALE)) Duty++;
+							ByPassCnt = 0;
+					}
+					else
+					{
+						ByPassCnt++;
+						if (ByPassCnt>30000)
+						{
+							ByPassCnt = 0;
+							State = INVERTER_MODE;
+							//BEEP = 0;
+						}	
+					}
 				}
-			}
-			LED = ~LED;
-		}
-		else
-		{
-			if (Duty<Q15(DUTY_SCALE))
-			{
-				Duty ++;//= Q15(0.0001);
+				LED = ~LED;
 			}
 			else
 			{
-				ByPassCnt = 0;
-				State = INVERTER_MODE;
+				if (Duty<Q15(DUTY_SCALE))
+				{
+					Duty ++;//= Q15(0.0001);
+				}
+				else
+				{
+					ByPassCnt = 0;
+					State = INVERTER_MODE;
+				}
 			}
 		}
 	}
@@ -89,6 +93,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 	{
 		if (m.state == OK)
 		{
+			if (!sValue[8]) 
+			{
+				State = SYSTEM_STARTUP;
+				BYPASS = 1;
+				SCR = 1;
+				Duty = 0;
+			}
+				
 			//#ifndef TEST
 			if (Value.ACInV > 1000 && jabs(Value.ACInV-Value.InvV)>50)
 			{
@@ -132,14 +144,17 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 	{
 	   if (m.state == OK)
 	   {
+
 	   }
 	   else if (m.state == NOK)
 	   { 
+
 	   }
 	}
 	break;
 	case SYSTEM_ERROR:
 	{
+
 	}
 	break;
 	case STATE_UNKNOWN:
@@ -157,20 +172,12 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 				State = SYSTEM_STARTUP;
 			}
 		}
+
 	}
 	break;
 	
 	}
-	
-	if (m.state == OK)
-	{
-		Value.Mode.h = 1;
-	}
-	else
-	{
-		Value.Mode.h = 0;
-	}
-				
+			
 	TMR2 = 0;
 	IFS0bits.T2IF = 0;                      /* Clear Interrupt Flag */
 }
