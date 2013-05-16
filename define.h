@@ -1,11 +1,13 @@
 #include "data_struct.h"
+#include <dsp.h>
 
 #define PHASESHIFT
 
 #define mulss(s,d) (__builtin_mulss((int)(s),(int)(d)))
 #define mulsu(s,d) (__builtin_mulsu((int)(s),(unsigned int)(d)))
 #define muluu(s,d) (__builtin_muluu((unsigned int)(s),(unsigned int)(d)))
-#define divss(n,d) (__builtin_divsd((long)n, (int) d))
+#define divss(n,d) (__builtin_divsd((long)(n), (int)(d)))
+#define divud(n,d) (__builtin_divud((unsigned long)(n), (unsigned int)(d)))
 
 /* AC Mains State definitions */
 
@@ -70,9 +72,8 @@ typedef struct _mains
 	int cnt;
 	int size;
 	int ofs;
-		
-	//int vs[MAINSIZE];
-	int V;
+
+        int V;
 	int icnt;
 	int ocnt;
 	int err;
@@ -94,7 +95,7 @@ typedef struct _invs
 	int minv;
 	int size;
 	int ofs;
-	//int vs[MAINSIZE];
+
 	int V;
 	int cnt;
 	int i;

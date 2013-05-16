@@ -1,39 +1,55 @@
 #include "data_struct.h"
 
-CValue Value={0};
-//SValue sValue={0};
-int sValue[10] = {0};
+#include <dsp.h>
 
-Bits bFlag={0};
-Bits ControlBits={0};
-/*
-b0 = work mode
-b1 = start mode
-*/
+//CValue Value={0};
+INT Value[12];
+//INT Vadj[12];
+//SValue sValue = 0;
+INT sValue[24];
 
-unsigned int Root(unsigned long Number) {
-	unsigned int i;
-	unsigned long SquareRoot;
-	if( Number == 0)
-	{
-	    return 0;
-	}
-	if( Number <= 4194304 )
-	{
-	    SquareRoot = ( Number >> 10 ) + 63;
-	}
-	else if ( Number <= 134217728 )
-	{
-	    SquareRoot = ( Number >> 12 ) + 255;
-	}
-	else
-	{
-		SquareRoot = ( Number >> 14 ) + 1023;
-	}
-	for ( i = 0; i < 5; i++ )
-	{
-		SquareRoot=( SquareRoot + Number / SquareRoot ) >> 1;
-	}
-	return ((unsigned int)SquareRoot);
+Bits bFlag = {0};
+Bits ControlBits = {0};
+void Adj_Init()
+{
+    Adj_ACInV      = Q15(1.0);
+    Adj_ACInI      = Q15(1.0);
+    Adj_InvV       = Q15(1.0);
+    Adj_LoadI      = Q15(1.0);
+    Adj_BatV       = Q15(1.0);
+    Adj_BatI       = Q15(1.0);
+    Adj_Factor     = Q15(1.0);
+    Adj_Power      = Q15(1.0);
+    Adj_LoadRate   = Q15(1.0);
+    Adj_ACInF      = Q15(1.0);
+    Adj_InvF       = Q15(1.0);
+    Adj_ChargeStatus    = Q15(1.0);
+}
+
+unsigned int Root(unsigned long Number)
+{
+    unsigned int i;
+    unsigned long SquareRoot;
+    if (Number == 0)
+    {
+        return 0;
+    }
+    if (Number <= 4194304)
+    {
+        SquareRoot = (Number >> 10) + 63;
+    }
+    else if (Number <= 134217728)
+    {
+        SquareRoot = (Number >> 12) + 255;
+    }
+    else
+    {
+        SquareRoot = (Number >> 14) + 1023;
+    }
+    for (i = 0; i < 5; i++)
+    {
+        SquareRoot = (SquareRoot + Number / SquareRoot) >> 1;
+    }
+    return ((unsigned int) SquareRoot);
 }
 

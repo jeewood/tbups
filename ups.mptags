@@ -34,9 +34,9 @@ AC4IP0	D:\UPS\tbupsv21\p33FJ16GS504.h	719;"	m	line:719	struct:tagIPC26BITS::<ano
 AC4IP1	D:\UPS\tbupsv21\p33FJ16GS504.h	720;"	m	line:720	struct:tagIPC26BITS::<anonymous>::<anonymous>
 AC4IP2	D:\UPS\tbupsv21\p33FJ16GS504.h	721;"	m	line:721	struct:tagIPC26BITS::<anonymous>::<anonymous>
 ACCSAT	D:\UPS\tbupsv21\p33FJ16GS504.h	84;"	m	line:84	struct:tagCORCONBITS::<anonymous>::<anonymous>
-ACInF	D:\UPS\tbupsv21\data_struct.h	27;"	m	line:27
-ACInI	D:\UPS\tbupsv21\data_struct.h	19;"	m	line:19
-ACInV	D:\UPS\tbupsv21\data_struct.h	18;"	m	line:18
+ACInF::Value[9].x	D:\UPS\tbupsv21\data_struct.h	58;"	d	line:58
+ACInI::Value[1].x	D:\UPS\tbupsv21\data_struct.h	50;"	d	line:50
+ACInV::Value[0].x	D:\UPS\tbupsv21\data_struct.h	49;"	d	line:49
 ACKBIT::0x00	D:\UPS\tbupsv21\i2c.c	9;"	d	line:9	file:
 ACKDT	D:\UPS\tbupsv21\p33FJ16GS504.h	1032;"	m	line:1032	struct:tagI2C1CONBITS
 ACKDT	D:\UPS\tbupsv21\p33FJ16GS504.h	1053;"	m	line:1053	struct:tagI2CCONBITS
@@ -117,13 +117,13 @@ APSTSCLR1	D:\UPS\tbupsv21\p33FJ16GS504.h	3735;"	m	line:3735	struct:tagACLKCONBIT
 APSTSCLR2	D:\UPS\tbupsv21\p33FJ16GS504.h	3736;"	m	line:3736	struct:tagACLKCONBITS::<anonymous>::<anonymous>
 ASRCSEL	D:\UPS\tbupsv21\p33FJ16GS504.h	3725;"	m	line:3725	struct:tagACLKCONBITS::<anonymous>::<anonymous>
 ASYNCSAMP	D:\UPS\tbupsv21\p33FJ16GS504.h	1505;"	m	line:1505	struct:tagADCONBITS::<anonymous>::<anonymous>
-Addr	D:\UPS\tbupsv21\uart.c	234;"	l	line:234
+Addr	D:\UPS\tbupsv21\uart.c	256;"	l	line:256
 BART_0::2.0	D:\UPS\tbupsv21\dsp.h	76;"	d	line:76
 BATTERY_CHARGER_MODE::1	D:\UPS\tbupsv21\define.h	41;"	d	line:41
 BCL	D:\UPS\tbupsv21\p33FJ16GS504.h	1079;"	m	line:1079	struct:tagI2C1STATBITS
 BCL	D:\UPS\tbupsv21\p33FJ16GS504.h	1098;"	m	line:1098	struct:tagI2CSTATBITS
 BEEP::LATCbits.LATC2	D:\UPS\tbupsv21\define.h	116;"	d	line:116
-BKLtime	D:\UPS\tbupsv21\data_struct.h	37;"	m	line:37
+BKLtime::sValue[3].x	D:\UPS\tbupsv21\data_struct.h	66;"	d	line:66
 BLCK_0::0.42	D:\UPS\tbupsv21\dsp.h	84;"	d	line:84
 BLCK_1::-0.50	D:\UPS\tbupsv21\dsp.h	85;"	d	line:85
 BLCK_2::0.08	D:\UPS\tbupsv21\dsp.h	86;"	d	line:86
@@ -154,15 +154,15 @@ BWRP_WRPROTECT_ON::0xFFFE	D:\UPS\tbupsv21\p33FJ16GS504.h	6115;"	d	line:6115
 BYPASS::LATBbits.LATB3	D:\UPS\tbupsv21\define.h	120;"	d	line:120
 BYPASS::LATCbits.LATC0	D:\UPS\tbupsv21\define.h	123;"	d	line:123
 BartlettInit	D:\UPS\tbupsv21\dsp.h	448;"	p	line:448	signature:( int numElems, fractional* window )
-BatI	D:\UPS\tbupsv21\data_struct.h	23;"	m	line:23
-BatV	D:\UPS\tbupsv21\data_struct.h	22;"	m	line:22
-BaudRate	D:\UPS\tbupsv21\data_struct.h	38;"	m	line:38
+BatI::Value[5].x	D:\UPS\tbupsv21\data_struct.h	54;"	d	line:54
+BatV::Value[4].x	D:\UPS\tbupsv21\data_struct.h	53;"	d	line:53
+BaudRate::sValue[4].x	D:\UPS\tbupsv21\data_struct.h	67;"	d	line:67
 BitReverseComplex	D:\UPS\tbupsv21\dsp.h	1250;"	p	line:1250	signature:( int log2N, fractcomplex* srcCV )
 BitReverseReal32bIP	D:\UPS\tbupsv21\dsp.h	1387;"	p	line:1387	signature:( int N, long *ipBuff )
-Bits	D:\UPS\tbupsv21\data_struct.h	59;"	t	line:59
+Bits	D:\UPS\tbupsv21\data_struct.h	84;"	t	line:84
 BlackmanInit	D:\UPS\tbupsv21\dsp.h	459;"	p	line:459	signature:( int numElems, fractional* window )
 ByPassCnt	D:\UPS\tbupsv21\StateMachine.c	17;"	v	line:17
-ByPassCtrl	D:\UPS\tbupsv21\data_struct.h	43;"	m	line:43
+ByPassCtrl::sValue[9].x	D:\UPS\tbupsv21\data_struct.h	72;"	d	line:72
 C	D:\UPS\tbupsv21\p33FJ16GS504.h	51;"	m	line:51	struct:tagSRBITS::<anonymous>::<anonymous>
 CALCULATION_DONE::2	D:\UPS\tbupsv21\define.h	35;"	d	line:35
 CAM	D:\UPS\tbupsv21\p33FJ16GS504.h	1734;"	m	line:1734	struct:tagPWMCON1BITS::<anonymous>::<anonymous>
@@ -386,14 +386,13 @@ COSC2	D:\UPS\tbupsv21\p33FJ16GS504.h	3614;"	m	line:3614	struct:tagOSCCONBITS::<a
 COVAERR	D:\UPS\tbupsv21\p33FJ16GS504.h	258;"	m	line:258	struct:tagINTCON1BITS
 COVBERR	D:\UPS\tbupsv21\p33FJ16GS504.h	257;"	m	line:257	struct:tagINTCON1BITS
 COVTE	D:\UPS\tbupsv21\p33FJ16GS504.h	254;"	m	line:254	struct:tagINTCON1BITS
-CRC	D:\UPS\tbupsv21\uart.c	131;"	l	line:131
-CRC16Table	D:\UPS\tbupsv21\uart.c	123;"	v	line:123
+CRC	D:\UPS\tbupsv21\uart.c	136;"	l	line:136
+CRC16Table	D:\UPS\tbupsv21\uart.c	128;"	v	line:128
 CURRENT_LIMIT_ACTIVE::1	D:\UPS\tbupsv21\define.h	26;"	d	line:26
 CURRENT_LIMIT_CLEARED::0	D:\UPS\tbupsv21\define.h	25;"	d	line:25
-CValue	D:\UPS\tbupsv21\data_struct.h	30;"	t	line:30
-ChargeStatus	D:\UPS\tbupsv21\data_struct.h	29;"	m	line:29
+ChargeStatus::Value[11].x	D:\UPS\tbupsv21\data_struct.h	60;"	d	line:60
 ClrWdt::{__asm__volatile("clrwdt");}	D:\UPS\tbupsv21\p33FJ16GS504.h	5981;"	d	line:5981
-ControlBits	D:\UPS\tbupsv21\data_struct.c	6;"	v	line:6
+ControlBits	D:\UPS\tbupsv21\data_struct.c	21;"	v	line:21
 ConvPair0Handler	D:\UPS\tbupsv21\pwm.c	62;"	f	line:62	signature:(void)
 ConvPair1Handler	D:\UPS\tbupsv21\pwm.c	145;"	f	line:145	signature:(void)
 CosFactorInit	D:\UPS\tbupsv21\dsp.h	1479;"	p	line:1479	signature:( int log2N, fractcomplex* cosFactors )
@@ -443,7 +442,7 @@ DTM	D:\UPS\tbupsv21\p33FJ16GS504.h	2498;"	m	line:2498	struct:tagTRGCON4BITS::<an
 DUTY_SCALE::0.99	D:\UPS\tbupsv21\define.h	113;"	d	line:113
 D_A	D:\UPS\tbupsv21\p33FJ16GS504.h	1074;"	m	line:1074	struct:tagI2C1STATBITS
 D_A	D:\UPS\tbupsv21\p33FJ16GS504.h	1093;"	m	line:1093	struct:tagI2CSTATBITS
-DataBits	D:\UPS\tbupsv21\data_struct.h	39;"	m	line:39
+DataBits::sValue[5].x	D:\UPS\tbupsv21\data_struct.h	68;"	d	line:68
 Duty	D:\UPS\tbupsv21\pwm.c	19;"	v	line:19
 EDT	D:\UPS\tbupsv21\p33FJ16GS504.h	89;"	m	line:89	struct:tagCORCONBITS::<anonymous>::<anonymous>
 EIE	D:\UPS\tbupsv21\p33FJ16GS504.h	1508;"	m	line:1508	struct:tagADCONBITS::<anonymous>::<anonymous>
@@ -629,7 +628,7 @@ FRMEN	D:\UPS\tbupsv21\p33FJ16GS504.h	1294;"	m	line:1294	struct:tagSPI1CON2BITS
 FRMPOL	D:\UPS\tbupsv21\p33FJ16GS504.h	1292;"	m	line:1292	struct:tagSPI1CON2BITS
 FWDTEN_OFF::0xFF7F	D:\UPS\tbupsv21\p33FJ16GS504.h	6330;"	d	line:6330
 FWDTEN_ON::0xFFFF	D:\UPS\tbupsv21\p33FJ16GS504.h	6331;"	d	line:6331
-Factor	D:\UPS\tbupsv21\data_struct.h	24;"	m	line:24
+Factor::Value[6].x	D:\UPS\tbupsv21\data_struct.h	55;"	d	line:55
 Float2Fract	D:\UPS\tbupsv21\dsp.h	140;"	p	line:140	signature:( float aVal )
 Float2Fract::(aVal)(aVal)	D:\UPS\tbupsv21\dsp.h	137;"	d	line:137
 Fract2Float	D:\UPS\tbupsv21\dsp.h	143;"	p	line:143	signature:( fractional aVal )
@@ -774,7 +773,7 @@ INSEL1	D:\UPS\tbupsv21\p33FJ16GS504.h	2594;"	m	line:2594	struct:tagCMPCON1BITS::
 INSEL1	D:\UPS\tbupsv21\p33FJ16GS504.h	2642;"	m	line:2642	struct:tagCMPCON2BITS::<anonymous>::<anonymous>
 INSEL1	D:\UPS\tbupsv21\p33FJ16GS504.h	2690;"	m	line:2690	struct:tagCMPCON3BITS::<anonymous>::<anonymous>
 INSEL1	D:\UPS\tbupsv21\p33FJ16GS504.h	2738;"	m	line:2738	struct:tagCMPCON4BITS::<anonymous>::<anonymous>
-INT	D:\UPS\tbupsv21\data_struct.h	14;"	t	line:14
+INT	D:\UPS\tbupsv21\data_struct.h	15;"	t	line:15
 INT0EP	D:\UPS\tbupsv21\p33FJ16GS504.h	267;"	m	line:267	struct:tagINTCON2BITS
 INT0IE	D:\UPS\tbupsv21\p33FJ16GS504.h	355;"	m	line:355	struct:tagIEC0BITS
 INT0IF	D:\UPS\tbupsv21\p33FJ16GS504.h	278;"	m	line:278	struct:tagIFS0BITS
@@ -869,8 +868,8 @@ IWCOL	D:\UPS\tbupsv21\p33FJ16GS504.h	1095;"	m	line:1095	struct:tagI2CSTATBITS
 Idle::{__asm__volatile("pwrsav#1");}	D:\UPS\tbupsv21\p33FJ16GS504.h	5983;"	d	line:5983
 InitI2C	D:\UPS\tbupsv21\i2c.c	20;"	f	line:20	signature:(void)
 InitI2C	D:\UPS\tbupsv21\i2c.h	1;"	p	line:1	signature:(void)
-InvF	D:\UPS\tbupsv21\data_struct.h	28;"	m	line:28
-InvV	D:\UPS\tbupsv21\data_struct.h	20;"	m	line:20
+InvF::Value[10].x	D:\UPS\tbupsv21\data_struct.h	59;"	d	line:59
+InvV::Value[2].x	D:\UPS\tbupsv21\data_struct.h	51;"	d	line:51
 JTAGEN_OFF::0xFFDF	D:\UPS\tbupsv21\p33FJ16GS504.h	6399;"	d	line:6399
 JTAGEN_ON::0xFFFF	D:\UPS\tbupsv21\p33FJ16GS504.h	6400;"	d	line:6400
 KaiserInit	D:\UPS\tbupsv21\dsp.h	492;"	p	line:492	signature:( int numElems, fractional* window, float betaVal )
@@ -952,9 +951,9 @@ LED::LATCbits.LATC7	D:\UPS\tbupsv21\define.h	115;"	d	line:115
 LEDCnt	D:\UPS\tbupsv21\StateMachine.c	12;"	v	line:12
 LOCK	D:\UPS\tbupsv21\p33FJ16GS504.h	3599;"	m	line:3599	struct:tagOSCCONBITS::<anonymous>::<anonymous>
 LPBACK	D:\UPS\tbupsv21\p33FJ16GS504.h	1137;"	m	line:1137	struct:tagU1MODEBITS::<anonymous>::<anonymous>
-Len	D:\UPS\tbupsv21\uart.c	234;"	l	line:234
-LoadI	D:\UPS\tbupsv21\data_struct.h	21;"	m	line:21
-LoadRate	D:\UPS\tbupsv21\data_struct.h	26;"	m	line:26
+Len	D:\UPS\tbupsv21\uart.c	256;"	l	line:256
+LoadI::Value[3].x	D:\UPS\tbupsv21\data_struct.h	52;"	d	line:52
+LoadRate::Value[8].x	D:\UPS\tbupsv21\data_struct.h	57;"	d	line:57
 MAINSIZE::200	D:\UPS\tbupsv21\define.h	63;"	d	line:63
 MAINSTRUCT	D:\UPS\tbupsv21\define.h	84;"	t	line:84
 MAINS_FREQUENCY_ERROR::9	D:\UPS\tbupsv21\define.h	52;"	d	line:52
@@ -972,13 +971,14 @@ MI2C1IP1	D:\UPS\tbupsv21\p33FJ16GS504.h	564;"	m	line:564	struct:tagIPC4BITS::<an
 MI2C1IP2	D:\UPS\tbupsv21\p33FJ16GS504.h	565;"	m	line:565	struct:tagIPC4BITS::<anonymous>::<anonymous>
 MODCONBITS	D:\UPS\tbupsv21\p33FJ16GS504.h	128;"	t	line:128
 MODE16	D:\UPS\tbupsv21\p33FJ16GS504.h	1272;"	m	line:1272	struct:tagSPI1CON1BITS::<anonymous>::<anonymous>
-MSFunc1	D:\UPS\tbupsv21\uart.c	150;"	f	line:150	signature:(int addr,int len)
-MSFunc16	D:\UPS\tbupsv21\uart.c	214;"	f	line:214	signature:(int addr,int len,unsigned char *buf)
-MSFunc3	D:\UPS\tbupsv21\uart.c	178;"	f	line:178	signature:(int addr,int len)
-MSFunc5	D:\UPS\tbupsv21\uart.c	161;"	f	line:161	signature:(int addr, int len)
-MSFunc6	D:\UPS\tbupsv21\uart.c	202;"	f	line:202	signature:(int addr,int value)
+MSFunc1	D:\UPS\tbupsv21\uart.c	161;"	f	line:161	signature:(int addr,int len)
+MSFunc16	D:\UPS\tbupsv21\uart.c	230;"	f	line:230	signature:(int addr,int len)
+MSFunc3	D:\UPS\tbupsv21\uart.c	189;"	f	line:189	signature:(int addr,int len)
+MSFunc5	D:\UPS\tbupsv21\uart.c	172;"	f	line:172	signature:(int addr, int len)
+MSFunc6	D:\UPS\tbupsv21\uart.c	218;"	f	line:218	signature:(int addr,int value)
 MSTEN	D:\UPS\tbupsv21\p33FJ16GS504.h	1267;"	m	line:1267	struct:tagSPI1CON1BITS::<anonymous>::<anonymous>
 MagnitudeCplx32bIP	D:\UPS\tbupsv21\dsp.h	1472;"	p	line:1472	signature:( int N, long *ipBuff )
+MakeInt	D:\UPS\tbupsv21\uart.c	155;"	f	line:155	signature:(unsigned char h,unsigned char l)
 MatrixAdd	D:\UPS\tbupsv21\dsp.h	657;"	p	line:657	signature:( int numRows, int numCols, fractional* dstM, fractional* srcM1, fractional* srcM2 )
 MatrixInvert	D:\UPS\tbupsv21\dsp.h	637;"	p	line:637	signature:( int numRowsCols, float* dstM, float* srcM, float* pivotFlag, int* swappedRows, int* swappedCols )
 MatrixMultiply	D:\UPS\tbupsv21\dsp.h	689;"	p	line:689	signature:( int numRows1, int numCols1Rows2, int numCols2, fractional* dstM, fractional* srcM1, fractional* srcM2 )
@@ -987,8 +987,8 @@ MatrixSubtract	D:\UPS\tbupsv21\dsp.h	673;"	p	line:673	signature:( int numRows, i
 MatrixTranspose	D:\UPS\tbupsv21\dsp.h	624;"	p	line:624	signature:( int numRows, int numCols, fractional* dstM, fractional* srcM )
 Max::(s){(s).maxv=((s).maxv<(s).cv)	D:\UPS\tbupsv21\pwm.c	30;"	d	line:30	file:
 Min::(s){(s).minv=((s).minv>(s).cv)	D:\UPS\tbupsv21\pwm.c	31;"	d	line:31	file:
-ModbusSA	D:\UPS\tbupsv21\data_struct.h	34;"	m	line:34
-ModbusSlave	D:\UPS\tbupsv21\uart.c	225;"	f	line:225
+ModbusSA::sValue[0].l	D:\UPS\tbupsv21\data_struct.h	63;"	d	line:63
+ModbusSlave	D:\UPS\tbupsv21\uart.c	247;"	f	line:247
 ModbusSlave	D:\UPS\tbupsv21\uart.h	4;"	p	line:4	signature:()
 N	D:\UPS\tbupsv21\p33FJ16GS504.h	54;"	m	line:54	struct:tagSRBITS::<anonymous>::<anonymous>
 NAKBIT::0x80	D:\UPS\tbupsv21\i2c.c	10;"	d	line:10	file:
@@ -1125,7 +1125,7 @@ OVRENL	D:\UPS\tbupsv21\p33FJ16GS504.h	1764;"	m	line:1764	struct:tagIOCON1BITS::<
 OVRENL	D:\UPS\tbupsv21\p33FJ16GS504.h	1989;"	m	line:1989	struct:tagIOCON2BITS::<anonymous>::<anonymous>
 OVRENL	D:\UPS\tbupsv21\p33FJ16GS504.h	2196;"	m	line:2196	struct:tagIOCON3BITS::<anonymous>::<anonymous>
 OVRENL	D:\UPS\tbupsv21\p33FJ16GS504.h	2403;"	m	line:2403	struct:tagIOCON4BITS::<anonymous>::<anonymous>
-OddEven	D:\UPS\tbupsv21\data_struct.h	41;"	m	line:41
+OddEven::sValue[7].x	D:\UPS\tbupsv21\data_struct.h	70;"	d	line:70
 P	D:\UPS\tbupsv21\p33FJ16GS504.h	1073;"	m	line:1073	struct:tagI2C1STATBITS
 P	D:\UPS\tbupsv21\p33FJ16GS504.h	1092;"	m	line:1092	struct:tagI2CSTATBITS
 P0RDY	D:\UPS\tbupsv21\p33FJ16GS504.h	1546;"	m	line:1546	struct:tagADSTATBITS
@@ -1314,7 +1314,7 @@ PWMCON2BITS	D:\UPS\tbupsv21\p33FJ16GS504.h	1977;"	t	line:1977
 PWMCON3BITS	D:\UPS\tbupsv21\p33FJ16GS504.h	2184;"	t	line:2184
 PWMCON4BITS	D:\UPS\tbupsv21\p33FJ16GS504.h	2391;"	t	line:2391
 PWMMD	D:\UPS\tbupsv21\p33FJ16GS504.h	3775;"	m	line:3775	struct:tagPMD1BITS
-Power	D:\UPS\tbupsv21\data_struct.h	25;"	m	line:25
+Power::Value[7].x	D:\UPS\tbupsv21\data_struct.h	56;"	d	line:56
 Q15::(X)	D:\UPS\tbupsv21\dsp.h	134;"	d	line:134
 RA	D:\UPS\tbupsv21\p33FJ16GS504.h	55;"	m	line:55	struct:tagSRBITS::<anonymous>::<anonymous>
 RA0	D:\UPS\tbupsv21\p33FJ16GS504.h	1311;"	m	line:1311	struct:tagPORTABITS
@@ -1659,7 +1659,7 @@ R_W	D:\UPS\tbupsv21\p33FJ16GS504.h	1071;"	m	line:1071	struct:tagI2C1STATBITS
 R_W	D:\UPS\tbupsv21\p33FJ16GS504.h	1090;"	m	line:1090	struct:tagI2CSTATBITS
 RcvCnt	D:\UPS\tbupsv21\uart.c	12;"	v	line:12
 Rcved	D:\UPS\tbupsv21\uart.c	15;"	v	line:15
-Root	D:\UPS\tbupsv21\data_struct.c	12;"	f	line:12	signature:(unsigned long Number)
+Root	D:\UPS\tbupsv21\data_struct.c	27;"	f	line:27	signature:(unsigned long Number)
 Root	D:\UPS\tbupsv21\data_struct.h	5;"	p	line:5	signature:(unsigned long Number)
 S	D:\UPS\tbupsv21\p33FJ16GS504.h	1072;"	m	line:1072	struct:tagI2C1STATBITS
 S	D:\UPS\tbupsv21\p33FJ16GS504.h	1091;"	m	line:1091	struct:tagI2CSTATBITS
@@ -1840,7 +1840,6 @@ STRIG3BITS	D:\UPS\tbupsv21\p33FJ16GS504.h	2336;"	t	line:2336
 STRIG4BITS	D:\UPS\tbupsv21\p33FJ16GS504.h	2543;"	t	line:2543
 STSEL	D:\UPS\tbupsv21\p33FJ16GS504.h	1132;"	m	line:1132	struct:tagU1MODEBITS::<anonymous>::<anonymous>
 ST_SIZE::SINE_TABLE_SIZE	D:\UPS\tbupsv21\sineTable_50Hz.h	247;"	d	line:247
-SValue	D:\UPS\tbupsv21\data_struct.h	44;"	t	line:44
 SWAP	D:\UPS\tbupsv21\p33FJ16GS504.h	1760;"	m	line:1760	struct:tagIOCON1BITS::<anonymous>::<anonymous>
 SWAP	D:\UPS\tbupsv21\p33FJ16GS504.h	1985;"	m	line:1985	struct:tagIOCON2BITS::<anonymous>::<anonymous>
 SWAP	D:\UPS\tbupsv21\p33FJ16GS504.h	2192;"	m	line:2192	struct:tagIOCON3BITS::<anonymous>::<anonymous>
@@ -1878,7 +1877,7 @@ SYNCSRC1	D:\UPS\tbupsv21\p33FJ16GS504.h	1704;"	m	line:1704	struct:tagPTCONBITS::
 SYSTEM_ERROR::3	D:\UPS\tbupsv21\define.h	43;"	d	line:43
 SYSTEM_STARTUP::0	D:\UPS\tbupsv21\define.h	40;"	d	line:40
 ScrCnt	D:\UPS\tbupsv21\StateMachine.c	17;"	v	line:17
-Sender	D:\UPS\tbupsv21\uart.c	113;"	f	line:113
+Sender	D:\UPS\tbupsv21\uart.c	118;"	f	line:118
 Sender	D:\UPS\tbupsv21\uart.c	17;"	p	line:17	file:
 Sender	D:\UPS\tbupsv21\uart.h	2;"	p	line:2	signature:()
 SetPhase2::(v){if(v>17500&&v<20000){PHASE	D:\UPS\tbupsv21\pwm.c	45;"	d	line:45	file:
@@ -1888,13 +1887,13 @@ Sleep::{__asm__volatile("pwrsav#0");}	D:\UPS\tbupsv21\p33FJ16GS504.h	5982;"	d	li
 SndCnt	D:\UPS\tbupsv21\uart.c	13;"	v	line:13
 SndPosi	D:\UPS\tbupsv21\uart.c	14;"	v	line:14
 SquareMagnitudeCplx	D:\UPS\tbupsv21\dsp.h	1592;"	p	line:1592	signature:( int numelems, fractcomplex* srcV, fractional* dstV )
-SquareRoot	D:\UPS\tbupsv21\data_struct.c	14;"	l	line:14
+SquareRoot	D:\UPS\tbupsv21\data_struct.c	29;"	l	line:29
 StartADC	D:\UPS\tbupsv21\pwm.c	469;"	f	line:469	signature:(void)
-StartCtrl	D:\UPS\tbupsv21\data_struct.h	42;"	m	line:42
+StartCtrl::sValue[8].x	D:\UPS\tbupsv21\data_struct.h	71;"	d	line:71
 StartPWM	D:\UPS\tbupsv21\pwm.c	613;"	f	line:613	signature:(void)
 StartUpCnt	D:\UPS\tbupsv21\StateMachine.c	14;"	v	line:14
 State	D:\UPS\tbupsv21\StateMachine.c	9;"	v	line:9
-StopBits	D:\UPS\tbupsv21\data_struct.h	40;"	m	line:40
+StopBits::sValue[6].x	D:\UPS\tbupsv21\data_struct.h	69;"	d	line:69
 T1CKR	D:\UPS\tbupsv21\p33FJ16GS504.h	2809;"	m	line:2809	struct:tagRPINR2BITS::<anonymous>::<anonymous>
 T1CKR0	D:\UPS\tbupsv21\p33FJ16GS504.h	2813;"	m	line:2813	struct:tagRPINR2BITS::<anonymous>::<anonymous>
 T1CKR1	D:\UPS\tbupsv21\p33FJ16GS504.h	2814;"	m	line:2814	struct:tagRPINR2BITS::<anonymous>::<anonymous>
@@ -2223,7 +2222,7 @@ U1TXREG	D:\UPS\tbupsv21\p33FJ16GS504.h	1192;"	m	line:1192	struct:tagU1TXREGBITS:
 U1TXREGBITS	D:\UPS\tbupsv21\p33FJ16GS504.h	1206;"	t	line:1206
 UART	D:\UPS\tbupsv21\p33FJ16GS504.h	1116;"	t	line:1116
 UARTEN	D:\UPS\tbupsv21\p33FJ16GS504.h	1145;"	m	line:1145	struct:tagU1MODEBITS::<anonymous>::<anonymous>
-UART_DRV	D:\UPS\tbupsv21\uart.c	54;"	f	line:54	signature:(void)
+UART_DRV	D:\UPS\tbupsv21\uart.c	59;"	f	line:59	signature:(void)
 UART_DRV	D:\UPS\tbupsv21\uart.h	3;"	p	line:3	signature:(void)
 UEN	D:\UPS\tbupsv21\p33FJ16GS504.h	1139;"	m	line:1139	struct:tagU1MODEBITS::<anonymous>::<anonymous>
 UEN0	D:\UPS\tbupsv21\p33FJ16GS504.h	1152;"	m	line:1152	struct:tagU1MODEBITS::<anonymous>::<anonymous>
@@ -2276,7 +2275,7 @@ VECNUM4	D:\UPS\tbupsv21\p33FJ16GS504.h	802;"	m	line:802	struct:tagINTTREGBITS::<
 VECNUM5	D:\UPS\tbupsv21\p33FJ16GS504.h	803;"	m	line:803	struct:tagINTTREGBITS::<anonymous>::<anonymous>
 VECNUM6	D:\UPS\tbupsv21\p33FJ16GS504.h	804;"	m	line:804	struct:tagINTTREGBITS::<anonymous>::<anonymous>
 VREGS	D:\UPS\tbupsv21\p33FJ16GS504.h	3583;"	m	line:3583	struct:tagRCONBITS
-Value	D:\UPS\tbupsv21\data_struct.c	3;"	v	line:3
+Value	D:\UPS\tbupsv21\data_struct.c	4;"	v	line:4
 VectorAdd	D:\UPS\tbupsv21\dsp.h	311;"	p	line:311	signature:( int numElems, fractional* dstV, fractional* srcV1, fractional* srcV2 )
 VectorConvolve	D:\UPS\tbupsv21\dsp.h	380;"	p	line:380	signature:( int numElems1, int numElems2, fractional* dstV, fractional* srcV1, fractional* srcV2 )
 VectorCopy	D:\UPS\tbupsv21\dsp.h	255;"	p	line:255	signature:( int numElems, fractional* dstV, fractional* srcV )
@@ -3547,7 +3546,7 @@ _U1RXIP0::IPC2bits.U1RXIP0	D:\UPS\tbupsv21\p33FJ16GS504.h	4141;"	d	line:4141
 _U1RXIP1::IPC2bits.U1RXIP1	D:\UPS\tbupsv21\p33FJ16GS504.h	4142;"	d	line:4142
 _U1RXIP2::IPC2bits.U1RXIP2	D:\UPS\tbupsv21\p33FJ16GS504.h	4143;"	d	line:4143
 _U1RXIP::IPC2bits.U1RXIP	D:\UPS\tbupsv21\p33FJ16GS504.h	4131;"	d	line:4131
-_U1RXInterrupt	D:\UPS\tbupsv21\uart.c	71;"	f	line:71
+_U1RXInterrupt	D:\UPS\tbupsv21\uart.c	76;"	f	line:76
 _U1RXR0::RPINR18bits.U1RXR0	D:\UPS\tbupsv21\p33FJ16GS504.h	5445;"	d	line:5445
 _U1RXR1::RPINR18bits.U1RXR1	D:\UPS\tbupsv21\p33FJ16GS504.h	5446;"	d	line:5446
 _U1RXR2::RPINR18bits.U1RXR2	D:\UPS\tbupsv21\p33FJ16GS504.h	5447;"	d	line:5447
@@ -3562,7 +3561,7 @@ _U1TXIP0::IPC3bits.U1TXIP0	D:\UPS\tbupsv21\p33FJ16GS504.h	4148;"	d	line:4148
 _U1TXIP1::IPC3bits.U1TXIP1	D:\UPS\tbupsv21\p33FJ16GS504.h	4149;"	d	line:4149
 _U1TXIP2::IPC3bits.U1TXIP2	D:\UPS\tbupsv21\p33FJ16GS504.h	4150;"	d	line:4150
 _U1TXIP::IPC3bits.U1TXIP	D:\UPS\tbupsv21\p33FJ16GS504.h	4146;"	d	line:4146
-_U1TXInterrupt	D:\UPS\tbupsv21\uart.c	97;"	f	line:97
+_U1TXInterrupt	D:\UPS\tbupsv21\uart.c	102;"	f	line:102
 _U1TXREG::U1TXREGbits.U1TXREG	D:\UPS\tbupsv21\p33FJ16GS504.h	4421;"	d	line:4421
 _UARTEN::U1MODEbits.UARTEN	D:\UPS\tbupsv21\p33FJ16GS504.h	4396;"	d	line:4396
 _UEN0::U1MODEbits.UEN0	D:\UPS\tbupsv21\p33FJ16GS504.h	4399;"	d	line:4399
@@ -3653,23 +3652,22 @@ _invs	D:\UPS\tbupsv21\define.h	88;"	s	line:88
 _mains	D:\UPS\tbupsv21\define.h	64;"	s	line:64
 abcCoefficients	D:\UPS\tbupsv21\dsp.h	1608;"	m	line:1608
 abs::jabs	D:\UPS\tbupsv21\pwm.c	35;"	d	line:35	file:
-ack	D:\UPS\tbupsv21\i2c.c	68;"	f	line:68	signature:(void)
-b0	D:\UPS\tbupsv21\data_struct.h	51;"	m	line:51
-b1	D:\UPS\tbupsv21\data_struct.h	52;"	m	line:52
-b2	D:\UPS\tbupsv21\data_struct.h	53;"	m	line:53
-b3	D:\UPS\tbupsv21\data_struct.h	54;"	m	line:54
-b4	D:\UPS\tbupsv21\data_struct.h	55;"	m	line:55
-b5	D:\UPS\tbupsv21\data_struct.h	56;"	m	line:56
-b6	D:\UPS\tbupsv21\data_struct.h	57;"	m	line:57
-b7	D:\UPS\tbupsv21\data_struct.h	58;"	m	line:58
-bFlag	D:\UPS\tbupsv21\data_struct.c	5;"	v	line:5
+ack	D:\UPS\tbupsv21\i2c.c	64;"	f	line:64	signature:(void)
+b0	D:\UPS\tbupsv21\data_struct.h	76;"	m	line:76
+b1	D:\UPS\tbupsv21\data_struct.h	77;"	m	line:77
+b2	D:\UPS\tbupsv21\data_struct.h	78;"	m	line:78
+b3	D:\UPS\tbupsv21\data_struct.h	79;"	m	line:79
+b4	D:\UPS\tbupsv21\data_struct.h	80;"	m	line:80
+b5	D:\UPS\tbupsv21\data_struct.h	81;"	m	line:81
+b6	D:\UPS\tbupsv21\data_struct.h	82;"	m	line:82
+b7	D:\UPS\tbupsv21\data_struct.h	83;"	m	line:83
+bFlag	D:\UPS\tbupsv21\data_struct.c	20;"	v	line:20
 bcnt	D:\UPS\tbupsv21\main.c	25;"	v	line:25
-bypassInSwitch::bFlag.b3	D:\UPS\tbupsv21\data_struct.h	67;"	d	line:67
-byte	D:\UPS\tbupsv21\i2c.c	154;"	l	line:154
+bypassInSwitch::bFlag.b3	D:\UPS\tbupsv21\data_struct.h	92;"	d	line:92
 c	D:\UPS\tbupsv21\define.h	104;"	m	line:104	struct:_invs
-ch	D:\UPS\tbupsv21\uart.c	133;"	l	line:133
-ch	D:\UPS\tbupsv21\uart.c	74;"	l	line:74
-chkack	D:\UPS\tbupsv21\i2c.c	51;"	f	line:51	signature:(void)
+ch	D:\UPS\tbupsv21\uart.c	138;"	l	line:138
+ch	D:\UPS\tbupsv21\uart.c	79;"	l	line:79
+chkack	D:\UPS\tbupsv21\i2c.c	50;"	f	line:50	signature:(void)
 clr::(v)(v)=0	D:\UPS\tbupsv21\pwm.c	38;"	d	line:38	file:
 cnt	D:\UPS\tbupsv21\define.h	70;"	m	line:70	struct:_mains
 cnt	D:\UPS\tbupsv21\define.h	99;"	m	line:99	struct:_invs
@@ -3685,8 +3683,8 @@ coeffsPage	D:\UPS\tbupsv21\dsp.h	787;"	m	line:787
 controlHistory	D:\UPS\tbupsv21\dsp.h	1611;"	m	line:1611
 controlOutput	D:\UPS\tbupsv21\dsp.h	1613;"	m	line:1613
 controlReference	D:\UPS\tbupsv21\dsp.h	1615;"	m	line:1615
-crc	D:\UPS\tbupsv21\uart.c	227;"	l	line:227
-crc16	D:\UPS\tbupsv21\uart.c	129;"	f	line:129	signature:(unsigned char* buf, unsigned char len)
+crc	D:\UPS\tbupsv21\uart.c	249;"	l	line:249
+crc16	D:\UPS\tbupsv21\uart.c	134;"	f	line:134	signature:(unsigned char* buf, unsigned char len)
 cv	D:\UPS\tbupsv21\define.h	66;"	m	line:66	struct:_mains
 cv	D:\UPS\tbupsv21\define.h	91;"	m	line:91	struct:_invs
 cycle	D:\UPS\tbupsv21\define.h	103;"	m	line:103	struct:_invs
@@ -3712,24 +3710,25 @@ fractcomplex	D:\UPS\tbupsv21\dsp.h	109;"	t	line:109
 fractional	D:\UPS\tbupsv21\dsp.h	100;"	t	line:100
 fractional	D:\UPS\tbupsv21\dsp.h	102;"	t	line:102
 gammaVals	D:\UPS\tbupsv21\dsp.h	1148;"	m	line:1148
-h	D:\UPS\tbupsv21\data_struct.h	11;"	m	line:11	struct:_INT::<anonymous>
-i	D:\UPS\tbupsv21\data_struct.c	13;"	l	line:13
+h	D:\UPS\tbupsv21\data_struct.h	13;"	m	line:13	struct:_INT::<anonymous>
+i	D:\UPS\tbupsv21\data_struct.c	28;"	l	line:28
 i	D:\UPS\tbupsv21\define.h	100;"	m	line:100	struct:_invs
 i	D:\UPS\tbupsv21\define.h	79;"	m	line:79	struct:_mains
-i	D:\UPS\tbupsv21\i2c.c	107;"	l	line:107
-i	D:\UPS\tbupsv21\i2c.c	136;"	l	line:136
-i	D:\UPS\tbupsv21\i2c.c	173;"	l	line:173
-i	D:\UPS\tbupsv21\i2c.c	53;"	l	line:53
-i	D:\UPS\tbupsv21\i2c.c	86;"	l	line:86
-i	D:\UPS\tbupsv21\uart.c	132;"	l	line:132
-i	D:\UPS\tbupsv21\uart.c	180;"	l	line:180
-i2cRead	D:\UPS\tbupsv21\i2c.c	152;"	f	line:152	signature:(unsigned char addr)
-i2cRead	D:\UPS\tbupsv21\i2c.h	4;"	p	line:4	signature:(unsigned char addr)
-i2cReadStr	D:\UPS\tbupsv21\i2c.c	171;"	f	line:171	signature:(unsigned char addr,unsigned char *buf,unsigned char len)
+i	D:\UPS\tbupsv21\i2c.c	105;"	l	line:105
+i	D:\UPS\tbupsv21\i2c.c	134;"	l	line:134
+i	D:\UPS\tbupsv21\i2c.c	170;"	l	line:170
+i	D:\UPS\tbupsv21\i2c.c	52;"	l	line:52
+i	D:\UPS\tbupsv21\i2c.c	84;"	l	line:84
+i	D:\UPS\tbupsv21\uart.c	137;"	l	line:137
+i	D:\UPS\tbupsv21\uart.c	191;"	l	line:191
+i	D:\UPS\tbupsv21\uart.c	232;"	l	line:232
+i2cRead	D:\UPS\tbupsv21\i2c.c	150;"	f	line:150	signature:(unsigned char addr, unsigned char* c)
+i2cRead	D:\UPS\tbupsv21\i2c.h	4;"	p	line:4	signature:(unsigned char addr, unsigned char *c)
+i2cReadStr	D:\UPS\tbupsv21\i2c.c	168;"	f	line:168	signature:(unsigned char addr, unsigned char *buf, unsigned char len)
 i2cReadStr	D:\UPS\tbupsv21\i2c.h	5;"	p	line:5	signature:(unsigned char addr,unsigned char *buf,unsigned char len)
-i2cWrite	D:\UPS\tbupsv21\i2c.c	121;"	f	line:121	signature:(unsigned char addr,unsigned char byte)
+i2cWrite	D:\UPS\tbupsv21\i2c.c	119;"	f	line:119	signature:(unsigned char addr, unsigned char byte)
 i2cWrite	D:\UPS\tbupsv21\i2c.h	2;"	p	line:2	signature:(unsigned char addr,unsigned char byte)
-i2cWriteStr	D:\UPS\tbupsv21\i2c.c	134;"	f	line:134	signature:(unsigned char addr,unsigned char * buf,unsigned char len)
+i2cWriteStr	D:\UPS\tbupsv21\i2c.c	132;"	f	line:132	signature:(unsigned char addr, unsigned char *buf, unsigned char len)
 i2cWriteStr	D:\UPS\tbupsv21\i2c.h	3;"	p	line:3	signature:(unsigned char addr,unsigned char *buf,unsigned char len)
 icnt	D:\UPS\tbupsv21\define.h	76;"	m	line:76	struct:_mains
 icxbuf	D:\UPS\tbupsv21\p33FJ16GS504.h	896;"	m	line:896	struct:tagIC
@@ -3743,18 +3742,19 @@ initClock	D:\UPS\tbupsv21\clock.c	3;"	f	line:3	signature:(void)
 initPWM	D:\UPS\tbupsv21\pwm.c	475;"	f	line:475	signature:(void)
 initStateMachineTimer	D:\UPS\tbupsv21\StateMachine.c	21;"	f	line:21	signature:(void)
 initStateMachineTimer	D:\UPS\tbupsv21\StateMachine.h	2;"	p	line:2	signature:(void)
-initUart	D:\UPS\tbupsv21\uart.c	23;"	f	line:23
+initUart	D:\UPS\tbupsv21\uart.c	28;"	f	line:28
 initUart	D:\UPS\tbupsv21\uart.h	1;"	p	line:1	signature:()
 initialGain	D:\UPS\tbupsv21\dsp.h	1071;"	m	line:1071
 inv	D:\UPS\tbupsv21\pwm.c	21;"	v	line:21
-invShift::bFlag.b2	D:\UPS\tbupsv21\data_struct.h	66;"	d	line:66
-invf::bFlag.b1	D:\UPS\tbupsv21\data_struct.h	65;"	d	line:65
+invShift::bFlag.b2	D:\UPS\tbupsv21\data_struct.h	91;"	d	line:91
+invf::bFlag.b1	D:\UPS\tbupsv21\data_struct.h	90;"	d	line:90
 invfadj::(r,f)r=PD3=(__builtin_mulsu(f,	D:\UPS\tbupsv21\pwm.c	27;"	d	line:27	file:
 issz::(s,v)(((s).cnt>128)&&(((s).pv>	D:\UPS\tbupsv21\pwm.c	25;"	d	line:25	file:
 iszc::(s,v)(((s).cnt>360)&&(((s).pv<	D:\UPS\tbupsv21\pwm.c	24;"	d	line:24	file:
 jabs	D:\UPS\tbupsv21\pwm.c	33;"	f	line:33	signature:(int x)
+jmemcpy	D:\UPS\tbupsv21\uart.c	19;"	f	line:19	signature:(unsigned char* s, unsigned char * d,unsigned int ls)
 jumpTable	D:\UPS\tbupsv21\pwm.c	319;"	v	line:319
-k	D:\UPS\tbupsv21\i2c.c	107;"	l	line:107
+k	D:\UPS\tbupsv21\i2c.c	105;"	l	line:105
 kappaVals	D:\UPS\tbupsv21\dsp.h	1145;"	m	line:1145
 l	D:\UPS\tbupsv21\data_struct.h	12;"	m	line:12	struct:_INT::<anonymous>
 m	D:\UPS\tbupsv21\pwm.c	22;"	v	line:22
@@ -3762,13 +3762,13 @@ main	D:\UPS\tbupsv21\main.c	59;"	f	line:59
 maxv	D:\UPS\tbupsv21\define.h	68;"	m	line:68	struct:_mains
 maxv	D:\UPS\tbupsv21\define.h	93;"	m	line:93	struct:_invs
 measuredOutput	D:\UPS\tbupsv21\dsp.h	1614;"	m	line:1614
-mf::bFlag.b0	D:\UPS\tbupsv21\data_struct.h	64;"	d	line:64
+mf::bFlag.b0	D:\UPS\tbupsv21\data_struct.h	89;"	d	line:89
 minv	D:\UPS\tbupsv21\define.h	69;"	m	line:69	struct:_mains
 minv	D:\UPS\tbupsv21\define.h	94;"	m	line:94	struct:_invs
 mulss::(s,d)(__builtin_mulss((int)(s)	D:\UPS\tbupsv21\define.h	5;"	d	line:5
 mulsu::(s,d)(__builtin_mulsu((int)(s)	D:\UPS\tbupsv21\define.h	6;"	d	line:6
 muluu::(s,d)(__builtin_muluu((unsigne	D:\UPS\tbupsv21\define.h	7;"	d	line:7
-noack	D:\UPS\tbupsv21\i2c.c	76;"	f	line:76	signature:(void)
+noack	D:\UPS\tbupsv21\i2c.c	74;"	f	line:74	signature:(void)
 numCoeffs	D:\UPS\tbupsv21\dsp.h	764;"	m	line:764
 numSectionsLess1	D:\UPS\tbupsv21\dsp.h	1058;"	m	line:1058
 numSectionsLess1	D:\UPS\tbupsv21\dsp.h	1100;"	m	line:1100
@@ -3783,14 +3783,14 @@ order	D:\UPS\tbupsv21\dsp.h	1143;"	m	line:1143
 perr	D:\UPS\tbupsv21\pwm.c	144;"	v	line:144
 pv	D:\UPS\tbupsv21\define.h	67;"	m	line:67	struct:_mains
 pv	D:\UPS\tbupsv21\define.h	92;"	m	line:92	struct:_invs
-read_byte	D:\UPS\tbupsv21\i2c.c	105;"	f	line:105	signature:(void)
+read_byte	D:\UPS\tbupsv21\i2c.c	103;"	f	line:103	signature:(void)
 real	D:\UPS\tbupsv21\dsp.h	107;"	m	line:107
 realFft32bIP	D:\UPS\tbupsv21\dsp.h	1424;"	p	line:1424	signature:( int log2N, long *ipBuff, long *tfBuff, int factPage )
 realiFft32bIP	D:\UPS\tbupsv21\dsp.h	1463;"	p	line:1463	signature:( int log2N, long *ipBuff, long *tfBuff, int factPage )
 rsBuf	D:\UPS\tbupsv21\uart.c	10;"	v	line:10
 sCntx	D:\UPS\tbupsv21\StateMachine.c	18;"	v	line:18
-sMode	D:\UPS\tbupsv21\data_struct.h	36;"	m	line:36
-sValue	D:\UPS\tbupsv21\data_struct.c	4;"	v	line:4
+sMode::sValue[2].x	D:\UPS\tbupsv21\data_struct.h	65;"	d	line:65
+sValue	D:\UPS\tbupsv21\data_struct.c	6;"	v	line:6
 set::(v){m.cv=(v);}	D:\UPS\tbupsv21\pwm.c	36;"	d	line:36	file:
 siv	D:\UPS\tbupsv21\pwm.c	51;"	v	line:51
 size	D:\UPS\tbupsv21\define.h	71;"	m	line:71	struct:_mains
@@ -3805,7 +3805,7 @@ state	D:\UPS\tbupsv21\define.h	102;"	m	line:102	struct:_invs
 state	D:\UPS\tbupsv21\define.h	82;"	m	line:82	struct:_mains
 stick	D:\UPS\tbupsv21\main.c	23;"	v	line:23
 stop	D:\UPS\tbupsv21\i2c.c	40;"	f	line:40	signature:(void)
-swap	D:\UPS\tbupsv21\uart.c	145;"	f	line:145	signature:(unsigned int i)
+swap	D:\UPS\tbupsv21\uart.c	150;"	f	line:150	signature:(unsigned int i)
 synced	D:\UPS\tbupsv21\define.h	106;"	m	line:106	struct:_invs
 tPID	D:\UPS\tbupsv21\dsp.h	1616;"	t	line:1616
 tagACLKCONBITS	D:\UPS\tbupsv21\p33FJ16GS504.h	3720;"	s	line:3720
@@ -3975,6 +3975,7 @@ tagU1STABITS	D:\UPS\tbupsv21\p33FJ16GS504.h	1160;"	s	line:1160
 tagU1TXREGBITS	D:\UPS\tbupsv21\p33FJ16GS504.h	1189;"	s	line:1189
 tagUART	D:\UPS\tbupsv21\p33FJ16GS504.h	1110;"	s	line:1110
 tagXBREVBITS	D:\UPS\tbupsv21\p33FJ16GS504.h	136;"	s	line:136
+ti	D:\UPS\tbupsv21\uart.c	157;"	l	line:157
 tick	D:\UPS\tbupsv21\main.c	23;"	v	line:23
 tmpi	D:\UPS\tbupsv21\pwm.c	630;"	v	line:630
 toneGen32b	D:\UPS\tbupsv21\dsp.h	1378;"	p	line:1378	signature:( int samp, int tone, int phase, long *tfBuff )
@@ -3985,7 +3986,6 @@ uxmode	D:\UPS\tbupsv21\p33FJ16GS504.h	1111;"	m	line:1111	struct:tagUART
 uxrxreg	D:\UPS\tbupsv21\p33FJ16GS504.h	1114;"	m	line:1114	struct:tagUART
 uxsta	D:\UPS\tbupsv21\p33FJ16GS504.h	1112;"	m	line:1112	struct:tagUART
 uxtxreg	D:\UPS\tbupsv21\p33FJ16GS504.h	1113;"	m	line:1113	struct:tagUART
-v	D:\UPS\tbupsv21\uart.c	204;"	l	line:204
-wMode	D:\UPS\tbupsv21\data_struct.h	35;"	m	line:35
-write_byte	D:\UPS\tbupsv21\i2c.c	84;"	f	line:84	signature:(unsigned char byte)
+wMode::sValue[1].x	D:\UPS\tbupsv21\data_struct.h	64;"	d	line:64
+write_byte	D:\UPS\tbupsv21\i2c.c	82;"	f	line:82	signature:(unsigned char byte)
 x	D:\UPS\tbupsv21\data_struct.h	9;"	m	line:9	union:_INT
