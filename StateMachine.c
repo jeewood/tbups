@@ -118,6 +118,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                     }
                 }
                 //#endif
+                //120% 2分钟跳旁路
+                //150% 30秒跳旁路
                 if (inv.synced)
                 {
                     if (bypassInSwitch)
@@ -136,6 +138,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                         SCR = 0;
                         ScrCnt = 0;
                     }
+                }
+                else
+                {
+                	if (bypassInSwitch)
+                	{
+                		SCR = 0;
+                		BYPASS = 1;
+                	}
                 }
             }
         }

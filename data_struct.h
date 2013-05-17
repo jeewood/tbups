@@ -14,6 +14,7 @@ typedef union _INT
         unsigned char h;
     };
 } INT;
+
 /*
 typedef struct
 {
@@ -24,8 +25,8 @@ typedef struct
     int BatV;               //4
     int BatI;               //5
     int Factor;             //6
-    int Power;              //7功率
-    int LoadRate;           //8负载率
+    int Power;              //7鹿娄脗脢
+    int LoadRate;           //8赂潞脭脴脗脢
     int ACInF;              //9
     int InvF;               //10
     int ChargeStatus;       //11
@@ -72,19 +73,19 @@ extern INT sValue[];
 #define OddEven          sValue[8].x
 #define StartCtrl        sValue[9].x
 #define ByPassCtrl       sValue[10].x
- 
-#define Adj_ACInV        sValue[11].x
-#define Adj_ACInI        sValue[12].x
-#define Adj_InvV         sValue[13].x
-#define Adj_LoadI        sValue[14].x
-#define Adj_BatV         sValue[15].x
-#define Adj_BatI         sValue[16].x
-#define Adj_Factor       sValue[17].x
-#define Adj_Power        sValue[18].x
-#define Adj_LoadRate     sValue[19].x
-#define Adj_ACInF        sValue[20].x
-#define Adj_InvF         sValue[21].x
-#define Adj_ChargeStatus sValue[22].x
+#define RatedCurr		 sValue[11].x
+#define Adj_ACInV        sValue[12].x
+#define Adj_ACInI        sValue[13].x
+#define Adj_InvV         sValue[14].x
+#define Adj_LoadI        sValue[15].x
+#define Adj_BatV         sValue[16].x
+#define Adj_BatI         sValue[17].x
+#define Adj_Factor       sValue[18].x
+#define Adj_Power        sValue[19].x
+#define Adj_LoadRate     sValue[20].x
+#define Adj_ACInF        sValue[21].x
+#define Adj_InvF         sValue[22].x
+#define Adj_ChargeStatus sValue[23].x
 
 typedef struct
 {

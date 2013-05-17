@@ -1,18 +1,18 @@
 /*****************************************************************  
- ** 功能描述: 串行通讯程序，DSP中断收到8个数据后，将收到的8个数据    **
- ** 以中断发送方式返送回发送方。                                   **
+ ** 鹿娄脛脺脙猫脢枚: 麓庐脨脨脥篓脩露鲁脤脨貌拢卢DSP脰脨露脧脢脮碌陆8赂枚脢媒戮脻潞贸拢卢陆芦脢脮碌陆碌脛8赂枚脢媒戮脻    **
+ ** 脪脭脰脨露脧路垄脣脥路陆脢陆路碌脣脥禄脴路垄脣脥路陆隆拢                                   **
  *************************************************************** */
-#include <p33fj16gs504.h>                //ds30f6014头文件   
+#include <p33fj16gs504.h>                //ds30f6014脥路脦脛录镁   
 #include "define.h"
 #include "data_struct.h"
 #include "i2c.h"
 
-unsigned char rsBuf[68]; // 接收数据数组
-//unsigned char SndBuf[32];            // 发送数据数组   
-unsigned char RcvCnt = 0; // 接收数据个数计数
-unsigned char SndCnt = 0; // 发送数据个数计数
-unsigned char SndPosi = 0; // 发送数据个数计数
-unsigned char Rcved; // ＝1，接收到8个数据
+unsigned char rsBuf[68]; // 陆脫脢脮脢媒戮脻脢媒脳茅
+//unsigned char SndBuf[32];            // 路垄脣脥脢媒戮脻脢媒脳茅   
+unsigned char RcvCnt = 0; // 陆脫脢脮脢媒戮脻赂枚脢媒录脝脢媒
+unsigned char SndCnt = 0; // 路垄脣脥脢媒戮脻赂枚脢媒录脝脢媒
+unsigned char SndPosi = 0; // 路垄脣脥脢媒戮脻赂枚脢媒录脝脢媒
+unsigned char Rcved; // 拢陆1拢卢陆脫脢脮碌陆8赂枚脢媒戮脻
 unsigned int CET = 0;
 void Sender();
 
@@ -22,27 +22,27 @@ void jmemcpy(unsigned char* s, unsigned char * d, unsigned int ls)
 }
 
 /*****************************************************************  
- ** 函数名: Uart_Initial()                                       **
- ** 功能描述: 232串行通讯初始化子程序，设置中断优先级            **
+ ** 潞炉脢媒脙没: Uart_Initial()                                       **
+ ** 鹿娄脛脺脙猫脢枚: 232麓庐脨脨脥篓脩露鲁玫脢录禄炉脳脫鲁脤脨貌拢卢脡猫脰脙脰脨露脧脫脜脧脠录露            **
  *************************************************************** */
 void initUart()
 {
 
-    //IPC2bits.U1RXIP=1;          //收中断优先级：1级
+    //IPC2bits.U1RXIP=1;          //脢脮脰脨露脧脫脜脧脠录露拢潞1录露
     //IPC3bits.U1TXIP=1;
 
     U1MODEbits.UARTEN = 1;
     //U1MODEbits.UEN = 3;
-    //U1MODE=0x8000;              //UART使能，8位数据，无奇偶校验
-    U1MODEbits.PDSEL = 2; //8位数据位，奇校验
-    U1MODEbits.STSEL = 0; //8位数据位，奇校验
+    //U1MODE=0x8000;              //UART脢鹿脛脺拢卢8脦禄脢媒戮脻拢卢脦脼脝忙脜录脨拢脩茅
+    U1MODEbits.PDSEL = 2; //8脦禄脢媒戮脻脦禄拢卢脝忙脨拢脩茅
+    U1MODEbits.STSEL = 0; //8脦禄脢媒戮脻脦禄拢卢脝忙脨拢脩茅
 
-    U1STA = 0x0000; //当一个字符被传输到发送移位寄存器（发送缓冲器中
-    //至少还有一个字符）产生中断，当接收到一个字符时，
-    //中断标志位置位
-    //U1STAbits.UTXINV = 1;		//发送极性，UxTX空闲为1
-    U1BRG = 0x102; //U1BRG=Fcy/(16*波特率)-1，此处波特率为9600
-    IEC0bits.U1RXIE = 1; //UART1接收和发送中断使能
+    U1STA = 0x0000; //碌卤脪禄赂枚脳脰路没卤禄麓芦脢盲碌陆路垄脣脥脪脝脦禄录脛麓忙脝梅拢篓路垄脣脥禄潞鲁氓脝梅脰脨
+    //脰脕脡脵禄鹿脫脨脪禄赂枚脳脰路没拢漏虏煤脡煤脰脨露脧拢卢碌卤陆脫脢脮碌陆脪禄赂枚脳脰路没脢卤拢卢
+    //脰脨露脧卤锚脰戮脦禄脰脙脦禄
+    //U1STAbits.UTXINV = 1;		//路垄脣脥录芦脨脭拢卢UxTX驴脮脧脨脦陋1
+    U1BRG = 0x102; //U1BRG=Fcy/(16*虏篓脤脴脗脢)-1拢卢麓脣麓娄虏篓脤脴脗脢脦陋9600
+    IEC0bits.U1RXIE = 1; //UART1陆脫脢脮潞脥路垄脣脥脰脨露脧脢鹿脛脺
     IEC0bits.U1TXIE = 1;
 
     U1STAbits.URXISEL = 0; // Interrupt after one RX character is received;
@@ -73,8 +73,8 @@ void UART_DRV(void)
 }
 
 /* ****************************************************************  
- ** 函 数 名: __attribute__((__interrupt__)) _U1RXInterrupt()
- ** 功能描述: 中断子程序：232接收中断
+ ** 潞炉 脢媒 脙没: __attribute__((__interrupt__)) _U1RXInterrupt()
+ ** 鹿娄脛脺脙猫脢枚: 脰脨露脧脳脫鲁脤脨貌拢潞232陆脫脢脮脰脨露脧
  *************************************************************** */
 void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt()
 {
@@ -100,21 +100,21 @@ void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt()
 }
 
 /* ****************************************************************  
- ** 函 数 名: __attribute__((__interrupt__)) _U1TXInterrupt()
- ** 功能描述: 中断子程序：232发送中断
+ ** 潞炉 脢媒 脙没: __attribute__((__interrupt__)) _U1TXInterrupt()
+ ** 鹿娄脛脺脙猫脢枚: 脰脨露脧脳脫鲁脤脨貌拢潞232路垄脣脥脰脨露脧
  *************************************************************** */
 void __attribute__((interrupt, no_auto_psv)) _U1TXInterrupt()
 {
     IFS0bits.U1TXIF = 0;
-    if (SndPosi >= SndCnt || SndPosi >= 64) //如果发送数据个数大于7
+    if (SndPosi >= SndCnt || SndPosi >= 64) //脠莽鹿没路垄脣脥脢媒戮脻赂枚脢媒麓贸脫脷7
     {
-        SndCnt = 0; //发送数据个数清零
-        U1STAbits.UTXEN = 0; //已经发送到最后一个数，发送不使能
+        SndCnt = 0; //路垄脣脥脢媒戮脻赂枚脢媒脟氓脕茫
+        U1STAbits.UTXEN = 0; //脪脩戮颅路垄脣脥碌陆脳卯潞贸脪禄赂枚脢媒拢卢路垄脣脥虏禄脢鹿脛脺
         LED = ~LED;
     }
     else
     {
-        //SndPosi++;                   // 否则，发送计数器加1 */
+        //SndPosi++;                   // 路帽脭貌拢卢路垄脣脥录脝脢媒脝梅录脫1 */
         U1TXREG = rsBuf[SndPosi++];
     }
 }
@@ -123,9 +123,9 @@ void Sender()
 {
     if (SndCnt)
     {
-        U1STAbits.UTXEN = 1; // 使能发送
+        U1STAbits.UTXEN = 1; // 脢鹿脛脺路垄脣脥
         SndPosi = 0;
-        U1TXREG = rsBuf[SndPosi++]; //先发送第一个数据
+        U1TXREG = rsBuf[SndPosi++]; //脧脠路垄脣脥碌脷脪禄赂枚脢媒戮脻
     }
 }
 
@@ -214,7 +214,7 @@ unsigned char MSFunc3(int addr, int len)
         }
         return rsBuf[2] + 3;
     }
-    else if (addr >= 0x4000 && addr + len <= 0x4022)
+    else if (addr >= 0x4000 && addr + len <= 0x4023)
     {
         addr -= 0x4000;
         addr %= 0x23;
@@ -235,7 +235,7 @@ modbus slave function 6
 unsigned char MSFunc6(int addr, int value)
 {
     unsigned long t; unsigned int ti;
-    if (addr >= 0x4000 && addr <= 0x4010)
+    if (addr >= 0x4000 && addr <= 0x4020)
     {
         addr -= 0x4000;
         sValue[addr].x = value;
@@ -247,9 +247,9 @@ unsigned char MSFunc6(int addr, int value)
         t = value;
 
         ti = divud((t<<15),Value[addr].x);
-        sValue[11+addr].x = muluu(ti,sValue[11+addr].x)>>15;
+        sValue[12+addr].x = muluu(ti,sValue[12+addr].x)>>15;
 
-        i2cWriteStr((11+addr)*2,(unsigned char*)&sValue[11+addr], 2);
+        i2cWriteStr((12+addr)*2,(unsigned char*)&sValue[12+addr], 2);
         return 6;
     }
     return 0;
@@ -261,7 +261,7 @@ modbus slave function 0x10
 unsigned char MSFunc16(int addr, int len)
 {
     unsigned char i;
-    if (addr >= 0x4000 && addr + len < 0x4010)
+    if (addr >= 0x4000 && addr + len < 0x4020)
     {
         addr -= 0x4000;
         for (i = 0; i < rsBuf[6]; i += 2)
@@ -269,7 +269,7 @@ unsigned char MSFunc16(int addr, int len)
             sValue[addr + i / 2].h = rsBuf[i + 7];
             sValue[addr + i / 2].l = rsBuf[i + 8];
         }
-        if (i2cWriteStr(addr * 2, (unsigned char*) &sValue[0], 16))
+        if (i2cWriteStr(addr * 2, (unsigned char*) &sValue[0], 24))
             return 6;
     }
     return 0;

@@ -123,6 +123,8 @@ typedef struct _curr
 
 extern CURRSTRUCT mcurr;
 extern CURRSTRUCT ocurr;
+extern CURRSTRUCT dcbus_v;
+extern CURRSTRUCT dcbus_i;
 
 extern char ADJEN;
 extern long ByPassCnt;

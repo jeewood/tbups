@@ -31,7 +31,5 @@ void initClock(void)
     ACLKCONbits.ENAPLL = 1; /* Enable Auxiliary PLL */
 
     while (ACLKCONbits.APLLCK != 1); /* Wait for Aux. PLL to Lock */
-
-
 }
 
