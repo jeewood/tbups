@@ -14,28 +14,14 @@
 #define NOT_READY_TO_SWITCH 0
 #define READY_TO_SWITCH 1
 
-#define SINE_11_25_DEGREES (2507 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_22_5_DEGREES (5086 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_33_75_DEGREES (7470 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_45_DEGREES (9566 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_56_25_DEGREES (11295 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_67_5_DEGREES (12589 >> OUTPUT_VOLTAGE_SETTING)
-#define SINE_78_75_DEGREES (13400 >> OUTPUT_VOLTAGE_SETTING)
-
-#define INVERTER_CURRENT_MAX_PEAK 6000
-
 #define CURRENT_LIMIT_CLEARED 0
 #define CURRENT_LIMIT_ACTIVE 1
 
-#define DRIVER_FAULT_CLEARED 0
-#define DRIVER_FAULT_ACTIVE 1
-
 /* RMS Calculation constants */
-#define RMS_BUFFER_SIZE  SINE_TABLE_SIZE>>1
-#define READY_TO_COLLECT_DATA 0
+#define READY_TO_COLLECT_DATA 3
 #define READY_TO_CALCULATE 1
 #define CALCULATION_DONE 2
-#define RMS_NOT_READY 3
+#define RMS_NOT_READY 0
 
 
 /* System State definitions */
@@ -53,9 +39,6 @@
 
 #define MAINS_FREQUENCY_ERROR 9
 
-extern volatile int mainsVref[];
-extern int voltageRMSBuffer[];
-
 #define NOK 0
 #define ADJ 1
 #define HVD 2
@@ -65,49 +48,81 @@ extern int voltageRMSBuffer[];
 #define MAINSIZE 200
 typedef struct _mains
 {
-	int cv;
-	int pv;
-	int maxv;
-	int minv;
-	int cnt;
-	int size;
-	int ofs;
+    int cv;
+    int pv;
+    int max;
+    
+    int max_idx;
 
-        int V;
-	int icnt;
-	int ocnt;
-	int err;
-	int i;
-	int f;
-	unsigned char cycle;
-	char state;
+    int min;
+    int cnt;
+    int size;
+    int ofs;
 
+    int V;
+    int icnt;
+    int ocnt;
+    int err;
+    int i;
+    int f;
+    char rms_stat;
+    unsigned char cycle;
+    char state;
+    unsigned long long sum;
 }MAINSTRUCT;
 
 extern MAINSTRUCT m;
 
 typedef struct _invs
 {
-	int idx;
-	int cv;
-	int pv;
-	int maxv;
-	int minv;
-	int size;
-	int ofs;
+    int idx;
+    int cv;
+    int pv;
+    int max;
 
-	int V;
-	int cnt;
-	int i;
-	int f;
-	char state;
-	unsigned char cycle;
-	unsigned char c;
-	int ocnt;
-	char synced;
+    int max_idx;
+
+    int min;
+    int size;
+    int ofs;
+
+    int V;
+    int cnt;
+    int i;
+    int f;
+
+    char rms_stat;
+    char state;
+    unsigned char cycle;
+    unsigned char c;
+    int ocnt;
+    char synced;
+    unsigned long long sum;
 }INVSTRUCT;
 
 extern INVSTRUCT inv;
+
+typedef struct _curr
+{
+    int cv;
+    int pv;
+    
+    int V;
+    int size;
+    int cnt;
+    int max;
+
+    int max_idx;
+    int rms_stat;
+
+    int min;
+    int ofs;
+    
+    unsigned long long sum;
+}CURRSTRUCT;
+
+extern CURRSTRUCT mcurr;
+extern CURRSTRUCT ocurr;
 
 extern char ADJEN;
 extern long ByPassCnt;

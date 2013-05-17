@@ -35,6 +35,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
     {
         LEDCnt = 0;
         LED = ~LED;
+        _SWTRG5 = 1;
     }
     LEDCnt++;
 
@@ -136,18 +137,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                         ScrCnt = 0;
                     }
                 }
-            }
-        }
-        break;
-        case BATTERY_CHARGER_MODE:
-        {
-            if (m.state == OK)
-            {
-
-            }
-            else if (m.state == NOK)
-            {
-
             }
         }
         break;

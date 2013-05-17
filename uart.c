@@ -250,8 +250,6 @@ unsigned char MSFunc6(int addr, int value)
         sValue[11+addr].x = muluu(ti,sValue[11+addr].x)>>15;
 
         i2cWriteStr((11+addr)*2,(unsigned char*)&sValue[11+addr], 2);
-        rsBuf[3] = sValue[11+addr].h;
-        rsBuf[4] = sValue[11+addr].l;
         return 6;
     }
     return 0;
