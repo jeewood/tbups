@@ -87,14 +87,13 @@ void ConvPair0Handler(void)
         }
     }
 
+    //过零点处
     if ((iszc(inv, ZCTHV)) || (inv.cnt > 1000)) 
     {
+        //currect part
         ocurr.size = ocurr.cnt;
         ocurr.cnt = 0;
 
-        inv.size = inv.cnt;
-        inv.cnt = 0;
-        //currect part
         if (ocurr.rms_stat == CALCULATION_DONE)
         {
             ocurr.sum = 0;
@@ -111,8 +110,13 @@ void ConvPair0Handler(void)
             {
                 ocurr.ofs -= (ocurr.ofs > -1000)?1:0;
             }
+            ocurr.rms_stat = READY_TO_CALCULATE;
         }
+
         //voltage part
+        inv.size = inv.cnt;
+        inv.cnt = 0;
+        
         if (inv.rms_stat == CALCULATION_DONE)
         {
             inv.sum = 0;
@@ -134,27 +138,6 @@ void ConvPair0Handler(void)
 
         //this is only for debug,
         InvF = inv.size;
-        if (inv.size > 400 && inv.size < 600)
-        {
-            inv.cycle ++;
-            inv.ocnt = 0;
-            if (inv.cycle>20)
-            {
-                inv.cycle = 0;
-                inv.state = OK;
-            }
-        }
-        else
-        {
-            inv.ocnt++;
-            inv.cycle = 0;
-            if (inv.ocnt>10)
-            {
-                inv.ocnt = 0;
-                inv.state = NOK;
-            }
-            inv.ofs = 0;
-        }
     }
 
     if (issz(inv, ZCTHV))
@@ -231,15 +214,13 @@ void ConvPair1Handler(void)
         m.i = 0;
     }
 
+    //过零点处
     if ((iszc(m, ZCTHV)) || (m.cnt > 1000)) 
     {
+        //currect part
         mcurr.size = mcurr.cnt;
         mcurr.cnt = 0;
 
-        m.size = m.cnt;
-        m.cnt = 0;
-
-        //currect part
         if (mcurr.rms_stat == CALCULATION_DONE)
         {
             mcurr.sum = 0;
@@ -256,8 +237,13 @@ void ConvPair1Handler(void)
             {
                 mcurr.ofs -= (mcurr.ofs > -1000)?1:0;
             }
+            mcurr.rms_stat = READY_TO_CALCULATE;
         }
+
         //voltage part
+        m.size = m.cnt;
+        m.cnt = 0;
+
         if (m.rms_stat == CALCULATION_DONE)
         {
             m.sum = 0;
@@ -277,133 +263,152 @@ void ConvPair1Handler(void)
 
             m.rms_stat = READY_TO_CALCULATE;
         }
+        
+        switch (m.state)
+        {
+            case ADJ:
+            {
+                if (m.size > 511)
+                {
+                    incr(PD3); 
+                }
+                else if (m.size < 511)
+                {
+                    decr(PD3); 
+                }
+                else
+                {
+                    m.cycle++;
+                    if (m.cycle > 20)
+                    {
+                        m.state = OK;
+                        //BEEP = 0;
+                        m.cycle = 0;
+                    }
+                }
+                SetPhase3(PD3);
+                break;
+            }
+            case OK:
+            {
+                if (m.size > 511) 
+                {
+                    incr(PD3);
+                    SetPhase3(PD3)
+                }
+                else if (m.size < 511)
+                {
+                    decr(PD3);
+                    SetPhase3(PD3)
+                }
 
-        if (m.size >= 1000 || ACInV < 1000) 
+
+                if (jabs(PD3 - PD2) < 50)   //频率同步处理
+                {
+                    err = (inv.i - m.i);
+                    if (jabs(err) > 0)
+                    {
+                        if (err > 128) err = 128;
+                        if (err < -128) err = -128;
+
+                        PD2 += (err >> 0) - (perr >> 0);
+
+                        if (err > 2)
+                        {
+                            incr(PD2);
+                        }
+                        else if (err < -2)
+                        {
+                            decr(PD2);
+                        }
+                        perr = err;
+                    }
+                    
+                    //同步判断
+                    if (!inv.synced)
+                    { 
+                        if (jabs(err) < 2)
+                        {
+                            inv.cycle++;
+                            if (inv.cycle > 30)
+                            {
+                                inv.synced = 1;
+                                inv.cycle = 0;
+                            }
+                            inv.ocnt = 0;
+                        }
+                        else
+                        {
+                            inv.cycle = 0;
+                        }
+                    }
+                    else 
+                    {
+                        if (jabs(err) > 15) 
+                        {
+                            inv.cycle++;
+                            if (inv.cycle > 200)
+                            {
+                                inv.synced = 0;
+                                inv.cycle = 0;
+                            }
+                        }
+                        else
+                        {
+                            inv.cycle = 0;
+                        }
+                    }
+                }
+                else if (PD2 < PD3)
+                {
+                    incr(PD2);
+                }
+                else if (PD2 > PD3)
+                {
+                    decr(PD2);
+                }
+
+                SetPhase2(PD2);
+                break;
+            }
+        }         
+    }
+
+    //交流电源判断
+    if ((m.cnt > 64 && m.cnt<192) || (m.cnt > 320 && m.cnt < 448))
+    {
+        if (m.state == OK && jabs(m.cv)<500)
         {
             m.ocnt++;
-            if (m.ocnt > 5)
+            m.icnt = 0;
+            if (m.ocnt > 32)
             {
                 m.state = NOK;
+                inv.synced = 0;
                 m.ocnt = 0;
                 m.ofs = 0;
             }
         }
-        else
+        
+        if (m.state == NOK && jabs(m.cv)>500)
         {
-            switch (m.state)
+            m.icnt++; 
+            m.ocnt = 0;
+            if (m.icnt > 32)
             {
-                case NOK:
-                {
-                    m.icnt++; 
-                    if (m.icnt > 10 && ACInV > 1000)
-                    {
-                        m.state = ADJ;
-                        m.icnt = 0;
-                    }
-                    break;
-                }
-                case ADJ:
-                {
-                    if (m.size > 511)
-                    {
-                        incr(PD3); 
-                    }
-                    else if (m.size < 511)
-                    {
-                        decr(PD3); 
-                    }
-                    else
-                    {
-                        m.cycle++;
-                        if (m.cycle > 20)
-                        {
-                            m.state = OK;
-                            m.cycle = 0;
-                        }
-                    }
-                    SetPhase3(PD3);
-                    break;
-                }
-                case OK:
-                {
-                    if (m.size > 511) 
-                    {
-                        incr(PD3);
-                        SetPhase3(PD3)
-                    }
-                    else if (m.size < 511)
-                    {
-                        decr(PD3);
-                        SetPhase3(PD3)
-                    }
-
-                    if ((inv.state == OK))  //逆变状态正常
-                    {
-                        if (jabs(PD3 - PD2) < 50)   //频率同步处理
-                        {
-                            err = (inv.i - m.i);
-                            if (jabs(err) > 0)
-                            {
-                                if (err > 128) err = 128;
-                                if (err < -128) err = -128;
-
-                                PD2 += (err >> 0) - (perr >> 0);
-
-                                if (err > 2)
-                                {
-                                    incr(PD2);
-                                }
-                                else if (err < -2)
-                                {
-                                    decr(PD2);
-                                }
-                                perr = err;
-                            }
-                            if (jabs(err) < 2)
-                            {
-                                inv.cycle++;
-                                if (inv.cycle > 50)
-                                {
-                                    inv.synced = 1;
-                                    inv.cycle = 0;
-                                }
-                                inv.ocnt = 0;
-                            }
-                            else if (jabs(err) > 10)
-                            {
-                                inv.ocnt++;
-                                inv.cycle = 0;
-                                if (inv.ocnt > 100)
-                                {
-                                    inv.synced = 0;
-                                    inv.ocnt = 0;
-                                }
-                            }
-                        }
-                        else if (PD2 < PD3)
-                        {
-                            incr(PD2);
-                        }
-                        else if (PD2 > PD3)
-                        {
-                            decr(PD2);
-                        }
-
-                        SetPhase2(PD2);
-                    }
-                    break;
-                }
+                m.state = ADJ;
+                //BEEP = 1;
+                m.icnt = 0;
             }
         }
-
-        Power = PD3;
-        Factor = PD2;
-
-        ChargeStatus = inv.ofs;
-
-        ACInF = m.size;
-
     }
+    
+    ACInI = m.state;
+    ACInF = m.size;
+    //Power = Duty;
+    Factor = inv.synced;
+    //ChargeStatus = err;
+
 
     m.pv = m.cv;
 
@@ -762,7 +767,7 @@ void RMS_CALC()
                 (mulss(tmpi, Q15(0.2)) >> 15)
                 );
         ocurr.sum = 0;
-        LoadI = mulss(ocurr.V, Adj_LoadI) >> 14; //30844
+        LoadI = mulss(ocurr.V, Adj_LoadI) >> 15; //30844
         ocurr.rms_stat = CALCULATION_DONE;
     }
 
@@ -777,7 +782,7 @@ void RMS_CALC()
                 (mulss(tmpi, Q15(0.2)) >> 15)
                 );
         inv.sum = 0;
-        InvV = mulss(inv.V, Adj_InvV) >> 14; //30844
+        InvV = mulss(inv.V, Adj_InvV) >> 15; //30844
         inv.rms_stat = CALCULATION_DONE;
     }
 
@@ -792,7 +797,7 @@ void RMS_CALC()
                 (mulss(tmpi, Q15(0.2)) >> 15)
                 );
         mcurr.sum = 0;
-        ACInI = mulss(mcurr.V, Adj_ACInI) >> 14; //30844
+        //ACInI = mulss(mcurr.V, Adj_ACInI) >> 15; //30844
         mcurr.rms_stat = CALCULATION_DONE;
     }
 

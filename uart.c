@@ -214,7 +214,7 @@ unsigned char MSFunc3(int addr, int len)
         }
         return rsBuf[2] + 3;
     }
-    else if (addr >= 0x4000 && addr + len <= 0x4023)
+    else if (addr >= 0x4000 && addr + len <= 0x4020)
     {
         addr -= 0x4000;
         addr %= 0x23;
@@ -235,21 +235,24 @@ modbus slave function 6
 unsigned char MSFunc6(int addr, int value)
 {
     unsigned long t; unsigned int ti;
-    if (addr >= 0x4000 && addr <= 0x4020)
+    if (addr>= 0x4000)
     {
         addr -= 0x4000;
-        sValue[addr].x = value;
-        if (i2cWriteStr(addr * 2, (unsigned char*) &sValue[addr], 2))
-            return 6;
-    }
-    else if (addr>= 0  && addr<= 12)
-    {
-        t = value;
-
-        ti = divud((t<<15),Value[addr].x);
-        sValue[12+addr].x = muluu(ti,sValue[12+addr].x)>>15;
-
-        i2cWriteStr((12+addr)*2,(unsigned char*)&sValue[12+addr], 2);
+        if (addr < 12)
+        {
+            t = value;
+            if (Value[addr].x)
+            {
+                ti = divud((t<<15),Value[addr].x);
+                sValue[addr].x = muluu(ti,sValue[addr].x)>>15;
+            }
+        }
+        else if (addr < 24)
+        {
+            sValue[addr].x = value;
+        }
+        //i2cWrite((addr)*2,(unsigned char*)&sValue[addr]);
+        i2cWriteStr((addr)*2,(unsigned char*)&sValue[addr].x, 2);
         return 6;
     }
     return 0;
@@ -269,7 +272,7 @@ unsigned char MSFunc16(int addr, int len)
             sValue[addr + i / 2].h = rsBuf[i + 7];
             sValue[addr + i / 2].l = rsBuf[i + 8];
         }
-        if (i2cWriteStr(addr * 2, (unsigned char*) &sValue[0], 24))
+        if (i2cWriteStr(addr * 2, (unsigned char*) &sValue, rsBuf[6]))
             return 6;
     }
     return 0;

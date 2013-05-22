@@ -5,6 +5,7 @@
 #include "data_struct.h"
 #include "uart.h"
 #include "pwm.h"
+#include "beep.h"
 
 int State;
 extern int Duty;
@@ -17,6 +18,7 @@ extern unsigned char InvMode;
 long ByPassCnt = 0, ScrCnt = 0;
 int sCntx = 0;
 extern void TestDrv();
+extern unsigned long bcnt;
 
 void initStateMachineTimer(void)
 {
@@ -46,6 +48,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 
     UART_DRV();
 
+    BeepDrv();
+
     switch (State)
     {
         case SYSTEM_STARTUP:
@@ -57,9 +61,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                 {
                     if (ACInV > 1000)
                     {
-                        if (InvV < ACInV - 100)
+                        if (InvV < ACInV - 100 && Duty < Q15(DUTY_SCALE))
                         {
-                            if (Duty < Q15(DUTY_SCALE)) Duty++;
+                            Duty++;
                             ByPassCnt = 0;
                         }
                         else
@@ -72,11 +76,10 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                             }
                         }
                     }
-                    LED = ~LED;
                 }
                 else
                 {
-                    if (Duty < Q15(DUTY_SCALE))
+                    if (InvV<2100 && Duty < Q15(DUTY_SCALE))
                     {
                         Duty++;
                     }
@@ -95,14 +98,167 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             {
                 State = SYSTEM_STARTUP;
                 BYPASS = 1;
-                SCR = 1;
+                SCR = 0;
                 Duty = 0;
+                ol.f = OVERLOAD_NORMAL;
+                SetBeep(OFF,0,0);
             }
-            
+
+            //120% 2∑÷÷”  150% 30√Î
+            switch(ol.f)
+            {
+	            case OVERLOAD_NORMAL:
+	            {
+		            if (LoadI>ol.s_curr)
+		            {
+			            ol.cycle++;
+			            if (ol.cycle>5)
+			            {
+				            ol.f = OVERLOAD150;
+				            ol.cnt = 150000;
+				            SetBeep(ON,0,0);
+				            SetRelay(OFF);
+				            ol.cycle = 0;
+			            }
+		            }
+		            else if (LoadI>ol.ol_curr)
+		            {
+			         	ol.cycle++;
+			         	if (ol.cycle>5)
+			         	{
+				         	ol.f = OVERLOAD120;
+				         	ol.cnt = 300000;
+				         	SetBeep(LOOP,3000,3000);
+				         	SetRelay(ON);
+				         	ol.cycle = 0;
+			         	}
+		            }
+		            else
+		            {
+			            ol.cycle = 0;
+		            }
+		            break;
+	            }
+	            case OVERLOAD150:
+	            {
+		            if (ol.cnt>0)
+		            {
+			            if (LoadI<RatedCurr)
+			            {
+				            ol.cycle++;
+				            if(ol.cycle>5)
+				            {
+					            SetRelay(ON);
+					            SetBeep(OFF,0,0);
+					            ol.cnt = 0;
+					        }
+			            }
+			            else if (LoadI>ol.ol_curr && LoadI<ol.s_curr)
+			            {
+				         	ol.cycle++;
+				         	if (ol.cycle>5)
+				         	{
+					         	ol.f = OVERLOAD120;
+					         	ol.cnt = 300000;
+					         	SetBeep(LOOP,3000,3000);
+					         	SetRelay(ON);
+					         	ol.cycle = 0;
+				         	}
+			            }
+			            else
+			            {
+				            ol.cycle = 0;
+			            }
+		            }
+		            break;
+	            }
+	            case OVERLOAD120:
+	            {
+		            if (ol.cnt>1)
+		            {
+			            if (LoadI>ol.s_curr)
+			            {
+				            ol.cycle++;
+				            if (ol.cycle>5)
+				            {
+					            ol.f = OVERLOAD150;
+					            ol.cnt = 150000;
+					            SetRelay(OFF);
+					            SetBeep(ON,0,0);
+					        } 
+			            }
+			            else
+			            if (LoadI<ol.ol_curr)
+			            {
+				            ol.cycle++;
+				            if (ol.cycle>5)
+				            {
+					         	ol.f = OVERLOAD_NORMAL;
+					         	ol.cnt = 0;
+					         	SetBeep(OFF,0,0);
+					         	SetRelay(ON);
+					         	ol.cycle = 0;
+				            }
+			            }
+		            }
+		            else if (ol.cnt==1)
+		            {
+			            if (LoadI>ol.ol_curr)
+			            {
+				            if (BYPASS)
+				            {
+			            		SetBeep(ON,0,0);
+			            		SetRelay(OFF);
+				            }
+			            }
+			            else if (!BYPASS)
+			            {
+		            		SetBeep(OFF,0,0);
+		            		SetRelay(ON);
+			            }
+		            }
+		            break;
+	            }
+            }
+           
+            if (ol.cnt) ol.cnt--;
+			Power = ol.f;
+			ChargeStatus = ol.cnt;
+
+            //ByPass Drv Begin
+            if (bp.inSwitch)
+            {
+                bp.inSwitch = 0;
+                if (inv.synced)
+                {
+                    SCR = 1;
+                    bp.cnt = 600;
+                }
+                else
+                {
+                    SCR = 0;
+                    BYPASS = !bp.r;
+                    bp.cnt = 0;
+                }
+            }
+
+            if (bp.cnt)
+            {
+                bp.cnt--;
+                if (bp.cnt == 580)
+                {
+                    BYPASS = !bp.r;
+                }
+                if (bp.cnt==1)
+                {
+                    SCR = 0;
+                    bp.cnt = 0;
+                }
+            }
+            //ByPass Drv End
             if (m.state == OK)
             {
-                //#ifndef TEST
-                if (ACInV > 1000 && jabs(ACInV - InvV) > 50)
+                if (ACInV > 1000 && ACInV < 2350 && jabs(ACInV - InvV) > 50)
                 {
                     sCntx++;
                     if (sCntx > 5)
@@ -115,39 +271,31 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                         {
                             if (Duty > Q15(0.1))Duty--;
                         }
+                        sCntx = 0;
                     }
                 }
-                //#endif
-                //120% 2ÂàÜÈíüË∑≥ÊóÅË∑Ø
-                //150% 30ÁßíË∑≥ÊóÅË∑Ø
-                if (inv.synced)
-                {
-                    if (bypassInSwitch)
-                    {
-                        SCR = 1;
-                        ScrCnt = 600;
-                        bypassInSwitch = 0;
-                    }
-                    else if (ScrCnt == 580)
-                    {
-                        BYPASS = !tx;
-                    }
 
-                    if ((ScrCnt--) == 1)
-                    {
-                        SCR = 0;
-                        ScrCnt = 0;
-                    }
-                }
-                else
-                {
-                	if (bypassInSwitch)
-                	{
-                		SCR = 0;
-                		BYPASS = 1;
-                	}
-                }
             }
+            else
+            {
+                 if (InvV < 2160)
+                 {
+                     if (Duty < Q15(DUTY_SCALE) && inv.c == 0) 
+                     {
+                     	Duty++;
+                     	inv.c = 1000;
+                     }
+                 }
+                 else if (InvV > 2240)
+                 {
+                     if (Duty > Q15(0.1) && inv.c == 0)
+                     {
+                     	Duty--;
+                     	inv.c = 1000;
+                     }
+                 }
+                 if (inv.c) inv.c --;
+	        }
         }
         break;
         case SYSTEM_ERROR:

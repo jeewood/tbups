@@ -1,6 +1,7 @@
-#include "data_struct.h"
+#include "define.h"
 
 #include <dsp.h>
+#include "beep.h"
 
 //CValue Value={0};
 INT Value[12];
@@ -8,8 +9,61 @@ INT Value[12];
 //SValue sValue = 0;
 INT sValue[24];
 
+OVERLOAD ol = {0};
+BP_STRUCT bp = {0};
+
 Bits bFlag = {0};
 Bits ControlBits = {0};
+
+unsigned int beep_cnt;
+BEEPSTRUCT bpd = {0};
+void SetBeep(char stat, unsigned int ontime,unsigned int offtime)
+{
+    if (stat != bpd.stat)
+    {
+        bpd.stat = stat;
+        bpd.ontime = ontime;
+        bpd.offtime = offtime;
+
+        if (bpd.stat) 
+        {
+            BEEP = 1;
+            bpd.cnt = bpd.ontime;
+        }
+        else
+        {
+            BEEP = 0;
+            bpd.cnt = 0;
+        }
+    }
+}
+
+void BeepDrv()
+{
+    if (bpd.cnt) bpd.cnt--;
+
+    if (bpd.cnt == 1)
+    {
+        if (bpd.stat==LOOP) 
+        {
+            BEEP = ~BEEP;
+            if (BEEP)
+            {
+                bpd.cnt = bpd.ontime;
+            }
+            else
+            {
+                bpd.cnt = bpd.offtime;
+            }
+        }
+        else
+        {
+            BEEP = 0;
+            bpd.cnt = 0;
+        }
+    }
+}
+
 void Adj_Init()
 {
     Adj_ACInV      = Q15(1.0);

@@ -94,7 +94,8 @@ typedef struct _invs
     char rms_stat;
     char state;
     unsigned char cycle;
-    unsigned char c;
+    unsigned int c;
+    int icnt;
     int ocnt;
     char synced;
     unsigned long long sum;
