@@ -212,7 +212,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             //ByPass Drv End
             if (m.state == OK)
             {
-                if (ACInV > 1650 && ACInV < 2420 && jabs(ACInV - InvV) > 500)
+                if (ACInV > 1650 && ACInV < 2420 && jabs(ACInV - InvV) > 100)
                 {
                     m.cycle++;
                     if (m.cycle > 5)
