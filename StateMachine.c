@@ -13,12 +13,75 @@ extern unsigned char tx;
 int LEDCnt = 0;
 
 unsigned long StartUpCnt = 0;
-extern unsigned char InvMode;
+//extern unsigned char InvMode;
 
 long ByPassCnt = 0, ScrCnt = 0;
 int sCntx = 0;
-extern void TestDrv();
-extern unsigned long bcnt;
+//extern void TestDrv();
+//extern unsigned long bcnt;
+
+#define OverLoad() \
+{\
+    switch(ol.f)\
+    {\
+        case LOAD_NORMAL:\
+            if (isImpulse())\
+            {\
+                INRUSH();\
+                SetRelay(MAINPOWER);\
+            }\
+            else\
+            if (isOverLoad())\
+            {\
+                OVERLOAD();\
+            }\
+            else\
+            {\
+                NORMAL();\
+                SYNCED(SetRelay(!wMode));\
+            }\
+            break;\
+        case LOAD_OVERLOAD:\
+            if (ol.cnt>1)\
+            {\
+                if (isImpulse())\
+                {\
+                    INRUSH();\
+                    SetRelay(MAINPOWER);\
+                }\
+                if (!isOverLoad())\
+                {\
+                    NORMAL();\
+                    SYNCED(SetRelay(!wMode));\
+                }\
+            }\
+            if (ol.cnt == 1)\
+            {\
+                if (isOverLoad())\
+                {\
+                    SetBeep(ON,0,0);\
+                    SetRelay(MAINPOWER);\
+                    ol.cnt--;\
+                }\
+            }\
+            break;\
+        case LOAD_INRUSH:\
+            if (ol.cnt>1)\
+            {\
+                if (LoadI < RatedCurr)\
+                {\
+                    NORMAL();\
+                    SYNCED(SetRelay(!wMode));\
+                }\
+                if (isOverLoad() && !isImpulse())\
+                {\
+                    OVERLOAD();\
+                }\
+            }\
+            if (ol.cnt==1) ol.cnt--;\
+        break;\
+    }\
+}
 
 void initStateMachineTimer(void)
 {
@@ -44,7 +107,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
     m.f += mf;
     inv.f += invf;
 
-    TestDrv();
+    //TestDrv();
 
     UART_DRV();
 
@@ -90,145 +153,35 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                     }
                 }
             }
+            else
+            {
+                NORMAL();
+            }
         }
         break;
         case INVERTER_MODE:
         {
             if (!StartCtrl)
             {
-                State = SYSTEM_STARTUP;
-                BYPASS = 1;
-                SCR = 0;
+                NORMAL();
+                SetRelay(MAINPOWER);
                 Duty = 0;
-                ol.f = OVERLOAD_NORMAL;
-                SetBeep(OFF,0,0);
+                inv.bsynced = 0;
+                inv.synced = 0;
+                State = SYSTEM_STARTUP;
             }
 
             //120% 2·ÖÖÓ  150% 30Ãë
-            switch(ol.f)
-            {
-	            case OVERLOAD_NORMAL:
-	            {
-		            if (LoadI>ol.s_curr)
-		            {
-			            ol.cycle++;
-			            if (ol.cycle>5)
-			            {
-				            ol.f = OVERLOAD150;
-				            ol.cnt = 150000;
-				            SetBeep(ON,0,0);
-				            SetRelay(OFF);
-				            ol.cycle = 0;
-			            }
-		            }
-		            else if (LoadI>ol.ol_curr)
-		            {
-			         	ol.cycle++;
-			         	if (ol.cycle>5)
-			         	{
-				         	ol.f = OVERLOAD120;
-				         	ol.cnt = 300000;
-				         	SetBeep(LOOP,3000,3000);
-				         	SetRelay(ON);
-				         	ol.cycle = 0;
-			         	}
-		            }
-		            else
-		            {
-			            ol.cycle = 0;
-		            }
-		            break;
-	            }
-	            case OVERLOAD150:
-	            {
-		            if (ol.cnt>0)
-		            {
-			            if (LoadI<RatedCurr)
-			            {
-				            ol.cycle++;
-				            if(ol.cycle>5)
-				            {
-					            SetRelay(ON);
-					            SetBeep(OFF,0,0);
-					            ol.cnt = 0;
-					        }
-			            }
-			            else if (LoadI>ol.ol_curr && LoadI<ol.s_curr)
-			            {
-				         	ol.cycle++;
-				         	if (ol.cycle>5)
-				         	{
-					         	ol.f = OVERLOAD120;
-					         	ol.cnt = 300000;
-					         	SetBeep(LOOP,3000,3000);
-					         	SetRelay(ON);
-					         	ol.cycle = 0;
-				         	}
-			            }
-			            else
-			            {
-				            ol.cycle = 0;
-			            }
-		            }
-		            break;
-	            }
-	            case OVERLOAD120:
-	            {
-		            if (ol.cnt>1)
-		            {
-			            if (LoadI>ol.s_curr)
-			            {
-				            ol.cycle++;
-				            if (ol.cycle>5)
-				            {
-					            ol.f = OVERLOAD150;
-					            ol.cnt = 150000;
-					            SetRelay(OFF);
-					            SetBeep(ON,0,0);
-					        } 
-			            }
-			            else
-			            if (LoadI<ol.ol_curr)
-			            {
-				            ol.cycle++;
-				            if (ol.cycle>5)
-				            {
-					         	ol.f = OVERLOAD_NORMAL;
-					         	ol.cnt = 0;
-					         	SetBeep(OFF,0,0);
-					         	SetRelay(ON);
-					         	ol.cycle = 0;
-				            }
-			            }
-		            }
-		            else if (ol.cnt==1)
-		            {
-			            if (LoadI>ol.ol_curr)
-			            {
-				            if (BYPASS)
-				            {
-			            		SetBeep(ON,0,0);
-			            		SetRelay(OFF);
-				            }
-			            }
-			            else if (!BYPASS)
-			            {
-		            		SetBeep(OFF,0,0);
-		            		SetRelay(ON);
-			            }
-		            }
-		            break;
-	            }
-            }
-           
-            if (ol.cnt) ol.cnt--;
+            OverLoad();
+
+            if (ol.cnt>1) ol.cnt--;
 			Power = ol.f;
-			ChargeStatus = ol.cnt;
+			ChargeStatus = wMode;
 
             //ByPass Drv Begin
-            if (bp.inSwitch)
+            if (bp.inSwitch==1)
             {
-                bp.inSwitch = 0;
+                bp.inSwitch = 2;
                 if (inv.synced)
                 {
                     SCR = 1;
@@ -252,16 +205,19 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                 if (bp.cnt==1)
                 {
                     SCR = 0;
-                    bp.cnt = 0;
                 }
+            }
+            else if (bp.inSwitch==2)
+            {
+                bp.inSwitch = 0;
             }
             //ByPass Drv End
             if (m.state == OK)
             {
                 if (ACInV > 1000 && ACInV < 2350 && jabs(ACInV - InvV) > 50)
                 {
-                    sCntx++;
-                    if (sCntx > 5)
+                    m.cycle++;
+                    if (m.cycle > 5)
                     {
                         if (InvV < ACInV)
                         {
@@ -271,7 +227,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                         {
                             if (Duty > Q15(0.1))Duty--;
                         }
-                        sCntx = 0;
+                        m.cycle = 0;
                     }
                 }
 

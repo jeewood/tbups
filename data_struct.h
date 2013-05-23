@@ -16,25 +16,25 @@ typedef union _INT
 } INT;
 
 
-#define OVERLOAD_NORMAL 0
-#define OVERLOAD120 1
-#define OVERLOAD150 2
+#define LOAD_NORMAL 0
+#define LOAD_OVERLOAD 1
+#define LOAD_INRUSH 2
 typedef struct _overload
 {
-    unsigned long cnt;  //¼ÆÊ±Æ÷
+    unsigned long cnt;  //Â¼Ã†ÃŠÂ±Ã†Ã·
     char f;
-    int curr;           //120¹ýÔØµçÁ÷
-    int ol_curr;        //120¹ýÔØµçÁ÷ÏÞÖµ
-    int s_curr;         //150³å»÷µçÁ÷ÏÞÖµ
+    int curr;           //120Â¹Ã½Ã”Ã˜ÂµÃ§ÃÃ·
+    int ol_curr;        //120Â¹Ã½Ã”Ã˜ÂµÃ§ÃÃ·ÃÃžÃ–Âµ
+    int s_curr;         //150Â³Ã¥Â»Ã·ÂµÃ§ÃÃ·ÃÃžÃ–Âµ
     int cycle;
-}OVERLOAD;
+}OVRLD_STRUCT;
 
 typedef struct _bypass
 {
     unsigned long cnt;
     char r;
     char inSwitch;
-}BP_STRUCT;
+}BYPASS_STRUCT;
 
 extern INT Value[];
 #define ACInV       	 Value[0].x
@@ -91,10 +91,25 @@ typedef struct
 
 extern Bits bFlag;
 extern Bits ControlBits;
-extern OVERLOAD ol;
-extern BP_STRUCT bp;
+extern OVRLD_STRUCT ol;
+extern BYPASS_STRUCT bp;
 
-#define SetRelay(b)	{ bp.r = b; bp.inSwitch = 1; }
+#define INVERTOR 1
+#define MAINPOWER 0
+#define SetRelay(b)	{ if (!bp.inSwitch) { bp.r=(b); bp.inSwitch=1; }}
+
+#define isOverLoad() (LoadI>ol.ol_curr)
+#define isImpulse() (LoadI>ol.s_curr)
+
+#define isByPass() (BYPASS==0)
+
+#define OL150TIME 150000
+#define OL120TIME 300000
+
+#define SYNCED(line) { if (inv.synced){ (line); } }
+#define NORMAL() { ol.f = LOAD_NORMAL; ol.cnt = 0; SetBeep(OFF,0,0); }
+#define INRUSH() { ol.f = LOAD_INRUSH; ol.cnt = OL150TIME; SetBeep(ON,0,0); }
+#define OVERLOAD() { ol.f = LOAD_OVERLOAD; ol.cnt = OL120TIME; SetBeep(LOOP,1000,1000); }
 
 #define mf bFlag.b0
 #define invf bFlag.b1

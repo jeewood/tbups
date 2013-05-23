@@ -98,6 +98,7 @@ typedef struct _invs
     int icnt;
     int ocnt;
     char synced;
+    char bsynced;
     unsigned long long sum;
 }INVSTRUCT;
 

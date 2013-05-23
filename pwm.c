@@ -330,7 +330,7 @@ void ConvPair1Handler(void)
                         if (jabs(err) < 2)
                         {
                             inv.cycle++;
-                            if (inv.cycle > 30)
+                            if (inv.cycle > 20)
                             {
                                 inv.synced = 1;
                                 inv.cycle = 0;

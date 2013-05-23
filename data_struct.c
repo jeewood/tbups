@@ -9,8 +9,8 @@ INT Value[12];
 //SValue sValue = 0;
 INT sValue[24];
 
-OVERLOAD ol = {0};
-BP_STRUCT bp = {0};
+OVRLD_STRUCT ol = {0};
+BYPASS_STRUCT bp = {0};
 
 Bits bFlag = {0};
 Bits ControlBits = {0};
