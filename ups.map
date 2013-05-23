@@ -1,4 +1,4 @@
-Microchip Technology Inc, vv3_31 (A) 7
+Microchip Technology Inc, vv3_31 (A) >
 
 Tool Name:
   c:\program files\microchip\mplab c30\bin\bin\..\bin/pic30-coff-ld.exe
@@ -56,11 +56,11 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x2d2           0x43b  (1083)
 .const                       0x4d2                0x20            0x30  (48)
-.text                        0x4f2              0x1ab8          0x2814  (10260)
-.dinit                      0x1faa               0x1ac           0x282  (642)
-.text                       0x2156               0x276           0x3b1  (945)
+.text                        0x4f2              0x1b4e          0x28f5  (10485)
+.dinit                      0x2040               0x1a8           0x27c  (636)
+.text                       0x21e8               0x270           0x3a8  (936)
 
-                     Total program memory used (bytes):         0x32b2  (12978) 80%
+                     Total program memory used (bytes):         0x3384  (13188) 81%
 
 
 Data Memory  [Origin = 0x800, Length = 0x800]
@@ -69,12 +69,12 @@ section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
 .ndata                       0x800                   0           0x1d2  (466)
 .nbss                        0x9d2                   0            0x90  (144)
-.ndata                       0xa62                   0            0x46  (70)
-.nbss                        0xaa8                   0             0xa  (10)
-.ndata                       0xab2                   0             0x6  (6)
-.nbss                        0xab8                   0             0x4  (4)
+.ndata                       0xa62                   0            0x40  (64)
+.nbss                        0xaa2                   0             0xa  (10)
+.ndata                       0xaac                   0             0x6  (6)
+.nbss                        0xab2                   0             0x4  (4)
 
-                        Total data memory used (bytes):          0x2bc  (700) 34%
+                        Total data memory used (bytes):          0x2b6  (694) 33%
 
 
 Dynamic Memory Usage
@@ -82,9 +82,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0xabc                               0x544  (1348)
+stack                        0xab6                               0x54a  (1354)
 
-                        Maximum dynamic memory (bytes):          0x544  (1348)
+                        Maximum dynamic memory (bytes):          0x54a  (1354)
 
 
 External Symbols in Data Memory (by address):
@@ -114,41 +114,38 @@ External Symbols in Data Memory (by address):
                     0x0a86                  _tick
                     0x0a8a                  _stick
                     0x0a8e                  _bcnt
-                    0x0a92                  _syncedbak
-                    0x0a94                  _SyncedCnt
-                    0x0a98                  _LEDCnt
-                    0x0a9a                  _StartUpCnt
-                    0x0a9e                  _ByPassCnt
-                    0x0aa2                  _ScrCnt
-                    0x0aa6                  _sCntx
-                    0x0aa8                  _err
-                    0x0aaa                  _jumpTable
-                    0x0ab0                  _tmpi
-                    0x0ab2                  _RcvCnt
-                    0x0ab3                  _SndCnt
-                    0x0ab4                  _SndPosi
-                    0x0ab6                  _CET
-                    0x0ab8                  _ByPassCtrlBak
-                    0x0aba                  _State
+                    0x0a92                  _LEDCnt
+                    0x0a94                  _StartUpCnt
+                    0x0a98                  _ByPassCnt
+                    0x0a9c                  _ScrCnt
+                    0x0aa0                  _sCntx
+                    0x0aa2                  _err
+                    0x0aa4                  _jumpTable
+                    0x0aaa                  _tmpi
+                    0x0aac                  _RcvCnt
+                    0x0aad                  _SndCnt
+                    0x0aae                  _SndPosi
+                    0x0ab0                  _CET
+                    0x0ab2                  _ByPassCtrlBak
+                    0x0ab4                  _State
 
 External Symbols in Data Memory (by name):
 
-                    0x0a9e                  _ByPassCnt
-                    0x0ab8                  _ByPassCtrlBak
-                    0x0ab6                  _CET
+                    0x0a98                  _ByPassCnt
+                    0x0ab2                  _ByPassCtrlBak
+                    0x0ab0                  _CET
                     0x0a78                  _ControlBits
                     0x090a                  _Duty
-                    0x0a98                  _LEDCnt
+                    0x0a92                  _LEDCnt
                     0x0906                  _PD2
                     0x0902                  _PD3
-                    0x0ab2                  _RcvCnt
+                    0x0aac                  _RcvCnt
                     0x0a60                  _Rcved
-                    0x0aa2                  _ScrCnt
-                    0x0ab3                  _SndCnt
-                    0x0ab4                  _SndPosi
-                    0x0a9a                  _StartUpCnt
-                    0x0aba                  _State
-                    0x0a94                  _SyncedCnt
+                    0x0a9c                  _ScrCnt
+                    0x0aad                  _SndCnt
+                    0x0aae                  _SndPosi
+                    0x0a94                  _StartUpCnt
+                    0x0ab4                  _State
                     0x09d2                  _Value
                     0x0a76                  _bFlag
                     0x0a8e                  _bcnt
@@ -158,29 +155,28 @@ External Symbols in Data Memory (by name):
                     0x0a82                  _cnt
                     0x09b4                  _dcbus_i
                     0x0998                  _dcbus_v
-                    0x0aa8                  _err
+                    0x0aa2                  _err
                     0x090c                  _inv
-                    0x0aaa                  _jumpTable
+                    0x0aa4                  _jumpTable
                     0x0938                  _m
                     0x0960                  _mcurr
                     0x097c                  _ocurr
                     0x0a62                  _ol
                     0x09d0                  _perr
                     0x0a1c                  _rsBuf
-                    0x0aa6                  _sCntx
+                    0x0aa0                  _sCntx
                     0x09ea                  _sValue
                     0x0a8a                  _stick
-                    0x0a92                  _syncedbak
                     0x0a86                  _tick
-                    0x0ab0                  _tmpi
+                    0x0aaa                  _tmpi
                     0x0a84                  _tx
 
 External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x000222                  __psv_init
-                  0x000232                  __data_init
                   0x000232                  __data_init_standard
+                  0x000232                  __data_init
                   0x000298                  __DefaultInterrupt
                   0x0002c2                  ___udivmoddi3
                   0x000390                  ___udivdi3
@@ -217,35 +213,34 @@ External Symbols in Program Memory (by address):
                   0x001592                  _ModbusSlave
                   0x00165c                  _initStateMachineTimer
                   0x001686                  __T2Interrupt
-                  0x001b64                  _InitI2C
-                  0x001b72                  _start
-                  0x001bda                  _stop
-                  0x001c32                  _chkack
-                  0x001c8a                  _ack
-                  0x001cd8                  _noack
-                  0x001d26                  _write_byte
-                  0x001dd0                  _read_byte
-                  0x001e50                  _i2cWrite
-                  0x001e88                  _i2cWriteStr
-                  0x001ee4                  _i2cRead
-                  0x001f34                  _i2cReadStr
-                  0x002156                  _SetBeep
-                  0x00219c                  _BeepDrv
-                  0x002204                  _Adj_Init
-                  0x00223a                  _Root
-                  0x0022dc                  _TestDrv
-                  0x0022e2                  _main
-                  0x002372                  _initClock
+                  0x001bfa                  _InitI2C
+                  0x001c08                  _start
+                  0x001c70                  _stop
+                  0x001cc8                  _chkack
+                  0x001d20                  _ack
+                  0x001d6e                  _noack
+                  0x001dbc                  _write_byte
+                  0x001e66                  _read_byte
+                  0x001ee6                  _i2cWrite
+                  0x001f1e                  _i2cWriteStr
+                  0x001f7a                  _i2cRead
+                  0x001fca                  _i2cReadStr
+                  0x0021e8                  _SetBeep
+                  0x00222e                  _BeepDrv
+                  0x002296                  _Adj_Init
+                  0x0022cc                  _Root
+                  0x00236e                  _main
+                  0x0023fe                  _initClock
 
 External Symbols in Program Memory (by name):
 
-                  0x002204                  _Adj_Init
-                  0x00219c                  _BeepDrv
+                  0x002296                  _Adj_Init
+                  0x00222e                  _BeepDrv
                   0x0004d2                  _CRC16Table
                   0x00050c                  _ConvPair0Handler
                   0x0007ba                  _ConvPair1Handler
                   0x000d62                  _ConvPair5Handler
-                  0x001b64                  _InitI2C
+                  0x001bfa                  _InitI2C
                   0x0012c6                  _MSFunc1
                   0x001506                  _MSFunc16
                   0x001350                  _MSFunc3
@@ -254,12 +249,11 @@ External Symbols in Program Memory (by name):
                   0x0012ac                  _MakeInt
                   0x001592                  _ModbusSlave
                   0x000f2a                  _RMS_CALC
-                  0x00223a                  _Root
+                  0x0022cc                  _Root
                   0x001214                  _Sender
-                  0x002156                  _SetBeep
+                  0x0021e8                  _SetBeep
                   0x000df6                  _StartADC
                   0x000ee4                  _StartPWM
-                  0x0022dc                  _TestDrv
                   0x00112e                  _UART_DRV
                   0x000f08                  __ADCInterrupt
                   0x000ef2                  __ADCP5Interrupt
@@ -277,27 +271,27 @@ External Symbols in Program Memory (by name):
                   0x000232                  __data_init_standard
                   0x000222                  __psv_init
                   0x000200                  __resetPRI
-                  0x001c8a                  _ack
-                  0x001c32                  _chkack
+                  0x001d20                  _ack
+                  0x001cc8                  _chkack
                   0x00123a                  _crc16
-                  0x001ee4                  _i2cRead
-                  0x001f34                  _i2cReadStr
-                  0x001e50                  _i2cWrite
-                  0x001e88                  _i2cWriteStr
+                  0x001f7a                  _i2cRead
+                  0x001fca                  _i2cReadStr
+                  0x001ee6                  _i2cWrite
+                  0x001f1e                  _i2cWriteStr
                   0x000d72                  _initADC
-                  0x002372                  _initClock
+                  0x0023fe                  _initClock
                   0x000dfe                  _initPWM
                   0x00165c                  _initStateMachineTimer
                   0x0010e2                  _initUart
                   0x0004f2                  _jabs
                   0x0010b8                  _jmemcpy
-                  0x0022e2                  _main
-                  0x001cd8                  _noack
-                  0x001dd0                  _read_byte
-                  0x001b72                  _start
-                  0x001bda                  _stop
+                  0x00236e                  _main
+                  0x001d6e                  _noack
+                  0x001e66                  _read_byte
+                  0x001c08                  _start
+                  0x001c70                  _stop
                   0x00129c                  _swap
-                  0x001d26                  _write_byte
+                  0x001dbc                  _write_byte
 
 Memory Configuration
 
@@ -1488,52 +1482,50 @@ __c30_signature
                     0x0a1c                  rsBuf
                     0x0a60                  Rcved
 
-.ndata              0x0a62         0x46
+.ndata              0x0a62         0x40
  .ndata             0x0a62         0x20 data_struct.o
                     0x0a62                  ol
                     0x0a70                  bp
                     0x0a76                  bFlag
                     0x0a78                  ControlBits
                     0x0a7a                  bpd
- .ndata             0x0a82         0x16 main.o
+ .ndata             0x0a82         0x10 main.o
                     0x0a82                  cnt
                     0x0a84                  tx
                     0x0a86                  tick
                     0x0a8a                  stick
                     0x0a8e                  bcnt
-                    0x0a92                  syncedbak
-                    0x0a94                  SyncedCnt
- .ndata             0x0a98         0x10 StateMachine.o
-                    0x0a98                  LEDCnt
-                    0x0a9a                  StartUpCnt
-                    0x0a9e                  ByPassCnt
-                    0x0aa2                  ScrCnt
-                    0x0aa6                  sCntx
+ .ndata             0x0a92         0x10 StateMachine.o
+                    0x0a92                  LEDCnt
+                    0x0a94                  StartUpCnt
+                    0x0a98                  ByPassCnt
+                    0x0a9c                  ScrCnt
+                    0x0aa0                  sCntx
 
-.nbss               0x0aa8          0xa
- .nbss              0x0aa8          0xa pwm.o
-                    0x0aa8                  err
-                    0x0aaa                  jumpTable
-                    0x0ab0                  tmpi
+.nbss               0x0aa2          0xa
+ .nbss              0x0aa2          0xa pwm.o
+                    0x0aa2                  err
+                    0x0aa4                  jumpTable
+                    0x0aaa                  tmpi
 
-.ndata              0x0ab2          0x6
- .ndata             0x0ab2          0x6 uart.o
-                    0x0ab2                  RcvCnt
-                    0x0ab3                  SndCnt
-                    0x0ab4                  SndPosi
-                    0x0ab6                  CET
+.ndata              0x0aac          0x6
+ .ndata             0x0aac          0x6 uart.o
+                    0x0aac                  RcvCnt
+                    0x0aad                  SndCnt
+                    0x0aae                  SndPosi
+                    0x0ab0                  CET
 
-.nbss               0x0ab8          0x4
- .nbss              0x0ab8          0x2 main.o
-                    0x0ab8                  ByPassCtrlBak
- .nbss              0x0aba          0x2 StateMachine.o
-                    0x0aba                  State
+.nbss               0x0ab2          0x4
+ .nbss              0x0ab2          0x2 main.o
+                    0x0ab2                  ByPassCtrlBak
+ .nbss              0x0ab4          0x2 StateMachine.o
+                    0x0ab4                  State
 
 .const              0x84d2         0x20 load address 0x0004d2  
  .const             0x84d2         0x20 uart.o
                     0x84d2                  CRC16Table
 
-.text             0x0004f2       0x1ab8
+.text             0x0004f2       0x1b4e
  .text            0x0004f2        0xbc6 pwm.o
                   0x0004f2                  jabs
                   0x00050c                  ConvPair0Handler
@@ -1562,34 +1554,33 @@ __c30_signature
                   0x00145a                  MSFunc6
                   0x001506                  MSFunc16
                   0x001592                  ModbusSlave
- .text            0x00165c        0x508 StateMachine.o
+ .text            0x00165c        0x59e StateMachine.o
                   0x00165c                  initStateMachineTimer
                   0x001686                  _T2Interrupt
- .text            0x001b64        0x446 i2c.o
-                  0x001b64                  InitI2C
-                  0x001b72                  start
-                  0x001bda                  stop
-                  0x001c32                  chkack
-                  0x001c8a                  ack
-                  0x001cd8                  noack
-                  0x001d26                  write_byte
-                  0x001dd0                  read_byte
-                  0x001e50                  i2cWrite
-                  0x001e88                  i2cWriteStr
-                  0x001ee4                  i2cRead
-                  0x001f34                  i2cReadStr
+ .text            0x001bfa        0x446 i2c.o
+                  0x001bfa                  InitI2C
+                  0x001c08                  start
+                  0x001c70                  stop
+                  0x001cc8                  chkack
+                  0x001d20                  ack
+                  0x001d6e                  noack
+                  0x001dbc                  write_byte
+                  0x001e66                  read_byte
+                  0x001ee6                  i2cWrite
+                  0x001f1e                  i2cWriteStr
+                  0x001f7a                  i2cRead
+                  0x001fca                  i2cReadStr
 
-.dinit            0x001faa        0x1ac
- .dinit           0x001faa        0x1ac data_init
+.dinit            0x002040        0x1a8
+ .dinit           0x002040        0x1a8 data_init
 
-.text             0x002156        0x276
- .text            0x002156        0x186 data_struct.o
-                  0x002156                  SetBeep
-                  0x00219c                  BeepDrv
-                  0x002204                  Adj_Init
-                  0x00223a                  Root
- .text            0x0022dc         0x96 main.o
-                  0x0022dc                  TestDrv
-                  0x0022e2                  main
- .text            0x002372         0x5a clock.o
-                  0x002372                  initClock
+.text             0x0021e8        0x270
+ .text            0x0021e8        0x186 data_struct.o
+                  0x0021e8                  SetBeep
+                  0x00222e                  BeepDrv
+                  0x002296                  Adj_Init
+                  0x0022cc                  Root
+ .text            0x00236e         0x90 main.o
+                  0x00236e                  main
+ .text            0x0023fe         0x5a clock.o
+                  0x0023fe                  initClock

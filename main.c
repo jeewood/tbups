@@ -25,61 +25,8 @@ unsigned long tick = 0, stick = 0;
 #define SOUNDDLY 3000
 unsigned long bcnt = SOUNDDLY;
 int ByPassCtrlBak;
-char syncedbak = 0;
-unsigned long SyncedCnt = 100000;
-
-void TestDrv()
-{
-	//旁路自动切换(实验用)
-	/*
-	if (inv.synced)
-	{
-	    if (MANCTRL)
-	    {
-	        tick++;
-	        if (tick > 60010)
-	        {
-	            tick = 0;
-	            SetByPass(tx=!tx);
-	        }
-	    }
-	    else		
-	    if (ByPassCtrlBak!=ByPassCtrl) //手动旁路切换
-	    {
-	        SetByPass(0);
-	        ByPassCtrlBak = ByPassCtrl;
-	    }
-	    else	
-		if (wMode==0 && BYPASS)
-		{
-			if (jabs(InvV-ACInV)<100)
-			{
-				SetByPass(0);			
-			}
-		}	    
-	}
-
-    if ((inv.synced !=syncedbak))
-    {
-        if (inv.synced)
-        {
-            SyncedCnt--;
-            if (SyncedCnt == 0)
-            {
-                syncedbak = inv.synced;
-                if (!isOverLoad())
-                {
-                    OLNORMAL();
-                }
-            }
-        }
-    }
-    else
-    {
-        SyncedCnt = 100000;
-    }
-    */    
-}
+//char syncedbak = 0;
+//unsigned long SyncedCnt = 100000;
 
 int main()
 {

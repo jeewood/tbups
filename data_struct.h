@@ -96,7 +96,7 @@ extern BYPASS_STRUCT bp;
 
 #define INVERTOR 1
 #define MAINPOWER 0
-#define SetRelay(b)	{ if (!bp.inSwitch) { bp.r=(b); bp.inSwitch=1; }}
+#define SetRelay(b)	{ if (!bp.inSwitch && BYPASS == (b)) { bp.r=(b); bp.inSwitch=1; }}
 
 #define isOverLoad() (LoadI>ol.ol_curr)
 #define isImpulse() (LoadI>ol.s_curr)

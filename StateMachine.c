@@ -107,8 +107,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
     m.f += mf;
     inv.f += invf;
 
-    //TestDrv();
-
     UART_DRV();
 
     BeepDrv();
@@ -182,7 +180,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             if (bp.inSwitch==1)
             {
                 bp.inSwitch = 2;
-                if (inv.synced)
+                if (inv.synced && jabs(ACInV-InvV)<100) 
                 {
                     SCR = 1;
                     bp.cnt = 600;
@@ -214,7 +212,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             //ByPass Drv End
             if (m.state == OK)
             {
-                if (ACInV > 1000 && ACInV < 2350 && jabs(ACInV - InvV) > 50)
+                if (ACInV > 1650 && ACInV < 2420 && jabs(ACInV - InvV) > 500)
                 {
                     m.cycle++;
                     if (m.cycle > 5)
