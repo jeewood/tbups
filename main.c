@@ -15,18 +15,11 @@ _FWDT(FWDTEN_OFF) //Watch Dog timer
 _FPOR(FPWRT_PWR128)// & BOREN_OFF) //by jwz. p33fj16gs504 not found BOREN_OFF
 _FICD(ICS_PGD1 & JTAGEN_OFF)
 
-extern int fRMSCalculation;
 unsigned int cnt = 0;
-extern unsigned long StartUpCnt;
-extern int Duty;
-unsigned char tx = 0;
-
 unsigned long tick = 0, stick = 0;
+
 #define SOUNDDLY 3000
 unsigned long bcnt = SOUNDDLY;
-int ByPassCtrlBak;
-//char syncedbak = 0;
-//unsigned long SyncedCnt = 100000;
 
 int main()
 {
@@ -63,22 +56,21 @@ int main()
     InitI2C();
 
     LED = 1;
-    StartUpCnt = 1;
+    m.StartUpCnt = 1;
     BEEP = 0;
-    Duty = 0;
-    //i2cWrite(0,0xA5);
+    inv.duty = 0;
+
     i2cReadStr(0, (unsigned char*)&sValue, 48);
     if (Password==-2)
     {
         Adj_Init();
         i2cReadStr(22,(unsigned char*)&sValue[12],24);
     }
-    
+    ol.ol_back_curr = mulss(RatedCurr,18022)>>14;//110% 过载返回电流
     ol.ol_curr = mulss(RatedCurr,19661)>>14;    //120%过载
-    ol.s_curr = mulss(RatedCurr,32767)>>14;     //150%冲击电流
+    ol.s_curr = mulss(RatedCurr,24576)>>14;     //150%冲击电流
 
     StartCtrl = sMode;
-    ByPassCtrlBak = !ByPassCtrl;
 
     while (1)
     {

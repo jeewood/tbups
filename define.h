@@ -65,6 +65,9 @@ typedef struct _mains
     int err;
     int i;
     int f;
+    
+    unsigned long StartUpCnt;
+
     char rms_stat;
     unsigned char cycle;
     char state;
@@ -90,6 +93,8 @@ typedef struct _invs
     int cnt;
     int i;
     int f;
+
+    int duty;
 
     char rms_stat;
     char state;

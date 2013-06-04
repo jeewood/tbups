@@ -9,4 +9,5 @@ build/default/production/_ext/1472/main.o:  \
 ../data_struct.h  \
 ../dsp.h  \
 ../StateMachine.h  \
-../i2c.h 
+../i2c.h  \
+../beep.h 

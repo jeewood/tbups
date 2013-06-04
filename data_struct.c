@@ -3,10 +3,7 @@
 #include <dsp.h>
 #include "beep.h"
 
-//CValue Value={0};
 INT Value[12];
-//INT Vadj[12];
-//SValue sValue = 0;
 INT sValue[24];
 
 OVRLD_STRUCT ol = {0};

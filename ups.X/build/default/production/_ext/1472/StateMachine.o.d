@@ -5,4 +5,5 @@ build/default/production/_ext/1472/StateMachine.o:  \
 ../define.h  \
 ../data_struct.h  \
 ../uart.h  \
-../pwm.h 
+../pwm.h  \
+../beep.h 

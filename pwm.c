@@ -8,12 +8,10 @@
 #define TriPD 18400
 #define TriPDX 23600
 
-#define DC_OFFSET 0x3FF0 //0x43E0		//0x3FF0
+#define DC_OFFSET 0x3FF0
 
 long PD3 = TriPD;
 long PD2 = TriPD;
-
-int Duty = 0; //Q15(1.0);
 
 INVSTRUCT inv = {0};
 MAINSTRUCT m = {0};
@@ -133,17 +131,12 @@ void ConvPair0Handler(void)
             {
                 inv.ofs -= (inv.ofs>-1000) ? 1 : 0;
             }
+            InvF = SIN((inv.max_idx - ocurr.max_idx + 640) % 512);
             inv.rms_stat = READY_TO_CALCULATE;
         }
-
-        //this is only for debug,
-        InvF = inv.size;
     }
 
-    if (issz(inv, ZCTHV))
-    {
-        inv.i = 0;
-    }
+    if (issz(inv, ZCTHV)) inv.i = 0;
 
     inv.pv = inv.cv;
 
@@ -157,7 +150,7 @@ void ConvPair0Handler(void)
         IOCON2bits.OVRDAT = 0;
     }
 
-    PDC2 = mulss(SIN(inv.idx), Duty) >> 15;
+    PDC2 = mulss(SIN(inv.idx), inv.duty) >> 15;
 
     inv.idx = (inv.idx + 1) % SINE_TABLE_SIZE;
 
@@ -169,6 +162,7 @@ void ConvPair0Handler(void)
  * AC input voltage current gathering
  */
 int err, perr = 0;
+unsigned long long pmi = 0;
 
 void ConvPair1Handler(void)
 {
@@ -198,6 +192,8 @@ void ConvPair1Handler(void)
     if (m.rms_stat == READY_TO_COLLECT_DATA)
     {
         m.sum += mulss(m.cv, m.cv);
+        pmi += mulss(jabs(m.cv) , jabs(mcurr.cv))>>10;
+
         if (m.max < m.cv)    //求最大值
         {
             m.max = m.cv;
@@ -248,6 +244,7 @@ void ConvPair1Handler(void)
         {
             m.sum = 0;
             m.max = m.min = 0;
+            pmi = 0;
             m.rms_stat = READY_TO_COLLECT_DATA;
         }
         else if (m.cnt < 1000)
@@ -260,7 +257,7 @@ void ConvPair1Handler(void)
             {
                 m.ofs -= (m.ofs>-1000) ? 1 : 0;
             }
-
+            ACInF = SIN((mcurr.max_idx - m.max_idx + 640) % 512);
             m.rms_stat = READY_TO_CALCULATE;
         }
         
@@ -282,7 +279,6 @@ void ConvPair1Handler(void)
                     if (m.cycle > 20)
                     {
                         m.state = OK;
-                        //BEEP = 0;
                         m.cycle = 0;
                     }
                 }
@@ -397,22 +393,12 @@ void ConvPair1Handler(void)
             if (m.icnt > 32)
             {
                 m.state = ADJ;
-                //BEEP = 1;
                 m.icnt = 0;
             }
         }
     }
     
-    ACInI = m.state;
-    ACInF = m.size;
-    //Power = Duty;
-    Factor = inv.synced;
-    //ChargeStatus = err;
-
-
     m.pv = m.cv;
-
-    //_SWTRG5 = 1;
 
     ADSTATbits.P1RDY = 0; // Clear the ADSTAT bits
 }
@@ -737,7 +723,6 @@ void StartPWM(void)
 
 void __attribute__((interrupt, no_auto_psv)) _ADCP5Interrupt(void)
 {
-    //BEEP = ~BEEP;
     BatI = (ADCBUF10);
     BatV = (ADCBUF11);
 
@@ -767,7 +752,8 @@ void RMS_CALC()
                 (mulss(tmpi, Q15(0.2)) >> 15)
                 );
         ocurr.sum = 0;
-        LoadI = mulss(ocurr.V, Adj_LoadI) >> 15; //30844
+        LoadI = mulss(ocurr.V, 6800) >> 14; //6800 sqrt
+        //LoadI = ocurr.V;
         ocurr.rms_stat = CALCULATION_DONE;
     }
 
@@ -797,7 +783,8 @@ void RMS_CALC()
                 (mulss(tmpi, Q15(0.2)) >> 15)
                 );
         mcurr.sum = 0;
-        //ACInI = mulss(mcurr.V, Adj_ACInI) >> 15; //30844
+        ACInI = mulss(mcurr.V, Adj_ACInI) >> 14; //6800 sqrt
+        //ACInI = mcurr.V;
         mcurr.rms_stat = CALCULATION_DONE;
     }
 
@@ -805,6 +792,8 @@ void RMS_CALC()
     if (m.rms_stat == READY_TO_CALCULATE)
     {
         m.sum /= m.size;
+        pmi /= m.size;
+
         tmpi = Root(m.sum);
         m.V = (
                 (mulss(m.V, Q15(0.8)) >> 15)
@@ -813,6 +802,8 @@ void RMS_CALC()
                 );
         m.sum = 0;
         ACInV = mulss(m.V, Adj_ACInV) >> 15; //60225
+        Power = pmi>>16;
+        Factor = pmi & 0xFFFF;
         m.rms_stat = CALCULATION_DONE;
     }
 }

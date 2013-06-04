@@ -8,18 +8,10 @@
 #include "beep.h"
 
 int State;
-extern int Duty;
-extern unsigned char tx;
 int LEDCnt = 0;
-
-unsigned long StartUpCnt = 0;
-//extern unsigned char InvMode;
-
-long ByPassCnt = 0, ScrCnt = 0;
-int sCntx = 0;
-//extern void TestDrv();
-//extern unsigned long bcnt;
-
+long ByPassCnt = 0;
+//市电没电的情况下切过去后,不再切回来
+long InrushDly = 0;     //用于冲击电流切旁路后切回逆变时的延时
 #define OverLoad() \
 {\
     switch(ol.f)\
@@ -28,6 +20,7 @@ int sCntx = 0;
             if (isImpulse())\
             {\
                 INRUSH();\
+                InrushDly = 0;\
                 SetRelay(MAINPOWER);\
             }\
             else\
@@ -47,9 +40,10 @@ int sCntx = 0;
                 if (isImpulse())\
                 {\
                     INRUSH();\
+                    InrushDly = 0;\
                     SetRelay(MAINPOWER);\
                 }\
-                if (!isOverLoad())\
+                if (isOverLoadBack())\
                 {\
                     NORMAL();\
                     SYNCED(SetRelay(!wMode));\
@@ -68,10 +62,15 @@ int sCntx = 0;
         case LOAD_INRUSH:\
             if (ol.cnt>1)\
             {\
-                if (LoadI < RatedCurr)\
+                if (isImpulseBack())\
                 {\
-                    NORMAL();\
-                    SYNCED(SetRelay(!wMode));\
+                    InrushDly++;\
+                    if (InrushDly>20000)\
+                    {\
+                        NORMAL();\
+                        SYNCED(SetRelay(!wMode));\
+                        InrushDly = 0;\
+                    }\
                 }\
                 if (isOverLoad() && !isImpulse())\
                 {\
@@ -111,6 +110,30 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
 
     BeepDrv();
 
+    //故障判定
+    if (m.state == NOK)
+    {
+        //市电故障
+    }
+
+    if (isOverLoad())
+    {
+        //UPS过载
+    }
+
+    if (BatV<1500)
+    {
+        //蓄电池低压
+    }
+
+    if (BatV>2300)
+    {
+        //蓄电池过压
+    }
+
+    //过热
+    //充电机故障,蓄电池电压低于多少伏,且没有充电电流
+
     switch (State)
     {
         case SYSTEM_STARTUP:
@@ -122,9 +145,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                 {
                     if (ACInV > 1000)
                     {
-                        if (InvV < ACInV - 100 && Duty < Q15(DUTY_SCALE))
+                        if (InvV < ACInV - 100 && inv.duty < Q15(DUTY_SCALE))
                         {
-                            Duty++;
+                            inv.duty++;
                             ByPassCnt = 0;
                         }
                         else
@@ -140,9 +163,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                 }
                 else
                 {
-                    if (InvV<2100 && Duty < Q15(DUTY_SCALE))
+                    if (InvV<2100 && inv.duty < Q15(DUTY_SCALE))
                     {
-                        Duty++;
+                        inv.duty++;
                     }
                     else
                     {
@@ -163,7 +186,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             {
                 NORMAL();
                 SetRelay(MAINPOWER);
-                Duty = 0;
+                inv.duty = 0;
                 inv.bsynced = 0;
                 inv.synced = 0;
                 State = SYSTEM_STARTUP;
@@ -173,8 +196,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             OverLoad();
 
             if (ol.cnt>1) ol.cnt--;
-			Power = ol.f;
-			ChargeStatus = wMode;
+            Power = ol.f;
+            //ChargeStatus = wMode;
 
             //ByPass Drv Begin
             if (bp.inSwitch==1)
@@ -219,11 +242,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
                     {
                         if (InvV < ACInV)
                         {
-                            if (Duty < Q15(DUTY_SCALE)) Duty++;
+                            if (inv.duty < Q15(DUTY_SCALE)) inv.duty++;
                         }
                         else if (InvV > ACInV)
                         {
-                            if (Duty > Q15(0.1))Duty--;
+                            if (inv.duty > Q15(0.1))inv.duty--;
                         }
                         m.cycle = 0;
                     }
@@ -234,22 +257,22 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
             {
                  if (InvV < 2160)
                  {
-                     if (Duty < Q15(DUTY_SCALE) && inv.c == 0) 
+                     if (inv.duty < Q15(DUTY_SCALE) && inv.c == 0) 
                      {
-                     	Duty++;
-                     	inv.c = 1000;
+                        inv.duty++;
+                        inv.c = 1000;
                      }
                  }
                  else if (InvV > 2240)
                  {
-                     if (Duty > Q15(0.1) && inv.c == 0)
+                     if (inv.duty > Q15(0.1) && inv.c == 0)
                      {
-                     	Duty--;
-                     	inv.c = 1000;
+                        inv.duty--;
+                        inv.c = 1000;
                      }
                  }
                  if (inv.c) inv.c --;
-	        }
+            }
         }
         break;
         case SYSTEM_ERROR:
@@ -259,11 +282,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt()
         break;
         case STATE_UNKNOWN:
         {
-            Duty = 0;
-            StartUpCnt++;
-            if (StartUpCnt > 60000)
+            inv.duty = 0;
+            m.StartUpCnt++;
+            if (m.StartUpCnt > 60000)
             {
-                StartUpCnt = 0;
+                m.StartUpCnt = 0;
                 if (m.state == OK || (m.state == NOK))
                 {
                     SSTART = 0;

@@ -16,7 +16,7 @@
 #define SCL_HIGH(b) SCL_TRIS=0;SCL=1;if(b)NOP()
 #define SDAR(b) SDA_TRIS=1;ODCBbits.ODCB5=1;if(b)NOP()
 
-//’‚ «I2C
+//I2c initalize
 void InitI2C(void)
 {
     SCL_LOW(0);

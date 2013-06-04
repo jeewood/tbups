@@ -21,11 +21,12 @@ typedef union _INT
 #define LOAD_INRUSH 2
 typedef struct _overload
 {
-    unsigned long cnt;  //¼ÆÊ±Æ÷
+    unsigned long cnt;
     char f;
-    int curr;           //120¹ýÔØµçÁ÷
-    int ol_curr;        //120¹ýÔØµçÁ÷ÏÞÖµ
-    int s_curr;         //150³å»÷µçÁ÷ÏÞÖµ
+    int curr;
+    int ol_back_curr;//110%
+    int ol_curr; 
+    int s_curr;
     int cycle;
 }OVRLD_STRUCT;
 
@@ -99,12 +100,15 @@ extern BYPASS_STRUCT bp;
 #define SetRelay(b)	{ if (!bp.inSwitch && BYPASS == (b)) { bp.r=(b); bp.inSwitch=1; }}
 
 #define isOverLoad() (LoadI>ol.ol_curr)
+#define isOverLoadBack() (LoadI<ol.ol_back_curr)
+
 #define isImpulse() (LoadI>ol.s_curr)
+#define isImpulseBack() (LoadI<RatedCurr)
 
 #define isByPass() (BYPASS==0)
 
-#define OL150TIME 150000
-#define OL120TIME 300000
+#define OL150TIME 300000
+#define OL120TIME 1200000
 
 #define SYNCED(line) { if (inv.synced){ (line); } }
 #define NORMAL() { ol.f = LOAD_NORMAL; ol.cnt = 0; SetBeep(OFF,0,0); }
@@ -117,3 +121,6 @@ extern BYPASS_STRUCT bp;
 #define bypassInSwitch bFlag.b3
 
 #endif //__DATA_STRUCT__
+
+
+
